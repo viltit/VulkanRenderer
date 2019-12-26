@@ -1,0 +1,1 @@
+/usr/bin/g++  -g   CMakeFiles/vkEngine.dir/main.cpp.o CMakeFiles/vkEngine.dir/vkRenderer/MoeVkInstance.cpp.o CMakeFiles/vkEngine.dir/vkRenderer/MoeVkRenderer.cpp.o CMakeFiles/vkEngine.dir/vkRenderer/VkWindow.cpp.o CMakeFiles/vkEngine.dir/vkRenderer/MoePhysicalDevice.cpp.o  -o vkEngine -lSDL2 /usr/lib/x86_64-linux-gnu/libvulkan.so 
