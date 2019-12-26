@@ -7,7 +7,10 @@
 #include <iostream>
 
 namespace moe {
-MoeVkInstance::MoeVkInstance(VkWindow *window, RendererOptions options) {
+MoeVkInstance::MoeVkInstance(VkWindow *window, RendererOptions options)
+    : _instance        {VK_NULL_HANDLE },
+      debugMessenger  { VK_NULL_HANDLE }
+{
 
     // query extensions for SDL Vulkan Window:
     // TODO: Put this code into window ??
@@ -60,7 +63,7 @@ MoeVkInstance::MoeVkInstance(VkWindow *window, RendererOptions options) {
     createInfo.enabledExtensionCount = extensions.size();
     createInfo.ppEnabledExtensionNames = extensions.data();
 
-    if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS) {
+    if (vkCreateInstance(&createInfo, nullptr, &_instance) != VK_SUCCESS) {
         // TODO: Include Vulkan error code as String
         throw InitException("Failed to create Vulkan instance", __FILE__, __FUNCTION__, __LINE__);
     }
@@ -71,6 +74,12 @@ MoeVkInstance::MoeVkInstance(VkWindow *window, RendererOptions options) {
     }
 }
 
+MoeVkInstance::~MoeVkInstance() {
+    if (debugMessenger) {
+        destroyDebugUtilsMessengerEXT(_instance, debugMessenger, nullptr);
+    }
+    vkDestroyInstance(_instance, nullptr);
+}
 
 void MoeVkInstance::createDebugMessenger() {
 #ifndef NDEBUG
@@ -89,7 +98,7 @@ void MoeVkInstance::createDebugMessenger() {
     createInfo.pfnUserCallback  = debugCallback;
     createInfo.pUserData = nullptr;
 
-    if (createDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS) {
+    if (createDebugUtilsMessengerEXT(_instance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS) {
         std::cout << "failed.\n";
         return;
     }
