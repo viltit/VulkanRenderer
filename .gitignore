@@ -1,6 +1,6 @@
 
-# Created by https://www.gitignore.io/api/clion
-# Edit at https://www.gitignore.io/?templates=clion
+# Created by https://www.gitignore.io/api/cmake,clion
+# Edit at https://www.gitignore.io/?templates=cmake,clion
 
 ### CLion ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm
@@ -90,4 +90,21 @@ fabric.properties
 .idea/**/markdown-navigator.xml
 .idea/**/markdown-navigator/
 
-# End of https://www.gitignore.io/api/clion
+### CMake ###
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
+
+### CMake Patch ###
+# External projects
+*-prefix/
+
+# End of https://www.gitignore.io/api/cmake,clion

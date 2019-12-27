@@ -82,9 +82,6 @@ MoeVkInstance::~MoeVkInstance() {
 }
 
 void MoeVkInstance::createDebugMessenger() {
-#ifndef NDEBUG
-    std::cout << "<VulkanHandler> Creating debug messenger ...";
-#endif
 
     VkDebugUtilsMessengerCreateInfoEXT createInfo = { };
     createInfo.sType            = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
@@ -102,10 +99,6 @@ void MoeVkInstance::createDebugMessenger() {
         std::cout << "failed.\n";
         return;
     }
-
-#ifndef NDEBUG
-    std::cout << "\tfinsihed\n";
-#endif
 }
 
 

@@ -16,9 +16,11 @@ include_directories(${Vulkan_INCLUDE_DIRS})
 add_executable(vkEngine main.cpp
         vkRenderer/MoeVkFunctions.hpp
         vkRenderer/MoeVkInstance.cpp
-        vkRenderer/MoeVkRenderer.cpp vkRenderer/QueueFamily.hpp
+        vkRenderer/MoeVkRenderer.cpp
+        vkRenderer/MoeVkQueueFamily.hpp
         vkRenderer/VkWindow.cpp
-        vkRenderer/MoePhysicalDevice.cpp
+        vkRenderer/MoeVkPhysicalDevice.cpp
+        vkRenderer/MoeVkLogicalDevice.cpp
         Colors/ColorRGB.hpp)
 
 target_link_libraries(vkEngine

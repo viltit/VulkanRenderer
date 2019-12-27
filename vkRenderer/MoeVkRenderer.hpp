@@ -1,7 +1,8 @@
 #include <vulkan/vulkan.h>
 #include <vector>
 
-#include "MoePhysicalDevice.hpp"
+#include "MoeVkPhysicalDevice.hpp"
+#include "MoeVkLogicalDevice.hpp"
 #include "MoeVkInstance.hpp"
 
 namespace moe {
@@ -21,6 +22,9 @@ private:
 
     MoeVkInstance               instance;
     VkSurfaceKHR                surface;
-    MoePhysicalDevice*          physicalDevice;
+
+    // TODO: Do NOT use 'new' ONLY because you are to proud to make a 'create' function instead of a huge constructor
+    MoeVkPhysicalDevice*        physicalDevice;
+    MoeVkLogicalDevice          logicalDevice;
 };
 }

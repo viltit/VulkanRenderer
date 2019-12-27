@@ -150,33 +150,6 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/vkEngine.dir/build.make CMakeFiles/vkEngine.dir/main.cpp.s
 .PHONY : main.cpp.s
 
-vkRenderer/MoePhysicalDevice.o: vkRenderer/MoePhysicalDevice.cpp.o
-
-.PHONY : vkRenderer/MoePhysicalDevice.o
-
-# target to build an object file
-vkRenderer/MoePhysicalDevice.cpp.o:
-	$(MAKE) -f CMakeFiles/vkEngine.dir/build.make CMakeFiles/vkEngine.dir/vkRenderer/MoePhysicalDevice.cpp.o
-.PHONY : vkRenderer/MoePhysicalDevice.cpp.o
-
-vkRenderer/MoePhysicalDevice.i: vkRenderer/MoePhysicalDevice.cpp.i
-
-.PHONY : vkRenderer/MoePhysicalDevice.i
-
-# target to preprocess a source file
-vkRenderer/MoePhysicalDevice.cpp.i:
-	$(MAKE) -f CMakeFiles/vkEngine.dir/build.make CMakeFiles/vkEngine.dir/vkRenderer/MoePhysicalDevice.cpp.i
-.PHONY : vkRenderer/MoePhysicalDevice.cpp.i
-
-vkRenderer/MoePhysicalDevice.s: vkRenderer/MoePhysicalDevice.cpp.s
-
-.PHONY : vkRenderer/MoePhysicalDevice.s
-
-# target to generate assembly for a file
-vkRenderer/MoePhysicalDevice.cpp.s:
-	$(MAKE) -f CMakeFiles/vkEngine.dir/build.make CMakeFiles/vkEngine.dir/vkRenderer/MoePhysicalDevice.cpp.s
-.PHONY : vkRenderer/MoePhysicalDevice.cpp.s
-
 vkRenderer/MoeVkInstance.o: vkRenderer/MoeVkInstance.cpp.o
 
 .PHONY : vkRenderer/MoeVkInstance.o
@@ -203,6 +176,60 @@ vkRenderer/MoeVkInstance.s: vkRenderer/MoeVkInstance.cpp.s
 vkRenderer/MoeVkInstance.cpp.s:
 	$(MAKE) -f CMakeFiles/vkEngine.dir/build.make CMakeFiles/vkEngine.dir/vkRenderer/MoeVkInstance.cpp.s
 .PHONY : vkRenderer/MoeVkInstance.cpp.s
+
+vkRenderer/MoeVkLogicalDevice.o: vkRenderer/MoeVkLogicalDevice.cpp.o
+
+.PHONY : vkRenderer/MoeVkLogicalDevice.o
+
+# target to build an object file
+vkRenderer/MoeVkLogicalDevice.cpp.o:
+	$(MAKE) -f CMakeFiles/vkEngine.dir/build.make CMakeFiles/vkEngine.dir/vkRenderer/MoeVkLogicalDevice.cpp.o
+.PHONY : vkRenderer/MoeVkLogicalDevice.cpp.o
+
+vkRenderer/MoeVkLogicalDevice.i: vkRenderer/MoeVkLogicalDevice.cpp.i
+
+.PHONY : vkRenderer/MoeVkLogicalDevice.i
+
+# target to preprocess a source file
+vkRenderer/MoeVkLogicalDevice.cpp.i:
+	$(MAKE) -f CMakeFiles/vkEngine.dir/build.make CMakeFiles/vkEngine.dir/vkRenderer/MoeVkLogicalDevice.cpp.i
+.PHONY : vkRenderer/MoeVkLogicalDevice.cpp.i
+
+vkRenderer/MoeVkLogicalDevice.s: vkRenderer/MoeVkLogicalDevice.cpp.s
+
+.PHONY : vkRenderer/MoeVkLogicalDevice.s
+
+# target to generate assembly for a file
+vkRenderer/MoeVkLogicalDevice.cpp.s:
+	$(MAKE) -f CMakeFiles/vkEngine.dir/build.make CMakeFiles/vkEngine.dir/vkRenderer/MoeVkLogicalDevice.cpp.s
+.PHONY : vkRenderer/MoeVkLogicalDevice.cpp.s
+
+vkRenderer/MoeVkPhysicalDevice.o: vkRenderer/MoeVkPhysicalDevice.cpp.o
+
+.PHONY : vkRenderer/MoeVkPhysicalDevice.o
+
+# target to build an object file
+vkRenderer/MoeVkPhysicalDevice.cpp.o:
+	$(MAKE) -f CMakeFiles/vkEngine.dir/build.make CMakeFiles/vkEngine.dir/vkRenderer/MoeVkPhysicalDevice.cpp.o
+.PHONY : vkRenderer/MoeVkPhysicalDevice.cpp.o
+
+vkRenderer/MoeVkPhysicalDevice.i: vkRenderer/MoeVkPhysicalDevice.cpp.i
+
+.PHONY : vkRenderer/MoeVkPhysicalDevice.i
+
+# target to preprocess a source file
+vkRenderer/MoeVkPhysicalDevice.cpp.i:
+	$(MAKE) -f CMakeFiles/vkEngine.dir/build.make CMakeFiles/vkEngine.dir/vkRenderer/MoeVkPhysicalDevice.cpp.i
+.PHONY : vkRenderer/MoeVkPhysicalDevice.cpp.i
+
+vkRenderer/MoeVkPhysicalDevice.s: vkRenderer/MoeVkPhysicalDevice.cpp.s
+
+.PHONY : vkRenderer/MoeVkPhysicalDevice.s
+
+# target to generate assembly for a file
+vkRenderer/MoeVkPhysicalDevice.cpp.s:
+	$(MAKE) -f CMakeFiles/vkEngine.dir/build.make CMakeFiles/vkEngine.dir/vkRenderer/MoeVkPhysicalDevice.cpp.s
+.PHONY : vkRenderer/MoeVkPhysicalDevice.cpp.s
 
 vkRenderer/MoeVkRenderer.o: vkRenderer/MoeVkRenderer.cpp.o
 
@@ -270,12 +297,15 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
-	@echo "... vkRenderer/MoePhysicalDevice.o"
-	@echo "... vkRenderer/MoePhysicalDevice.i"
-	@echo "... vkRenderer/MoePhysicalDevice.s"
 	@echo "... vkRenderer/MoeVkInstance.o"
 	@echo "... vkRenderer/MoeVkInstance.i"
 	@echo "... vkRenderer/MoeVkInstance.s"
+	@echo "... vkRenderer/MoeVkLogicalDevice.o"
+	@echo "... vkRenderer/MoeVkLogicalDevice.i"
+	@echo "... vkRenderer/MoeVkLogicalDevice.s"
+	@echo "... vkRenderer/MoeVkPhysicalDevice.o"
+	@echo "... vkRenderer/MoeVkPhysicalDevice.i"
+	@echo "... vkRenderer/MoeVkPhysicalDevice.s"
 	@echo "... vkRenderer/MoeVkRenderer.o"
 	@echo "... vkRenderer/MoeVkRenderer.i"
 	@echo "... vkRenderer/MoeVkRenderer.s"

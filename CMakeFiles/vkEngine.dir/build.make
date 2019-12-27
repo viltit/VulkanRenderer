@@ -109,18 +109,31 @@ CMakeFiles/vkEngine.dir/vkRenderer/VkWindow.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/vkEngine.dir/vkRenderer/VkWindow.cpp.s"
 	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/titus/programming/c++/vkEngine/vkRenderer/VkWindow.cpp -o CMakeFiles/vkEngine.dir/vkRenderer/VkWindow.cpp.s
 
-CMakeFiles/vkEngine.dir/vkRenderer/MoePhysicalDevice.cpp.o: CMakeFiles/vkEngine.dir/flags.make
-CMakeFiles/vkEngine.dir/vkRenderer/MoePhysicalDevice.cpp.o: vkRenderer/MoePhysicalDevice.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/titus/programming/c++/vkEngine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/vkEngine.dir/vkRenderer/MoePhysicalDevice.cpp.o"
-	/usr/bin/g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/vkEngine.dir/vkRenderer/MoePhysicalDevice.cpp.o -c /home/titus/programming/c++/vkEngine/vkRenderer/MoePhysicalDevice.cpp
+CMakeFiles/vkEngine.dir/vkRenderer/MoeVkPhysicalDevice.cpp.o: CMakeFiles/vkEngine.dir/flags.make
+CMakeFiles/vkEngine.dir/vkRenderer/MoeVkPhysicalDevice.cpp.o: vkRenderer/MoeVkPhysicalDevice.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/titus/programming/c++/vkEngine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/vkEngine.dir/vkRenderer/MoeVkPhysicalDevice.cpp.o"
+	/usr/bin/g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/vkEngine.dir/vkRenderer/MoeVkPhysicalDevice.cpp.o -c /home/titus/programming/c++/vkEngine/vkRenderer/MoeVkPhysicalDevice.cpp
 
-CMakeFiles/vkEngine.dir/vkRenderer/MoePhysicalDevice.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/vkEngine.dir/vkRenderer/MoePhysicalDevice.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/titus/programming/c++/vkEngine/vkRenderer/MoePhysicalDevice.cpp > CMakeFiles/vkEngine.dir/vkRenderer/MoePhysicalDevice.cpp.i
+CMakeFiles/vkEngine.dir/vkRenderer/MoeVkPhysicalDevice.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/vkEngine.dir/vkRenderer/MoeVkPhysicalDevice.cpp.i"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/titus/programming/c++/vkEngine/vkRenderer/MoeVkPhysicalDevice.cpp > CMakeFiles/vkEngine.dir/vkRenderer/MoeVkPhysicalDevice.cpp.i
 
-CMakeFiles/vkEngine.dir/vkRenderer/MoePhysicalDevice.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/vkEngine.dir/vkRenderer/MoePhysicalDevice.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/titus/programming/c++/vkEngine/vkRenderer/MoePhysicalDevice.cpp -o CMakeFiles/vkEngine.dir/vkRenderer/MoePhysicalDevice.cpp.s
+CMakeFiles/vkEngine.dir/vkRenderer/MoeVkPhysicalDevice.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/vkEngine.dir/vkRenderer/MoeVkPhysicalDevice.cpp.s"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/titus/programming/c++/vkEngine/vkRenderer/MoeVkPhysicalDevice.cpp -o CMakeFiles/vkEngine.dir/vkRenderer/MoeVkPhysicalDevice.cpp.s
+
+CMakeFiles/vkEngine.dir/vkRenderer/MoeVkLogicalDevice.cpp.o: CMakeFiles/vkEngine.dir/flags.make
+CMakeFiles/vkEngine.dir/vkRenderer/MoeVkLogicalDevice.cpp.o: vkRenderer/MoeVkLogicalDevice.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/titus/programming/c++/vkEngine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/vkEngine.dir/vkRenderer/MoeVkLogicalDevice.cpp.o"
+	/usr/bin/g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/vkEngine.dir/vkRenderer/MoeVkLogicalDevice.cpp.o -c /home/titus/programming/c++/vkEngine/vkRenderer/MoeVkLogicalDevice.cpp
+
+CMakeFiles/vkEngine.dir/vkRenderer/MoeVkLogicalDevice.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/vkEngine.dir/vkRenderer/MoeVkLogicalDevice.cpp.i"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/titus/programming/c++/vkEngine/vkRenderer/MoeVkLogicalDevice.cpp > CMakeFiles/vkEngine.dir/vkRenderer/MoeVkLogicalDevice.cpp.i
+
+CMakeFiles/vkEngine.dir/vkRenderer/MoeVkLogicalDevice.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/vkEngine.dir/vkRenderer/MoeVkLogicalDevice.cpp.s"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/titus/programming/c++/vkEngine/vkRenderer/MoeVkLogicalDevice.cpp -o CMakeFiles/vkEngine.dir/vkRenderer/MoeVkLogicalDevice.cpp.s
 
 # Object files for target vkEngine
 vkEngine_OBJECTS = \
@@ -128,7 +141,8 @@ vkEngine_OBJECTS = \
 "CMakeFiles/vkEngine.dir/vkRenderer/MoeVkInstance.cpp.o" \
 "CMakeFiles/vkEngine.dir/vkRenderer/MoeVkRenderer.cpp.o" \
 "CMakeFiles/vkEngine.dir/vkRenderer/VkWindow.cpp.o" \
-"CMakeFiles/vkEngine.dir/vkRenderer/MoePhysicalDevice.cpp.o"
+"CMakeFiles/vkEngine.dir/vkRenderer/MoeVkPhysicalDevice.cpp.o" \
+"CMakeFiles/vkEngine.dir/vkRenderer/MoeVkLogicalDevice.cpp.o"
 
 # External object files for target vkEngine
 vkEngine_EXTERNAL_OBJECTS =
@@ -137,11 +151,12 @@ vkEngine: CMakeFiles/vkEngine.dir/main.cpp.o
 vkEngine: CMakeFiles/vkEngine.dir/vkRenderer/MoeVkInstance.cpp.o
 vkEngine: CMakeFiles/vkEngine.dir/vkRenderer/MoeVkRenderer.cpp.o
 vkEngine: CMakeFiles/vkEngine.dir/vkRenderer/VkWindow.cpp.o
-vkEngine: CMakeFiles/vkEngine.dir/vkRenderer/MoePhysicalDevice.cpp.o
+vkEngine: CMakeFiles/vkEngine.dir/vkRenderer/MoeVkPhysicalDevice.cpp.o
+vkEngine: CMakeFiles/vkEngine.dir/vkRenderer/MoeVkLogicalDevice.cpp.o
 vkEngine: CMakeFiles/vkEngine.dir/build.make
 vkEngine: /usr/lib/x86_64-linux-gnu/libvulkan.so
 vkEngine: CMakeFiles/vkEngine.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/titus/programming/c++/vkEngine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable vkEngine"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/titus/programming/c++/vkEngine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable vkEngine"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/vkEngine.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

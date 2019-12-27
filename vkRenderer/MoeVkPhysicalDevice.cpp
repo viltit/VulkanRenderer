@@ -1,5 +1,5 @@
 
-#include "MoePhysicalDevice.hpp"
+#include "MoeVkPhysicalDevice.hpp"
 #include "../Exceptions/InitException.hpp"
 
 #include <map>
@@ -9,17 +9,17 @@
 
 namespace moe {
 
-MoePhysicalDevice::MoePhysicalDevice(const VkInstance& instance)
+MoeVkPhysicalDevice::MoeVkPhysicalDevice(const VkInstance& instance)
     : _instance { instance }
 {
     fetchAll();
 }
 
-MoePhysicalDevice::~MoePhysicalDevice() {
+MoeVkPhysicalDevice::~MoeVkPhysicalDevice() {
 
 }
 
-void MoePhysicalDevice::fetchAll() {
+void MoeVkPhysicalDevice::fetchAll() {
     uint32_t numDevices = 0;
     // fetch number of devices
     if (vkEnumeratePhysicalDevices(_instance, &numDevices, nullptr) != VK_SUCCESS) {
@@ -44,7 +44,7 @@ void MoePhysicalDevice::fetchAll() {
     fetchBest(physDevices, extension);
 }
 
-void MoePhysicalDevice::fetchBest(
+void MoeVkPhysicalDevice::fetchBest(
         const std::vector<VkPhysicalDevice> &devices,
         std::vector<const char *> extensions) {
 
@@ -60,13 +60,19 @@ void MoePhysicalDevice::fetchBest(
     // check if the best candidate is suitable:
     if (candidates.rbegin()->first >= 0) {
         _device = candidates.rbegin()->second;
+        // TODO: We already fetched all families
+        _queueFamily = fetchQueueFamilies(_device);
     }
     else {
         throw InitException("No suitable GPU could be found.", __FILE__, __FUNCTION__, __LINE__);
     }
 }
-
-int MoePhysicalDevice::score(const VkPhysicalDevice &device, std::vector<const char *> extensions) {
+/**
+ * @param device The Vulkan Handler to the physical device, ie a VkPhysicalDevice
+ * @param extensions The extensions the decive should support, ie support for drawing on a surface
+ * @return a score of this device, where -1 means that the device is not suited for this app
+ */
+int MoeVkPhysicalDevice::score(const VkPhysicalDevice &device, std::vector<const char *> extensions) {
 
     int score = 0;
 
@@ -99,10 +105,44 @@ int MoePhysicalDevice::score(const VkPhysicalDevice &device, std::vector<const c
     // maximum texture size increases graphic quality
     score += std::min((props.limits.maxImageDimension2D / 10000), uint(5));
 
+    MoeVkQueueFamily family = fetchQueueFamilies(device);
+    if (!family.hasGraphics()) {
+        return -1;  // no graphics queue is a killer
+    }
+
     return score;
 }
 
-void MoePhysicalDevice::printPhysicalDeviceStats(VkPhysicalDevice device) {
+MoeVkQueueFamily MoeVkPhysicalDevice::fetchQueueFamilies(VkPhysicalDevice device) {
+
+    MoeVkQueueFamily family;
+    uint numFamilies { 0 };
+
+    vkGetPhysicalDeviceQueueFamilyProperties(device, &numFamilies, nullptr);
+    std::vector<VkQueueFamilyProperties> familyProps(numFamilies);
+    vkGetPhysicalDeviceQueueFamilyProperties(device, &numFamilies, familyProps.data());
+
+#ifdef __DEBUG__
+    printQueueFamilies(familyProps);
+#endif
+
+    for (size_t i = 0; i < numFamilies; i++) {
+        if (familyProps[i].queueCount > 0 && familyProps[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+            family.graphics.push_back(i);
+            family.numQueues.push_back(familyProps[i].queueCount);
+        }
+        /*
+        VkBool32 hasPresentation;
+        vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &hasPresentation);
+        if (familyProps[i].queueCount > 0 && hasPresentation) {
+            family.presentation.push_back(i);
+        } */
+    }
+    return family;
+}
+
+
+void MoeVkPhysicalDevice::printPhysicalDeviceStats(VkPhysicalDevice device) {
 
     std::map<VkPhysicalDeviceType, std::string> types = {
             { VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU, "Dedicated GPU" },
@@ -133,5 +173,18 @@ void MoePhysicalDevice::printPhysicalDeviceStats(VkPhysicalDevice device) {
     // VkPhysicalDeviceMemoryProperties memory;
     // vkGetPhysicalDeviceMemoryProperties(device, &memory);
 }
+
+void MoeVkPhysicalDevice::printQueueFamilies(const std::vector<VkQueueFamilyProperties>& props) const {
+
+        std::cout << "\t\tSupported queues:\n";
+        for (size_t i = 0; i < props.size(); i++) {
+            std::cout << "\t\tQueue Family #" << i << ": ";
+            std::cout << (props[i].queueFlags & VK_QUEUE_GRAPHICS_BIT ? "Graphics | " : " 0 | ");
+            std::cout << (props[i].queueFlags & VK_QUEUE_COMPUTE_BIT ? "Compute | " : " 0 | ");
+            std::cout << (props[i].queueFlags & VK_QUEUE_TRANSFER_BIT ? "Transfer | " : " 0 | ");
+            std::cout << (props[i].queueFlags & VK_QUEUE_SPARSE_BINDING_BIT ? "Sparse Binding" : "");
+            std::cout << "\n\t\t\t" << "Queue count: " << props[i].queueCount << "\n";
+        }
+    }
 
 }

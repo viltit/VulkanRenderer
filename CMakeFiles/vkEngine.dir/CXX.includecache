@@ -24,35 +24,43 @@ vkRenderer/VkWindow.hpp
 Exceptions/InitException.hpp
 /home/titus/programming/c++/vkEngine/Exceptions/InitException.hpp
 
-/home/titus/programming/c++/vkEngine/vkRenderer/MoePhysicalDevice.hpp
+/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkInstance.hpp
 vulkan/vulkan.h
 -
 vector
 -
 
-/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkFunctions.hpp
-iostream
+/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkLogicalDevice.cpp
+assert.h
 -
+MoeVkLogicalDevice.hpp
+/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkLogicalDevice.hpp
 
-/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkInstance.cpp
-MoeVkInstance.hpp
-/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkInstance.hpp
-VkWindow.hpp
-/home/titus/programming/c++/vkEngine/vkRenderer/VkWindow.hpp
-MoeVkFunctions.hpp
-/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkFunctions.hpp
+/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkLogicalDevice.hpp
+vulkan/vulkan.h
+-
+MoeVkPhysicalDevice.hpp
+/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkPhysicalDevice.hpp
+
+/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkPhysicalDevice.cpp
+MoeVkPhysicalDevice.hpp
+/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkPhysicalDevice.hpp
 ../Exceptions/InitException.hpp
 /home/titus/programming/c++/vkEngine/Exceptions/InitException.hpp
-SDL_vulkan.h
+map
 -
 iostream
 -
 
-/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkInstance.hpp
+/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkPhysicalDevice.hpp
 vulkan/vulkan.h
 -
 vector
 -
+MoeVkQueueFamily.hpp
+/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkQueueFamily.hpp
+
+/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkQueueFamily.hpp
 
 /home/titus/programming/c++/vkEngine/vkRenderer/MoeVkRenderer.cpp
 MoeVkRenderer.hpp
@@ -71,8 +79,10 @@ vulkan/vulkan.h
 -
 vector
 -
-MoePhysicalDevice.hpp
-/home/titus/programming/c++/vkEngine/vkRenderer/MoePhysicalDevice.hpp
+MoeVkPhysicalDevice.hpp
+/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkPhysicalDevice.hpp
+MoeVkLogicalDevice.hpp
+/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkLogicalDevice.hpp
 MoeVkInstance.hpp
 /home/titus/programming/c++/vkEngine/vkRenderer/MoeVkInstance.hpp
 

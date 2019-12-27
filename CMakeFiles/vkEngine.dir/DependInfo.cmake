@@ -5,8 +5,9 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/titus/programming/c++/vkEngine/main.cpp" "/home/titus/programming/c++/vkEngine/CMakeFiles/vkEngine.dir/main.cpp.o"
-  "/home/titus/programming/c++/vkEngine/vkRenderer/MoePhysicalDevice.cpp" "/home/titus/programming/c++/vkEngine/CMakeFiles/vkEngine.dir/vkRenderer/MoePhysicalDevice.cpp.o"
   "/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkInstance.cpp" "/home/titus/programming/c++/vkEngine/CMakeFiles/vkEngine.dir/vkRenderer/MoeVkInstance.cpp.o"
+  "/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkLogicalDevice.cpp" "/home/titus/programming/c++/vkEngine/CMakeFiles/vkEngine.dir/vkRenderer/MoeVkLogicalDevice.cpp.o"
+  "/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkPhysicalDevice.cpp" "/home/titus/programming/c++/vkEngine/CMakeFiles/vkEngine.dir/vkRenderer/MoeVkPhysicalDevice.cpp.o"
   "/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkRenderer.cpp" "/home/titus/programming/c++/vkEngine/CMakeFiles/vkEngine.dir/vkRenderer/MoeVkRenderer.cpp.o"
   "/home/titus/programming/c++/vkEngine/vkRenderer/VkWindow.cpp" "/home/titus/programming/c++/vkEngine/CMakeFiles/vkEngine.dir/vkRenderer/VkWindow.cpp.o"
   )

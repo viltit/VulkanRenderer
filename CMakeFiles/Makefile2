@@ -74,12 +74,12 @@ preinstall:
 CMakeFiles/vkEngine.dir/all:
 	$(MAKE) -f CMakeFiles/vkEngine.dir/build.make CMakeFiles/vkEngine.dir/depend
 	$(MAKE) -f CMakeFiles/vkEngine.dir/build.make CMakeFiles/vkEngine.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/titus/programming/c++/vkEngine/CMakeFiles --progress-num=1,2,3,4,5,6 "Built target vkEngine"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/titus/programming/c++/vkEngine/CMakeFiles --progress-num=1,2,3,4,5,6,7 "Built target vkEngine"
 .PHONY : CMakeFiles/vkEngine.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/vkEngine.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/titus/programming/c++/vkEngine/CMakeFiles 6
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/titus/programming/c++/vkEngine/CMakeFiles 7
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/vkEngine.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/titus/programming/c++/vkEngine/CMakeFiles 0
 .PHONY : CMakeFiles/vkEngine.dir/rule

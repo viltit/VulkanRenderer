@@ -4,14 +4,12 @@
 CMakeFiles/vkEngine.dir/main.cpp.o: Colors/ColorRGB.hpp
 CMakeFiles/vkEngine.dir/main.cpp.o: Exceptions/InitException.hpp
 CMakeFiles/vkEngine.dir/main.cpp.o: main.cpp
-CMakeFiles/vkEngine.dir/main.cpp.o: vkRenderer/MoePhysicalDevice.hpp
 CMakeFiles/vkEngine.dir/main.cpp.o: vkRenderer/MoeVkInstance.hpp
+CMakeFiles/vkEngine.dir/main.cpp.o: vkRenderer/MoeVkLogicalDevice.hpp
+CMakeFiles/vkEngine.dir/main.cpp.o: vkRenderer/MoeVkPhysicalDevice.hpp
+CMakeFiles/vkEngine.dir/main.cpp.o: vkRenderer/MoeVkQueueFamily.hpp
 CMakeFiles/vkEngine.dir/main.cpp.o: vkRenderer/MoeVkRenderer.hpp
 CMakeFiles/vkEngine.dir/main.cpp.o: vkRenderer/VkWindow.hpp
-
-CMakeFiles/vkEngine.dir/vkRenderer/MoePhysicalDevice.cpp.o: Exceptions/InitException.hpp
-CMakeFiles/vkEngine.dir/vkRenderer/MoePhysicalDevice.cpp.o: vkRenderer/MoePhysicalDevice.cpp
-CMakeFiles/vkEngine.dir/vkRenderer/MoePhysicalDevice.cpp.o: vkRenderer/MoePhysicalDevice.hpp
 
 CMakeFiles/vkEngine.dir/vkRenderer/MoeVkInstance.cpp.o: Colors/ColorRGB.hpp
 CMakeFiles/vkEngine.dir/vkRenderer/MoeVkInstance.cpp.o: Exceptions/InitException.hpp
@@ -34,10 +32,22 @@ CMakeFiles/vkEngine.dir/vkRenderer/MoeVkInstance.cpp.o: /usr/include/SDL2/SDL_vu
 CMakeFiles/vkEngine.dir/vkRenderer/MoeVkInstance.cpp.o: /usr/include/SDL2/begin_code.h
 CMakeFiles/vkEngine.dir/vkRenderer/MoeVkInstance.cpp.o: /usr/include/SDL2/close_code.h
 
+CMakeFiles/vkEngine.dir/vkRenderer/MoeVkLogicalDevice.cpp.o: vkRenderer/MoeVkLogicalDevice.cpp
+CMakeFiles/vkEngine.dir/vkRenderer/MoeVkLogicalDevice.cpp.o: vkRenderer/MoeVkLogicalDevice.hpp
+CMakeFiles/vkEngine.dir/vkRenderer/MoeVkLogicalDevice.cpp.o: vkRenderer/MoeVkPhysicalDevice.hpp
+CMakeFiles/vkEngine.dir/vkRenderer/MoeVkLogicalDevice.cpp.o: vkRenderer/MoeVkQueueFamily.hpp
+
+CMakeFiles/vkEngine.dir/vkRenderer/MoeVkPhysicalDevice.cpp.o: Exceptions/InitException.hpp
+CMakeFiles/vkEngine.dir/vkRenderer/MoeVkPhysicalDevice.cpp.o: vkRenderer/MoeVkPhysicalDevice.cpp
+CMakeFiles/vkEngine.dir/vkRenderer/MoeVkPhysicalDevice.cpp.o: vkRenderer/MoeVkPhysicalDevice.hpp
+CMakeFiles/vkEngine.dir/vkRenderer/MoeVkPhysicalDevice.cpp.o: vkRenderer/MoeVkQueueFamily.hpp
+
 CMakeFiles/vkEngine.dir/vkRenderer/MoeVkRenderer.cpp.o: Colors/ColorRGB.hpp
 CMakeFiles/vkEngine.dir/vkRenderer/MoeVkRenderer.cpp.o: Exceptions/InitException.hpp
-CMakeFiles/vkEngine.dir/vkRenderer/MoeVkRenderer.cpp.o: vkRenderer/MoePhysicalDevice.hpp
 CMakeFiles/vkEngine.dir/vkRenderer/MoeVkRenderer.cpp.o: vkRenderer/MoeVkInstance.hpp
+CMakeFiles/vkEngine.dir/vkRenderer/MoeVkRenderer.cpp.o: vkRenderer/MoeVkLogicalDevice.hpp
+CMakeFiles/vkEngine.dir/vkRenderer/MoeVkRenderer.cpp.o: vkRenderer/MoeVkPhysicalDevice.hpp
+CMakeFiles/vkEngine.dir/vkRenderer/MoeVkRenderer.cpp.o: vkRenderer/MoeVkQueueFamily.hpp
 CMakeFiles/vkEngine.dir/vkRenderer/MoeVkRenderer.cpp.o: vkRenderer/MoeVkRenderer.cpp
 CMakeFiles/vkEngine.dir/vkRenderer/MoeVkRenderer.cpp.o: vkRenderer/MoeVkRenderer.hpp
 CMakeFiles/vkEngine.dir/vkRenderer/MoeVkRenderer.cpp.o: vkRenderer/VkWindow.hpp

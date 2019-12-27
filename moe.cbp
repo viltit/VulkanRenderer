@@ -76,12 +76,6 @@
 		<Unit filename="/home/titus/programming/c++/vkEngine/main.cpp">
 			<Option target="vkEngine"/>
 		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoePhysicalDevice.cpp">
-			<Option target="vkEngine"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoePhysicalDevice.hpp">
-			<Option target="vkEngine"/>
-		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkFunctions.hpp">
 			<Option target="vkEngine"/>
 		</Unit>
@@ -91,13 +85,25 @@
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkInstance.hpp">
 			<Option target="vkEngine"/>
 		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkLogicalDevice.cpp">
+			<Option target="vkEngine"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkLogicalDevice.hpp">
+			<Option target="vkEngine"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkPhysicalDevice.cpp">
+			<Option target="vkEngine"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkPhysicalDevice.hpp">
+			<Option target="vkEngine"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkQueueFamily.hpp">
+			<Option target="vkEngine"/>
+		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkRenderer.cpp">
 			<Option target="vkEngine"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkRenderer.hpp">
-			<Option target="vkEngine"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/QueueFamily.hpp">
 			<Option target="vkEngine"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/VkWindow.cpp">
