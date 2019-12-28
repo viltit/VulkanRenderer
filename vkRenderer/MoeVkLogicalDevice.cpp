@@ -15,7 +15,9 @@ MoeVkLogicalDevice::~MoeVkLogicalDevice() {
     vkDestroyDevice(_device, nullptr);
 }
 
-void MoeVkLogicalDevice::create(VkInstance instance, MoeVkPhysicalDevice physDevice, unsigned int desiredQueueCount) {
+void MoeVkLogicalDevice::create(VkInstance instance, MoeVkPhysicalDevice physDevice,
+        const std::vector<const char*>& extensions,
+        unsigned int desiredQueueCount) {
 
     assert(physDevice.queueFamily().graphics.size() > 0);
     assert(physDevice.queueFamily().presentation.size() > 0);
@@ -49,8 +51,8 @@ void MoeVkLogicalDevice::create(VkInstance instance, MoeVkPhysicalDevice physDev
     // Old vulkan versions needed the validation layer here too - for newer ones, it suffices to activate them on the instance
     createInfo.enabledLayerCount        = 0;
     createInfo.ppEnabledLayerNames      = nullptr;
-    createInfo.enabledExtensionCount    = 0;
-    createInfo.ppEnabledExtensionNames  = nullptr;
+    createInfo.enabledExtensionCount    = extensions.size();
+    createInfo.ppEnabledExtensionNames  = extensions.data();
     createInfo.pEnabledFeatures         = &features;
 
     if (vkCreateDevice(physDevice.device(), &createInfo, nullptr, &_device) != VK_SUCCESS) {

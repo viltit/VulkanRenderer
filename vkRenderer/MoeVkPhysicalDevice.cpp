@@ -13,10 +13,13 @@ MoeVkPhysicalDevice::MoeVkPhysicalDevice() { }
 
 MoeVkPhysicalDevice::~MoeVkPhysicalDevice() { }
 
-void MoeVkPhysicalDevice::create(const VkInstance &instance, const VkSurfaceKHR &surface) {
+void MoeVkPhysicalDevice::create(
+        const VkInstance &instance,
+        const VkSurfaceKHR &surface,
+        const std::vector<const char*> desiredExtensions) {
+
     auto devices = fetchAll(instance);
-    std::vector<const char*> extension = { };
-    fetchBest(devices, extension, surface);
+    fetchBest(devices, desiredExtensions, surface);
 }
 
 std::vector<VkPhysicalDevice> MoeVkPhysicalDevice::fetchAll(const VkInstance& instance) {
@@ -45,7 +48,7 @@ std::vector<VkPhysicalDevice> MoeVkPhysicalDevice::fetchAll(const VkInstance& in
 
 void MoeVkPhysicalDevice::fetchBest(
         const std::vector<VkPhysicalDevice> &devices,
-        std::vector<const char *> extensions,
+        const std::vector<const char *>& extensions,
         const VkSurfaceKHR& surface) {
 
     std::multimap<int, VkPhysicalDevice> candidates;
@@ -72,7 +75,7 @@ void MoeVkPhysicalDevice::fetchBest(
  * @return a score of this device, where -1 means that the device is not suited for this app
  */
 int MoeVkPhysicalDevice::score(const VkPhysicalDevice device,
-        std::vector<const char *> extensions,
+        const std::vector<const char *>& extensions,
         const VkSurfaceKHR& surface) {
 
     int score = 0;
@@ -105,12 +108,18 @@ int MoeVkPhysicalDevice::score(const VkPhysicalDevice device,
     // maximum texture size increases graphic quality
     score += std::min((props.limits.maxImageDimension2D / 10000), uint(5));
 
+    // check if the device queue families are suitable:
     MoeVkQueueFamily family = fetchQueueFamilies(device, surface);
     if (!family.hasGraphics()) {
         return -1;  // no graphics queue is a killer
     }
     if (!family.hasPresentation()) {
         return -1;
+    }
+
+    // check if the device has the desired extensions:
+    if (!hasExtensions(device, extensions)) {
+        return false;
     }
 
     return score;
@@ -142,6 +151,25 @@ MoeVkQueueFamily MoeVkPhysicalDevice::fetchQueueFamilies(VkPhysicalDevice device
         }
     }
     return family;
+}
+
+bool MoeVkPhysicalDevice::hasExtensions(const VkPhysicalDevice device, const std::vector<const char*>& desiredExtensions) const {
+
+    uint numExtensions;
+    vkEnumerateDeviceExtensionProperties(device, nullptr, &numExtensions, nullptr);
+    std::vector<VkExtensionProperties> extensions(numExtensions);
+    vkEnumerateDeviceExtensionProperties(device, nullptr, &numExtensions, extensions.data());
+
+    uint unconfirmedExtensions = desiredExtensions.size();
+    for (const auto& desired : desiredExtensions) {
+        for (const auto& available : extensions) {
+            if (std::string(available.extensionName) == std::string(desired)) {
+                unconfirmedExtensions--;
+                break;
+            }
+        }
+    }
+    return unconfirmedExtensions == 0;
 }
 
 

@@ -14,9 +14,10 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, RendererOptions options)
     :   instance        { window, options },
         surface         { VK_NULL_HANDLE }
 {
+    const std::vector<const char*> extensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
     createSurface(window);
-    physicalDevice.create(instance.instance(), surface);
-    logicalDevice.create(instance.instance(), physicalDevice);
+    physicalDevice.create(instance.instance(), surface, extensions);
+    logicalDevice.create(instance.instance(), physicalDevice, extensions);
 }
 
 MoeVkRenderer::~MoeVkRenderer() {
