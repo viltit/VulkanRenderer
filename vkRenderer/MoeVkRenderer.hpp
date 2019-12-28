@@ -23,8 +23,7 @@ private:
     MoeVkInstance               instance;
     VkSurfaceKHR                surface;
 
-    // TODO: Do NOT use 'new' ONLY because you are to proud to make a 'create' function instead of a huge constructor
-    MoeVkPhysicalDevice*        physicalDevice;
+    MoeVkPhysicalDevice         physicalDevice;
     MoeVkLogicalDevice          logicalDevice;
 };
 }

@@ -8,23 +8,28 @@
 namespace moe {
 class MoeVkPhysicalDevice {
 public:
-    MoeVkPhysicalDevice(const VkInstance& instance);
+    MoeVkPhysicalDevice();
     ~MoeVkPhysicalDevice();
+
+    void create(const VkInstance& instance, const VkSurfaceKHR& surface);
 
     VkPhysicalDevice device()       { return _device; }
     MoeVkQueueFamily queueFamily()  { return _queueFamily; }
 
 private:
 
-    void        fetchAll            ();
-    void        fetchBest           (const std::vector<VkPhysicalDevice>& devices, std::vector<const char *> extensions);
-    int         score               (const VkPhysicalDevice& device, std::vector<const char*> extensions);
-    MoeVkQueueFamily fetchQueueFamilies  (VkPhysicalDevice device);
+    std::vector<VkPhysicalDevice>   fetchAll     (const VkInstance& instance);
+    void                            fetchBest    (const std::vector<VkPhysicalDevice>& devices,
+                                                        std::vector<const char *> extensions,
+                                                        const VkSurfaceKHR& surface);
+    int                             score        (const VkPhysicalDevice device,
+                                                        std::vector<const char*> extensions,
+                                                        const VkSurfaceKHR& surface);
+    MoeVkQueueFamily                fetchQueueFamilies  (VkPhysicalDevice device, const VkSurfaceKHR& surface);
 
     void printPhysicalDeviceStats(VkPhysicalDevice device);
     void printQueueFamilies(const std::vector<VkQueueFamilyProperties>& props) const;
 
-    const VkInstance&   _instance;
     MoeVkQueueFamily    _queueFamily;
     VkPhysicalDevice    _device;
 };

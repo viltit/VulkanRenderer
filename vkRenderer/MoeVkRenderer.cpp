@@ -12,15 +12,16 @@ namespace moe {
 // TODO: Go on with selecting the QueueFamilies
 MoeVkRenderer::MoeVkRenderer(VkWindow* window, RendererOptions options)
     :   instance        { window, options },
-        surface         { VK_NULL_HANDLE },
-        physicalDevice  { nullptr }
+        surface         { VK_NULL_HANDLE }
 {
     createSurface(window);
-    physicalDevice = new MoeVkPhysicalDevice(instance.instance());
-    logicalDevice.create(instance.instance(), *physicalDevice);
+    physicalDevice.create(instance.instance(), surface);
+    logicalDevice.create(instance.instance(), physicalDevice);
 }
 
-MoeVkRenderer::~MoeVkRenderer() { }
+MoeVkRenderer::~MoeVkRenderer() {
+    vkDestroySurfaceKHR(instance.instance(), surface, nullptr);
+}
 
 void MoeVkRenderer::createSurface(moe::VkWindow *window) {
     if (!window) {

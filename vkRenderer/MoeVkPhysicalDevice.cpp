@@ -9,20 +9,20 @@
 
 namespace moe {
 
-MoeVkPhysicalDevice::MoeVkPhysicalDevice(const VkInstance& instance)
-    : _instance { instance }
-{
-    fetchAll();
+MoeVkPhysicalDevice::MoeVkPhysicalDevice() { }
+
+MoeVkPhysicalDevice::~MoeVkPhysicalDevice() { }
+
+void MoeVkPhysicalDevice::create(const VkInstance &instance, const VkSurfaceKHR &surface) {
+    auto devices = fetchAll(instance);
+    std::vector<const char*> extension = { };
+    fetchBest(devices, extension, surface);
 }
 
-MoeVkPhysicalDevice::~MoeVkPhysicalDevice() {
-
-}
-
-void MoeVkPhysicalDevice::fetchAll() {
+std::vector<VkPhysicalDevice> MoeVkPhysicalDevice::fetchAll(const VkInstance& instance) {
     uint32_t numDevices = 0;
     // fetch number of devices
-    if (vkEnumeratePhysicalDevices(_instance, &numDevices, nullptr) != VK_SUCCESS) {
+    if (vkEnumeratePhysicalDevices(instance, &numDevices, nullptr) != VK_SUCCESS) {
         throw InitException("Failed to fetch Physical Devices", __FILE__, __FUNCTION__, __LINE__);
     }
     if (numDevices == 0) {
@@ -30,7 +30,7 @@ void MoeVkPhysicalDevice::fetchAll() {
     }
     std::vector<VkPhysicalDevice> physDevices(numDevices);
     // fetch devices:
-    if (vkEnumeratePhysicalDevices(_instance, &numDevices, physDevices.data()) != VK_SUCCESS) {
+    if (vkEnumeratePhysicalDevices(instance, &numDevices, physDevices.data()) != VK_SUCCESS) {
         throw InitException("Failed to fetch Physical Devices", __FILE__, __FUNCTION__, __LINE__);
     }
 
@@ -40,20 +40,19 @@ void MoeVkPhysicalDevice::fetchAll() {
         printPhysicalDeviceStats(physDevices[i]);
     }
 #endif
-    std::vector<const char*> extension = { };
-    fetchBest(physDevices, extension);
+    return physDevices;
 }
 
 void MoeVkPhysicalDevice::fetchBest(
         const std::vector<VkPhysicalDevice> &devices,
-        std::vector<const char *> extensions) {
-
+        std::vector<const char *> extensions,
+        const VkSurfaceKHR& surface) {
 
     std::multimap<int, VkPhysicalDevice> candidates;
 
     // rate each device
     for (const auto& device : devices) {
-        int newScore = score(device, extensions);
+        int newScore = score(device, extensions, surface);
         candidates.insert(std::make_pair(newScore, device));
     }
 
@@ -61,7 +60,7 @@ void MoeVkPhysicalDevice::fetchBest(
     if (candidates.rbegin()->first >= 0) {
         _device = candidates.rbegin()->second;
         // TODO: We already fetched all families
-        _queueFamily = fetchQueueFamilies(_device);
+        _queueFamily = fetchQueueFamilies(_device, surface);
     }
     else {
         throw InitException("No suitable GPU could be found.", __FILE__, __FUNCTION__, __LINE__);
@@ -72,10 +71,11 @@ void MoeVkPhysicalDevice::fetchBest(
  * @param extensions The extensions the decive should support, ie support for drawing on a surface
  * @return a score of this device, where -1 means that the device is not suited for this app
  */
-int MoeVkPhysicalDevice::score(const VkPhysicalDevice &device, std::vector<const char *> extensions) {
+int MoeVkPhysicalDevice::score(const VkPhysicalDevice device,
+        std::vector<const char *> extensions,
+        const VkSurfaceKHR& surface) {
 
     int score = 0;
-
     // fetch device properties and features
     VkPhysicalDeviceProperties props;
     vkGetPhysicalDeviceProperties(device, &props);
@@ -105,7 +105,7 @@ int MoeVkPhysicalDevice::score(const VkPhysicalDevice &device, std::vector<const
     // maximum texture size increases graphic quality
     score += std::min((props.limits.maxImageDimension2D / 10000), uint(5));
 
-    MoeVkQueueFamily family = fetchQueueFamilies(device);
+    MoeVkQueueFamily family = fetchQueueFamilies(device, surface);
     if (!family.hasGraphics()) {
         return -1;  // no graphics queue is a killer
     }
@@ -113,7 +113,7 @@ int MoeVkPhysicalDevice::score(const VkPhysicalDevice &device, std::vector<const
     return score;
 }
 
-MoeVkQueueFamily MoeVkPhysicalDevice::fetchQueueFamilies(VkPhysicalDevice device) {
+MoeVkQueueFamily MoeVkPhysicalDevice::fetchQueueFamilies(VkPhysicalDevice device, const VkSurfaceKHR& surface) {
 
     MoeVkQueueFamily family;
     uint numFamilies { 0 };
@@ -131,12 +131,12 @@ MoeVkQueueFamily MoeVkPhysicalDevice::fetchQueueFamilies(VkPhysicalDevice device
             family.graphics.push_back(i);
             family.numQueues.push_back(familyProps[i].queueCount);
         }
-        /*
+
         VkBool32 hasPresentation;
         vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &hasPresentation);
         if (familyProps[i].queueCount > 0 && hasPresentation) {
             family.presentation.push_back(i);
-        } */
+        }
     }
     return family;
 }
