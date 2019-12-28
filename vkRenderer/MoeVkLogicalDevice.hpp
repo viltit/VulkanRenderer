@@ -18,6 +18,7 @@ public:
     void create(VkInstance instance, MoeVkPhysicalDevice device, unsigned int desiredQueueCount = 4);
 
 private:
+
     // handle to the logical device
     VkDevice _device;
     // handles to the queues of our device

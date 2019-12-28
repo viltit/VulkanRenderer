@@ -1,4 +1,6 @@
 #include <assert.h>
+#include <set>
+#include <iostream>
 
 #include "MoeVkLogicalDevice.hpp"
 #include "../Exceptions/InitException.hpp"
@@ -16,23 +18,23 @@ MoeVkLogicalDevice::~MoeVkLogicalDevice() {
 void MoeVkLogicalDevice::create(VkInstance instance, MoeVkPhysicalDevice physDevice, unsigned int desiredQueueCount) {
 
     assert(physDevice.queueFamily().graphics.size() > 0);
+    assert(physDevice.queueFamily().presentation.size() > 0);
     assert(physDevice.queueFamily().numQueues.size() == physDevice.queueFamily().graphics.size());
 
-    // we just take the first queue family that supports graphics for now
-    // TODO: Take the best queueFamily !! What is the best ? Do not overthink: Just take a dedicated transfer queue if there is one
-    unsigned int queueIndex = physDevice.queueFamily().graphics[0];
-    unsigned int maxQueues = physDevice.queueFamily().numQueues[0];
-
-    unsigned int numQueues = maxQueues >= desiredQueueCount ? desiredQueueCount : maxQueues;
+    std::vector<uint> queues = physDevice.queueFamily().pickBest();
     float queuePriorities = 1.0;
 
-    VkDeviceQueueCreateInfo queueCreateInfo { };
-    queueCreateInfo.sType               = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-    queueCreateInfo.pNext               = nullptr;
-    queueCreateInfo.flags               = 0;
-    queueCreateInfo.queueFamilyIndex    = queueIndex;
-    queueCreateInfo.queueCount          = numQueues;
-    queueCreateInfo.pQueuePriorities    = &queuePriorities;
+    std::vector<VkDeviceQueueCreateInfo> queueCreateInfos(queues.size());
+    for (size_t i = 0; i < queues.size(); i++) {
+        VkDeviceQueueCreateInfo queueCreateInfo { };
+        queueCreateInfo.sType               = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+        queueCreateInfo.pNext               = nullptr;
+        queueCreateInfo.flags               = 0;
+        queueCreateInfo.queueFamilyIndex    = queues[i];
+        queueCreateInfo.queueCount          = 1;   // TODO: Is  it even worth taking more than 1 ??
+        queueCreateInfo.pQueuePriorities    = &queuePriorities;
+        queueCreateInfos[i] = queueCreateInfo;
+    }
 
     // TODO - add specific features we need from the gpu -> only add features we really use !
     VkPhysicalDeviceFeatures features = { };
@@ -42,8 +44,8 @@ void MoeVkLogicalDevice::create(VkInstance instance, MoeVkPhysicalDevice physDev
     createInfo.sType                    = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
     createInfo.pNext                    = nullptr;
     createInfo.flags                    = 0;
-    createInfo.queueCreateInfoCount     = 1;    // TODO: We could use multiple queues
-    createInfo.pQueueCreateInfos        = &queueCreateInfo;
+    createInfo.queueCreateInfoCount     = queueCreateInfos.size();
+    createInfo.pQueueCreateInfos        = queueCreateInfos.data();
     // Old vulkan versions needed the validation layer here too - for newer ones, it suffices to activate them on the instance
     createInfo.enabledLayerCount        = 0;
     createInfo.ppEnabledLayerNames      = nullptr;
@@ -56,8 +58,7 @@ void MoeVkLogicalDevice::create(VkInstance instance, MoeVkPhysicalDevice physDev
     }
 
     // get a handle to our queues:
-    // TODO: We defined multiple queues above -> we need multiple queue handles to take advantage of this. For now, we just take queue 0
-    vkGetDeviceQueue(_device, queueIndex, 0, &_graphicsQueue);
-    vkGetDeviceQueue(_device, queueIndex, 0, &_presentationQueue);
+    vkGetDeviceQueue(_device, queues.front(), 0, &_graphicsQueue);
+    vkGetDeviceQueue(_device, queues.back(), 0, &_presentationQueue);
 }
 }

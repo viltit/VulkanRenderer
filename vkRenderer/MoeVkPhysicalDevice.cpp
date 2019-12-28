@@ -109,6 +109,9 @@ int MoeVkPhysicalDevice::score(const VkPhysicalDevice device,
     if (!family.hasGraphics()) {
         return -1;  // no graphics queue is a killer
     }
+    if (!family.hasPresentation()) {
+        return -1;
+    }
 
     return score;
 }
