@@ -12,10 +12,11 @@ MoeVkLogicalDevice::MoeVkLogicalDevice() {
 }
 
 MoeVkLogicalDevice::~MoeVkLogicalDevice() {
+    std::cout << "Destroying logical device\n";
     vkDestroyDevice(_device, nullptr);
 }
 
-void MoeVkLogicalDevice::create(VkInstance instance, MoeVkPhysicalDevice physDevice,
+void MoeVkLogicalDevice::create(VkInstance instance, MoeVkPhysicalDevice& physDevice,
         const std::vector<const char*>& extensions,
         unsigned int desiredQueueCount) {
 

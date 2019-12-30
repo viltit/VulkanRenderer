@@ -15,9 +15,11 @@ public:
     MoeVkLogicalDevice();
     ~MoeVkLogicalDevice();
 
-    void create(VkInstance instance, MoeVkPhysicalDevice device,
+    void create(VkInstance instance, MoeVkPhysicalDevice& device,
             const std::vector<const char*>& extensions,
             unsigned int desiredQueueCount = 4);
+
+    VkDevice& device() { return _device; }
 
 private:
 

@@ -4,6 +4,7 @@
 #include "MoeVkPhysicalDevice.hpp"
 #include "MoeVkLogicalDevice.hpp"
 #include "MoeVkInstance.hpp"
+#include "MoeVkSwapChain.hpp"
 
 namespace moe {
 
@@ -21,6 +22,7 @@ private:
     void findQueueFamilies(VkPhysicalDevice device);
 
     MoeVkInstance               instance;
+    MoeVkSwapChain              swapChain;
     VkSurfaceKHR                surface;
 
     MoeVkPhysicalDevice         physicalDevice;

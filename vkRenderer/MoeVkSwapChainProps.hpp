@@ -7,6 +7,8 @@ namespace moe {
 // helper struct to keep track of some important features of our Swap Chain
 struct SwapChainProps {
 
+    SwapChainProps() { }
+
     SwapChainProps(const VkPhysicalDevice &device, const VkSurfaceKHR &surface) {
 
         vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &capabilities);
