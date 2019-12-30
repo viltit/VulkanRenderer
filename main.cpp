@@ -38,7 +38,7 @@ int main() {
             }
             // vulkan->draw();
         }
-        SDL_Quit();
+        // SDL_Quit();
 
 
     }
