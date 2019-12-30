@@ -9,7 +9,6 @@
 
 namespace moe {
 
-// TODO: Go on with selecting the QueueFamilies
 MoeVkRenderer::MoeVkRenderer(VkWindow* window, RendererOptions options)
     :   instance        { window, options },
         surface         { VK_NULL_HANDLE }

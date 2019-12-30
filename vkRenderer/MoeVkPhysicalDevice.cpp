@@ -1,5 +1,6 @@
 
 #include "MoeVkPhysicalDevice.hpp"
+#include "MoeVkSwapChainProps.hpp"
 #include "../Exceptions/InitException.hpp"
 
 #include <map>
@@ -119,7 +120,12 @@ int MoeVkPhysicalDevice::score(const VkPhysicalDevice device,
 
     // check if the device has the desired extensions:
     if (!hasExtensions(device, extensions)) {
-        return false;
+        return -1;
+    }
+    // check if the Swap Chain is sufficient
+    SwapChainProps swapChainProps { device, surface };
+    if (swapChainProps.presentModes.size() == 0 || swapChainProps.formats.size() == 0) {
+        return -1;
     }
 
     return score;

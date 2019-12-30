@@ -21,6 +21,8 @@ add_executable(vkEngine main.cpp
         vkRenderer/VkWindow.cpp
         vkRenderer/MoeVkPhysicalDevice.cpp
         vkRenderer/MoeVkLogicalDevice.cpp
+        vkRenderer/MoeVkSwapChain.cpp
+        vkRenderer/MoeVkSwapChainProps.hpp
         Colors/ColorRGB.hpp)
 
 target_link_libraries(vkEngine

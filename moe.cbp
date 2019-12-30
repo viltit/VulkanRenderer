@@ -106,6 +106,15 @@
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkRenderer.hpp">
 			<Option target="vkEngine"/>
 		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkSwapChain.cpp">
+			<Option target="vkEngine"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkSwapChain.hpp">
+			<Option target="vkEngine"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkSwapChainProps.hpp">
+			<Option target="vkEngine"/>
+		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/VkWindow.cpp">
 			<Option target="vkEngine"/>
 		</Unit>
