@@ -18,6 +18,7 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, RendererOptions options)
     physicalDevice.create(instance.instance(), surface, extensions);
     logicalDevice.create(instance.instance(), physicalDevice, extensions);
     swapChain.create(physicalDevice, logicalDevice, surface, *window);
+    pipeline.create(logicalDevice);
 }
 
 MoeVkRenderer::~MoeVkRenderer() {
