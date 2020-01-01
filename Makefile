@@ -231,6 +231,33 @@ vkRenderer/MoeVkPhysicalDevice.cpp.s:
 	$(MAKE) -f CMakeFiles/vkEngine.dir/build.make CMakeFiles/vkEngine.dir/vkRenderer/MoeVkPhysicalDevice.cpp.s
 .PHONY : vkRenderer/MoeVkPhysicalDevice.cpp.s
 
+vkRenderer/MoeVkPipeline.o: vkRenderer/MoeVkPipeline.cpp.o
+
+.PHONY : vkRenderer/MoeVkPipeline.o
+
+# target to build an object file
+vkRenderer/MoeVkPipeline.cpp.o:
+	$(MAKE) -f CMakeFiles/vkEngine.dir/build.make CMakeFiles/vkEngine.dir/vkRenderer/MoeVkPipeline.cpp.o
+.PHONY : vkRenderer/MoeVkPipeline.cpp.o
+
+vkRenderer/MoeVkPipeline.i: vkRenderer/MoeVkPipeline.cpp.i
+
+.PHONY : vkRenderer/MoeVkPipeline.i
+
+# target to preprocess a source file
+vkRenderer/MoeVkPipeline.cpp.i:
+	$(MAKE) -f CMakeFiles/vkEngine.dir/build.make CMakeFiles/vkEngine.dir/vkRenderer/MoeVkPipeline.cpp.i
+.PHONY : vkRenderer/MoeVkPipeline.cpp.i
+
+vkRenderer/MoeVkPipeline.s: vkRenderer/MoeVkPipeline.cpp.s
+
+.PHONY : vkRenderer/MoeVkPipeline.s
+
+# target to generate assembly for a file
+vkRenderer/MoeVkPipeline.cpp.s:
+	$(MAKE) -f CMakeFiles/vkEngine.dir/build.make CMakeFiles/vkEngine.dir/vkRenderer/MoeVkPipeline.cpp.s
+.PHONY : vkRenderer/MoeVkPipeline.cpp.s
+
 vkRenderer/MoeVkRenderer.o: vkRenderer/MoeVkRenderer.cpp.o
 
 .PHONY : vkRenderer/MoeVkRenderer.o
@@ -333,6 +360,9 @@ help:
 	@echo "... vkRenderer/MoeVkPhysicalDevice.o"
 	@echo "... vkRenderer/MoeVkPhysicalDevice.i"
 	@echo "... vkRenderer/MoeVkPhysicalDevice.s"
+	@echo "... vkRenderer/MoeVkPipeline.o"
+	@echo "... vkRenderer/MoeVkPipeline.i"
+	@echo "... vkRenderer/MoeVkPipeline.s"
 	@echo "... vkRenderer/MoeVkRenderer.o"
 	@echo "... vkRenderer/MoeVkRenderer.i"
 	@echo "... vkRenderer/MoeVkRenderer.s"

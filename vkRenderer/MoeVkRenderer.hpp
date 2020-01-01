@@ -5,6 +5,7 @@
 #include "MoeVkLogicalDevice.hpp"
 #include "MoeVkInstance.hpp"
 #include "MoeVkSwapChain.hpp"
+#include "MoeVkPipeline.hpp"
 
 namespace moe {
 
@@ -19,10 +20,10 @@ public:
 
 private:
     void createSurface(VkWindow* window);
-    void findQueueFamilies(VkPhysicalDevice device);
 
     MoeVkInstance               instance;
     MoeVkSwapChain              swapChain;
+    MoeVkPipeline               pipeline;
     VkSurfaceKHR                surface;
 
     MoeVkPhysicalDevice         physicalDevice;

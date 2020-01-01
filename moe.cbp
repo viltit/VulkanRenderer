@@ -97,6 +97,12 @@
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkPhysicalDevice.hpp">
 			<Option target="vkEngine"/>
 		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkPipeline.cpp">
+			<Option target="vkEngine"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkPipeline.hpp">
+			<Option target="vkEngine"/>
+		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkQueueFamily.hpp">
 			<Option target="vkEngine"/>
 		</Unit>

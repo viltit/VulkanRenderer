@@ -46,7 +46,4 @@ void MoeVkRenderer::createSurface(moe::VkWindow *window) {
 }
 
 
-void MoeVkRenderer::findQueueFamilies(VkPhysicalDevice device) {
-
-}
 }
