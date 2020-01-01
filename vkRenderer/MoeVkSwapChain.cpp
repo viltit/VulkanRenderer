@@ -12,7 +12,10 @@ MoeVkSwapChain::MoeVkSwapChain()
 
 MoeVkSwapChain::~MoeVkSwapChain() { }
 
-void MoeVkSwapChain::destroy(moe::MoeVkLogicalDevice &device) {
+void MoeVkSwapChain::destroy(MoeVkLogicalDevice &device) {
+    for (size_t i = 0; i < _imageViews.size(); i++) {
+        vkDestroyImageView(device.device(), _imageViews[i], nullptr);
+    }
     vkDestroySwapchainKHR(device.device(), _swapChain, nullptr);
 }
 
@@ -71,7 +74,42 @@ void MoeVkSwapChain::create(
         throw InitException("Failed to create Swapchain.", __FILE__, __FUNCTION__, __LINE__);
     }
 
+    // get a handle to the images in the Swapchain:
+    vkGetSwapchainImagesKHR(logicalDevice.device(), _swapChain, &numImages, nullptr);
+    _images.resize(numImages);
+    vkGetSwapchainImagesKHR(logicalDevice.device(), _swapChain, &numImages, _images.data());
 
+    // create a view into these images:
+    createImageViews(logicalDevice);
+}
+
+void MoeVkSwapChain::createImageViews(MoeVkLogicalDevice& device) {
+
+    _imageViews.resize(_images.size());
+    for (size_t i = 0; i < _images.size(); i++) {
+        VkImageViewCreateInfo createInfo { };
+        createInfo.sType            = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        createInfo.pNext            = nullptr;
+        createInfo.flags            = 0;
+        createInfo.image            = _images[i];
+        createInfo.viewType         = VK_IMAGE_VIEW_TYPE_2D;
+        createInfo.format           = _format.format;
+        // we *could* map all channels into the red channel or stuff like that here
+        createInfo.components       = { VK_COMPONENT_SWIZZLE_IDENTITY,
+                                        VK_COMPONENT_SWIZZLE_IDENTITY,
+                                        VK_COMPONENT_SWIZZLE_IDENTITY,
+                                        VK_COMPONENT_SWIZZLE_IDENTITY };
+        // TODO later: We could add mipmapping here
+        createInfo.subresourceRange.aspectMask = VK_IMAGE_VIEW_TYPE_2D;
+        createInfo.subresourceRange.baseMipLevel = 0;
+        createInfo.subresourceRange.levelCount = 1;
+        createInfo.subresourceRange.baseArrayLayer = 0;
+        createInfo.subresourceRange.layerCount = 1;
+
+        if (vkCreateImageView(device.device(), &createInfo, nullptr, &_imageViews[i]) != VK_SUCCESS) {
+            throw InitException("Failed to create an Image View.", __FILE__, __FUNCTION__, __LINE__);
+        }
+    }
 }
 
 // TODO: Let the calling code define what is the best format

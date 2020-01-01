@@ -26,6 +26,7 @@ private:
     VkSurfaceFormatKHR  fetchBestFormat() const;
     VkPresentModeKHR    fetchBestPresentMode() const;
     VkExtent2D          fetchBestExtent(const VkWindow& window);
+    void                createImageViews(MoeVkLogicalDevice& device);
 
     VkSwapchainKHR              _swapChain;
     SwapChainProps              _properties;
@@ -33,6 +34,8 @@ private:
     VkSurfaceFormatKHR          _format;
     VkPresentModeKHR            _presentMode;
     VkExtent2D                  _extent;
+    std::vector<VkImage>        _images;
+    std::vector<VkImageView >   _imageViews;
 
 };
 }
