@@ -10,13 +10,15 @@ MoeVkPipeline::MoeVkPipeline() { }
 
 MoeVkPipeline::~MoeVkPipeline() { }
 
-void MoeVkPipeline::create(MoeVkLogicalDevice& device) {
+void MoeVkPipeline::create(MoeVkLogicalDevice& device, const MoeVkSwapChain& swapChain) {
 
     // TODO later: Do not hardcode shader path
     auto vertexCode = readShader("Shaders/triangle.vert.spv");
     auto fragmentCode = readShader("Shaders/triangle.frag.spv");
     VkShaderModule vertexModule = createShader(device, vertexCode);
     VkShaderModule fragmentModule = createShader(device, fragmentCode);
+
+    createRenderPass(device, swapChain);
 
     VkPipelineShaderStageCreateInfo vertexCreateInfo { };
     vertexCreateInfo.sType          = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -39,11 +41,172 @@ void MoeVkPipeline::create(MoeVkLogicalDevice& device) {
 
     VkPipelineShaderStageCreateInfo shaderStages[] = { vertexCreateInfo, fragmentCreateInfo };
 
-    
+    /* Pipeline stages ---------------------------------------------------- */
+    VkPipelineVertexInputStateCreateInfo vertexInputCreateInfo { };
+    vertexInputCreateInfo.sType         = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+    vertexInputCreateInfo.pNext         = nullptr;
+    vertexInputCreateInfo.flags         = 0;
+    // TODO later: We can only use 0 here because we have a hardcoded triangle in the shader
+    vertexInputCreateInfo.vertexBindingDescriptionCount = 0;
+    vertexInputCreateInfo.pVertexBindingDescriptions = nullptr;
+    vertexInputCreateInfo.vertexAttributeDescriptionCount = 0;
+    vertexInputCreateInfo.pVertexAttributeDescriptions = nullptr;
+
+    VkPipelineInputAssemblyStateCreateInfo inputAssemblyCreateInfo { };
+    inputAssemblyCreateInfo.sType       = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+    inputAssemblyCreateInfo.pNext       = nullptr;
+    inputAssemblyCreateInfo.flags       = 0;
+    // here we could change the geometries to triangle_fan, triangle_strip and others
+    inputAssemblyCreateInfo.topology    = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+    inputAssemblyCreateInfo.primitiveRestartEnable  = VK_FALSE;
+
+    // viewport describes the region of the SwapChain Framebuffer that will be rendered on screen
+    VkViewport viewport { };
+    viewport.x = 0.f;
+    viewport.y = 0.f;
+    viewport.width = (float)swapChain.extent().width;
+    viewport.height = (float)swapChain.extent().height;
+    viewport.minDepth = 0.f;
+    viewport.maxDepth = 1.f;
+
+    // the scissor can cut parts of the SwapChain image before presenting it on screen
+    VkRect2D scissor;
+    scissor.offset = { 0, 0 };
+    scissor.extent = swapChain.extent();
+
+    VkPipelineViewportStateCreateInfo viewportCreateInfo { };
+    viewportCreateInfo.sType        = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+    viewportCreateInfo.pNext        = nullptr;
+    viewportCreateInfo.flags        = 0;
+    viewportCreateInfo.viewportCount = 1;
+    viewportCreateInfo.pViewports   = &viewport;
+    viewportCreateInfo.scissorCount  = 1;
+    viewportCreateInfo.pScissors    = &scissor;
+
+    VkPipelineRasterizationStateCreateInfo rasterizationCreateInfo { };
+    rasterizationCreateInfo.sType                   = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
+    rasterizationCreateInfo.pNext                   = nullptr;
+    rasterizationCreateInfo.flags                   = 0;
+    // if enabled, fragments with a depth beyond { 0, 1 } are clamped and not discarded -> useful for shadow mapping
+    rasterizationCreateInfo.depthClampEnable        = VK_FALSE;
+    rasterizationCreateInfo.rasterizerDiscardEnable = VK_FALSE;
+    // use LINE for wireframes
+    rasterizationCreateInfo.polygonMode             = VK_POLYGON_MODE_FILL;
+    rasterizationCreateInfo.cullMode                = VK_CULL_MODE_BACK_BIT;
+    rasterizationCreateInfo.frontFace               = VK_FRONT_FACE_CLOCKWISE;
+    rasterizationCreateInfo.depthBiasEnable         = VK_FALSE;
+    rasterizationCreateInfo.depthBiasConstantFactor = 0;
+    rasterizationCreateInfo.depthBiasClamp          = VK_FALSE;
+    rasterizationCreateInfo.depthBiasSlopeFactor    = 0;
+    rasterizationCreateInfo.lineWidth               = 1.f;
+
+    // TODO: Add multisampling at a later stage
+    VkPipelineMultisampleStateCreateInfo multisampleCreateInfo = { };
+    multisampleCreateInfo.sType                     = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
+    multisampleCreateInfo.pNext                     = nullptr;
+    multisampleCreateInfo.flags                     = 0;
+    multisampleCreateInfo.rasterizationSamples      = VK_SAMPLE_COUNT_1_BIT;
+    multisampleCreateInfo.sampleShadingEnable       = VK_FALSE;
+    multisampleCreateInfo.minSampleShading          = 1.f;
+    multisampleCreateInfo.pSampleMask               = nullptr;
+    multisampleCreateInfo.alphaToCoverageEnable     = VK_FALSE;
+    multisampleCreateInfo.alphaToOneEnable          = VK_FALSE;
+
+    // TODO later: VkPipelineDepthStencilStateCreateInfo   -> we do not use one yet
+
+    // color blending on a per-framebuffer basis:
+    VkPipelineColorBlendAttachmentState colorBlendAttachment { };
+    colorBlendAttachment.blendEnable            = VK_FALSE; // TODO: Revisit later
+    colorBlendAttachment.srcColorBlendFactor    = VK_BLEND_FACTOR_ONE;
+    colorBlendAttachment.dstColorBlendFactor    = VK_BLEND_FACTOR_ZERO;
+    colorBlendAttachment.colorBlendOp           = VK_BLEND_OP_ADD;
+    colorBlendAttachment.srcAlphaBlendFactor    = VK_BLEND_FACTOR_ONE;
+    colorBlendAttachment.dstAlphaBlendFactor    = VK_BLEND_FACTOR_ZERO;
+    colorBlendAttachment.alphaBlendOp           = VK_BLEND_OP_ADD;
+    colorBlendAttachment.colorWriteMask         = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+
+    // color blending on a global basis, ie applied to ALL framebuffers:
+    VkPipelineColorBlendStateCreateInfo blendingCreateInfo { };
+    blendingCreateInfo.sType                = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+    blendingCreateInfo.pNext                = nullptr;
+    blendingCreateInfo.flags                = 0;
+    blendingCreateInfo.logicOpEnable        = VK_FALSE;
+    blendingCreateInfo.logicOp              = VK_LOGIC_OP_COPY;
+    blendingCreateInfo.attachmentCount      = 1;
+    blendingCreateInfo.pAttachments         = &colorBlendAttachment;
+    blendingCreateInfo.blendConstants[0]    = 0.f;
+    blendingCreateInfo.blendConstants[1]    = 0.f;
+    blendingCreateInfo.blendConstants[2]    = 0.f;
+    blendingCreateInfo.blendConstants[3]    = 0.f;
+
+    // TODO later: VkDynamicState to avoid recrating the pipeline because, for example, we want a line width of 2
+
+    // TODO later: We have to define the uniforms our shader is using here
+    VkPipelineLayoutCreateInfo layoutCreateInfo { };
+    layoutCreateInfo.sType                  = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+    layoutCreateInfo.pNext                  = nullptr;
+    layoutCreateInfo.flags                  = 0;
+    layoutCreateInfo.setLayoutCount         = 0;
+    layoutCreateInfo.pSetLayouts            = nullptr;
+    layoutCreateInfo.pushConstantRangeCount = 0;
+    layoutCreateInfo.pPushConstantRanges    = nullptr;
+
+    if (vkCreatePipelineLayout(device.device(), &layoutCreateInfo, nullptr, &_layout) != VK_SUCCESS) {
+        throw InitException("Failed to create pipeline layout", __FILE__, __FUNCTION__, __LINE__);
+    }
+
+    /**
+     * And FINALLY, we have all the objects that define the rendering pipeline:
+     *      - Shader stages: They represent the programmable parts of the pipeline
+     *      - Fixed function stages: Input assembly, rasterization etc.
+     *      - Pipeline layout: Uniform and push values that can be used by the shader
+     *      - Render pass: The attachments referenced by the pipeline stages and their usage
+     */
+    VkGraphicsPipelineCreateInfo pipelineCreateInfo { };
+    pipelineCreateInfo.sType                = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+    pipelineCreateInfo.pNext                = nullptr;
+    pipelineCreateInfo.flags                = 0;
+    pipelineCreateInfo.stageCount           = 2;    // vertex and fragment shader
+    pipelineCreateInfo.pStages              = shaderStages;
+    pipelineCreateInfo.pVertexInputState    = &vertexInputCreateInfo;
+    pipelineCreateInfo.pInputAssemblyState  = &inputAssemblyCreateInfo;
+    pipelineCreateInfo.pTessellationState   = nullptr;
+    pipelineCreateInfo.pViewportState       = &viewportCreateInfo;
+    pipelineCreateInfo.pRasterizationState  = &rasterizationCreateInfo;
+    pipelineCreateInfo.pMultisampleState    = &multisampleCreateInfo;
+    pipelineCreateInfo.pDepthStencilState   = nullptr;
+    pipelineCreateInfo.pColorBlendState     = &blendingCreateInfo;
+    pipelineCreateInfo.pDynamicState        = nullptr;
+    pipelineCreateInfo.layout               = _layout;
+    pipelineCreateInfo.renderPass           = _renderPass;
+    pipelineCreateInfo.subpass              = 0;
+    // When using multiple pipelines, we could define a basePipeline with common features
+    // This is better for performance than using multiple completly different pipelines !!
+    // We would also have to set the VK_PIPELINE_CREATE_DERIVATIVE_BIT in flags
+    pipelineCreateInfo.basePipelineHandle   = VK_NULL_HANDLE;
+    pipelineCreateInfo.basePipelineIndex    = -1;
+
+    // TODO: Look into the PipelineCache once using multiple pipelines
+    if (vkCreateGraphicsPipelines(
+            device.device(),
+            VK_NULL_HANDLE,
+            1,
+            &pipelineCreateInfo,
+            nullptr,
+            &_pipeline) != VK_SUCCESS) {
+
+        throw InitException("Failed to create graphics pipeline", __FILE__, __FUNCTION__, __LINE__);
+    }
 
     // TODO: These should be destroyed even if we get an Exception above !!
     vkDestroyShaderModule(device.device(), vertexModule, nullptr);
     vkDestroyShaderModule(device.device(), fragmentModule, nullptr);
+}
+
+void MoeVkPipeline::destroy(MoeVkLogicalDevice& device) {
+    vkDestroyPipelineLayout(device.device(), _layout, nullptr);
+    vkDestroyRenderPass(device.device(), _renderPass, nullptr);
+    vkDestroyPipeline(device.device(), _pipeline, nullptr);
 }
 
 std::vector<char> MoeVkPipeline::readShader(const std::string& filename) {
@@ -84,5 +247,47 @@ VkShaderModule MoeVkPipeline::createShader(MoeVkLogicalDevice& device, const std
     }
 
     return module;
+}
+
+
+void MoeVkPipeline::createRenderPass(MoeVkLogicalDevice &device, const MoeVkSwapChain& swapChain) {
+
+    VkAttachmentDescription colorAttachment { };
+    colorAttachment.format              = swapChain.format().format;
+    colorAttachment.samples             = VK_SAMPLE_COUNT_1_BIT;    // TODO later: no multisampling yet -> stick to 1 sample
+    colorAttachment.loadOp              = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    colorAttachment.storeOp             = VK_ATTACHMENT_STORE_OP_STORE;
+    colorAttachment.stencilLoadOp       = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    colorAttachment.stencilStoreOp      = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    colorAttachment.initialLayout       = VK_IMAGE_LAYOUT_UNDEFINED;
+    colorAttachment.finalLayout         = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
+    // We could define several rendering subpasses, for example for postprocessing. For the fist triangle, however,
+    // one subpass is enough
+    VkAttachmentReference colorAttachmentRef { };
+    // because we only have one colorAttachment, its index will be 0.
+    // Important: The index directly references the fragments shader layout(location=0) out vec4 color index !!
+    colorAttachmentRef.attachment       = 0;
+    colorAttachmentRef.layout           = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+    VkSubpassDescription subpass { };
+    subpass.pipelineBindPoint       = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    subpass.colorAttachmentCount    = 1;
+    subpass.pColorAttachments       = &colorAttachmentRef;
+
+    VkRenderPassCreateInfo renderPassCreateInfo { };
+    renderPassCreateInfo.sType                = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+    renderPassCreateInfo.pNext                = nullptr;
+    renderPassCreateInfo.flags                = 0;
+    renderPassCreateInfo.attachmentCount      = 1;
+    renderPassCreateInfo.pAttachments         = &colorAttachment;
+    renderPassCreateInfo.subpassCount         = 1;
+    renderPassCreateInfo.pSubpasses           = &subpass;
+    renderPassCreateInfo.dependencyCount      = 0;
+    renderPassCreateInfo.pDependencies        = nullptr;
+
+    if (vkCreateRenderPass(device.device(), &renderPassCreateInfo, nullptr, &_renderPass) != VK_SUCCESS) {
+        throw InitException("Failed to create Render Pass", __FILE__, __FUNCTION__, __LINE__);
+    }
 }
 }

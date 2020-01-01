@@ -22,6 +22,9 @@ public:
 
     void destroy(MoeVkLogicalDevice& device);
 
+    VkExtent2D              extent() const { return _extent; }
+    VkSurfaceFormatKHR      format() const { return _format; }
+
 private:
     VkSurfaceFormatKHR  fetchBestFormat() const;
     VkPresentModeKHR    fetchBestPresentMode() const;
