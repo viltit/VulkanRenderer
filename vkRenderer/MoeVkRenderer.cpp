@@ -19,9 +19,11 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, RendererOptions options)
     logicalDevice.create(instance.instance(), physicalDevice, extensions);
     swapChain.create(physicalDevice, logicalDevice, surface, *window);
     pipeline.create(logicalDevice, swapChain);
+    framebuffer.create(logicalDevice, swapChain, pipeline);
 }
 
 MoeVkRenderer::~MoeVkRenderer() {
+    framebuffer.destroy(logicalDevice);
     swapChain.destroy(logicalDevice);
     pipeline.destroy(logicalDevice);
     vkDestroySurfaceKHR(instance.instance(), surface, nullptr);

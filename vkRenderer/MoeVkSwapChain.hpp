@@ -22,8 +22,10 @@ public:
 
     void destroy(MoeVkLogicalDevice& device);
 
-    VkExtent2D              extent() const { return _extent; }
-    VkSurfaceFormatKHR      format() const { return _format; }
+    VkExtent2D                  extent() const { return _extent; }
+    VkSurfaceFormatKHR          format() const { return _format; }
+    std::vector<VkImageView>&   images()       { return _imageViews; }
+
 
 private:
     VkSurfaceFormatKHR  fetchBestFormat() const;

@@ -6,6 +6,7 @@
 #include "MoeVkInstance.hpp"
 #include "MoeVkSwapChain.hpp"
 #include "MoeVkPipeline.hpp"
+#include "MoeVkFramebuffer.hpp"
 
 namespace moe {
 
@@ -24,6 +25,7 @@ private:
     MoeVkInstance               instance;
     MoeVkSwapChain              swapChain;
     MoeVkPipeline               pipeline;
+    MoeVkFramebuffer            framebuffer;
     VkSurfaceKHR                surface;
 
     MoeVkPhysicalDevice         physicalDevice;

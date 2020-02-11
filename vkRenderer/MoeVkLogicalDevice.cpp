@@ -8,7 +8,7 @@
 namespace moe {
 
 MoeVkLogicalDevice::MoeVkLogicalDevice() {
-
+    std::cout << "Creating logical device\n";
 }
 
 MoeVkLogicalDevice::~MoeVkLogicalDevice() {

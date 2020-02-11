@@ -16,6 +16,8 @@ public:
     void create(MoeVkLogicalDevice& device, const MoeVkSwapChain& swapChain);
     void destroy(MoeVkLogicalDevice& device);
 
+    const VkRenderPass& renderPass() const { return _renderPass; }
+
 private:
     /// reads a compiled shader file (ie a .spv-file)
     std::vector<char> readShader(const std::string& filename);

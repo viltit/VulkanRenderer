@@ -76,6 +76,12 @@
 		<Unit filename="/home/titus/programming/c++/vkEngine/main.cpp">
 			<Option target="vkEngine"/>
 		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkFramebuffer.cpp">
+			<Option target="vkEngine"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkFramebuffer.hpp">
+			<Option target="vkEngine"/>
+		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkFunctions.hpp">
 			<Option target="vkEngine"/>
 		</Unit>
