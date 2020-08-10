@@ -20,6 +20,8 @@ public:
             unsigned int desiredQueueCount = 4);
 
     VkDevice& device() { return _device; }
+    VkQueue& graphicsQueue() { return _graphicsQueue; }
+    VkQueue& presentationQueue() { return _presentationQueue; }
 
 private:
 

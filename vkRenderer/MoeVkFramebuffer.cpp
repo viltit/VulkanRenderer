@@ -13,6 +13,7 @@ MoeVkFramebuffer::~MoeVkFramebuffer() { }
 void MoeVkFramebuffer::create(MoeVkLogicalDevice& device, MoeVkSwapChain &swapChain,
                               const MoeVkPipeline &pipeline) {
 
+
     auto images = swapChain.images();
     _framebuffers.resize(images.size());
     for (size_t i = 0; i < images.size(); i++) {

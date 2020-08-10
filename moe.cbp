@@ -76,6 +76,18 @@
 		<Unit filename="/home/titus/programming/c++/vkEngine/main.cpp">
 			<Option target="vkEngine"/>
 		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkCommandPool.cpp">
+			<Option target="vkEngine"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkCommandPool.hpp">
+			<Option target="vkEngine"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkFence.cpp">
+			<Option target="vkEngine"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkFence.hpp">
+			<Option target="vkEngine"/>
+		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkFramebuffer.cpp">
 			<Option target="vkEngine"/>
 		</Unit>
@@ -116,6 +128,12 @@
 			<Option target="vkEngine"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkRenderer.hpp">
+			<Option target="vkEngine"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkSemaphore.cpp">
+			<Option target="vkEngine"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkSemaphore.hpp">
 			<Option target="vkEngine"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkSwapChain.cpp">

@@ -17,6 +17,8 @@ public:
     void create(MoeVkLogicalDevice& device, MoeVkSwapChain& swapChain, const MoeVkPipeline& pipeline);
     void destroy(MoeVkLogicalDevice& device);
 
+    std::vector<VkFramebuffer>& buffers() { return _framebuffers; }
+
 private:
     std::vector<VkFramebuffer> _framebuffers;
 };

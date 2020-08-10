@@ -36,7 +36,7 @@ int main() {
                         break;
                 }
             }
-            // vulkan->draw();
+            vkApp.draw();
         }
         // SDL_Quit();
 

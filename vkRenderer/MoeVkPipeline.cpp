@@ -252,6 +252,18 @@ VkShaderModule MoeVkPipeline::createShader(MoeVkLogicalDevice& device, const std
 
 void MoeVkPipeline::createRenderPass(MoeVkLogicalDevice &device, const MoeVkSwapChain& swapChain) {
 
+    // specific for rendering: add a subpass dependency for synchronization. "External" refers to the implicit
+    // subpass before and after the rendering. Index 0 refers to our rendering pass, which is the only one
+    VkSubpassDependency dependency { };
+    dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+    dependency.dstSubpass = 0;
+    // the operations to wait on:
+    dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    dependency.srcAccessMask = 0;
+    // the operations that should wait:
+    dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
     VkAttachmentDescription colorAttachment { };
     colorAttachment.format              = swapChain.format().format;
     colorAttachment.samples             = VK_SAMPLE_COUNT_1_BIT;    // TODO later: no multisampling yet -> stick to 1 sample
@@ -283,8 +295,8 @@ void MoeVkPipeline::createRenderPass(MoeVkLogicalDevice &device, const MoeVkSwap
     renderPassCreateInfo.pAttachments         = &colorAttachment;
     renderPassCreateInfo.subpassCount         = 1;
     renderPassCreateInfo.pSubpasses           = &subpass;
-    renderPassCreateInfo.dependencyCount      = 0;
-    renderPassCreateInfo.pDependencies        = nullptr;
+    renderPassCreateInfo.dependencyCount      = 1;
+    renderPassCreateInfo.pDependencies        = &dependency;
 
     if (vkCreateRenderPass(device.device(), &renderPassCreateInfo, nullptr, &_renderPass) != VK_SUCCESS) {
         throw InitException("Failed to create Render Pass", __FILE__, __FUNCTION__, __LINE__);

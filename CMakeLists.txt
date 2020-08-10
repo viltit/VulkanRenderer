@@ -25,6 +25,9 @@ add_executable(vkEngine main.cpp
         vkRenderer/MoeVkSwapChainProps.hpp
         vkRenderer/MoeVkPipeline.cpp
         vkRenderer/MoeVkFramebuffer.cpp
+        vkRenderer/MoeVkCommandPool.cpp
+        vkRenderer/MoeVkSemaphore.cpp
+        vkRenderer/MoeVkFence.cpp
         Colors/ColorRGB.hpp)
 
 target_link_libraries(vkEngine

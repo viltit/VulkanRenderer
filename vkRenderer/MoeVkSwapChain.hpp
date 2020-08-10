@@ -22,6 +22,7 @@ public:
 
     void destroy(MoeVkLogicalDevice& device);
 
+    VkSwapchainKHR&             swapChain()     { return _swapChain; }
     VkExtent2D                  extent() const { return _extent; }
     VkSurfaceFormatKHR          format() const { return _format; }
     std::vector<VkImageView>&   images()       { return _imageViews; }

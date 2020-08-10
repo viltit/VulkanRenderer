@@ -17,6 +17,7 @@ public:
     void destroy(MoeVkLogicalDevice& device);
 
     const VkRenderPass& renderPass() const { return _renderPass; }
+    const VkPipeline& pipeline() const  { return _pipeline; }
 
 private:
     /// reads a compiled shader file (ie a .spv-file)
