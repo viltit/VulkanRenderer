@@ -3,10 +3,15 @@
 #include "vkRenderer/VkWindow.hpp"
 #include "Exceptions/InitException.hpp"
 
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/basic_file_sink.h"
+
 using namespace moe;
 
 int main() {
     try {
+        spdlog::info("App is starting");
+
         VkWindow window = VkWindow("Vulkan Barebones", 500, 500, ColorRGB::black());
         MoeVkRenderer vkApp = MoeVkRenderer(&window, RendererOptions::validation);
 

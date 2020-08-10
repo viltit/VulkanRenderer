@@ -1,9 +1,13 @@
 cmake_minimum_required(VERSION 3.10)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
 
 project(moe)
+
+# Staticly link spdlog, a logger library for C++
+# See https://github.com/gabime/spdlog
+add_subdirectory(external/spdlog)
 
 #Locate SDL
 find_package(SDL2 REQUIRED)
@@ -30,6 +34,8 @@ add_executable(vkEngine main.cpp
         vkRenderer/MoeVkFence.cpp
         Colors/ColorRGB.hpp)
 
+
 target_link_libraries(vkEngine
+        spdlog
         ${SDL2_LIBRARIES}
         ${Vulkan_LIBRARIES})
