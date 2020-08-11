@@ -20,10 +20,10 @@ public:
         return buffer[index];
     }
 
-private:
-
     void createCommandBuffers(MoeVkLogicalDevice& device, MoeVkFramebuffer& framebuffer, MoeVkPipeline& pipeline, MoeVkSwapChain& swapChain);
+    void destroyCommandBuffers(MoeVkLogicalDevice& device);
 
+private:
     VkCommandPool pool;
 
     /**

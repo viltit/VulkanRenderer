@@ -74,8 +74,11 @@ void MoeVkCommandPool::createCommandBuffers(moe::MoeVkLogicalDevice &device, Moe
         if (vkEndCommandBuffer(buffer[i]) != VK_SUCCESS) {
             throw InitException("Failed to end command buffer", __FILE__, __FUNCTION__, __LINE__);
         }
-
     }
+}
+
+void MoeVkCommandPool::destroyCommandBuffers(MoeVkLogicalDevice& device) {
+    vkFreeCommandBuffers(device.device(), pool, static_cast<uint32_t>(buffer.size()), buffer.data());
 }
 
 }

@@ -11,7 +11,8 @@ namespace moe {
 
 MoeVkRenderer::MoeVkRenderer(VkWindow* window, RendererOptions options)
     :   instance        { window, options },
-        surface         { VK_NULL_HANDLE }
+        surface         { VK_NULL_HANDLE },
+        window          { window }
 {
     const std::vector<const char*> extensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
     createSurface(window);
@@ -57,12 +58,22 @@ void MoeVkRenderer::draw() {
         Execute the command buffer with that image as attachment in the framebuffer
         Return the image to the swap chain for presentation     */
     uint32_t imageIndex;
-    vkAcquireNextImageKHR(logicalDevice.device(),
+    VkResult result = vkAcquireNextImageKHR(logicalDevice.device(),
             swapChain.swapChain(),
             UINT64_MAX,
             imageAvalaibleSemaphore[currentFrame].semaphore(),
             VK_NULL_HANDLE,
             &imageIndex);
+
+    // check if the swapchain is out of date
+    if (result == VK_ERROR_OUT_OF_DATE_KHR) {
+        recreateSwapChain();
+        return;
+    }
+    else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
+        // TODO: Maybe warn in case of suboptimal swapchain
+        throw std::runtime_error("Failed to aquire a swapchain image.");
+    }
 
     // check if a previous frame is using this image (ie, there is a fence for it)
     if(!imagesInFlight[imageIndex].isNull()) {
@@ -100,11 +111,33 @@ void MoeVkRenderer::draw() {
     presentInfo.pSwapchains = swapchains;
     presentInfo.pImageIndices = &imageIndex;
     presentInfo.pResults = nullptr; // with several swapchains, we could get a VkResult for each of them
-    vkQueuePresentKHR(logicalDevice.presentationQueue(), &presentInfo);
+
+    result = vkQueuePresentKHR(logicalDevice.presentationQueue(), &presentInfo);
+    if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
+        recreateSwapChain();
+    }
+    else if (result != VK_SUCCESS) {
+        throw std::runtime_error("Failed to present swap chain image");
+    }
 
     currentFrame = (currentFrame + 1) % maxFramesInFlight;
 }
 
+void MoeVkRenderer::recreateSwapChain() {
+    vkDeviceWaitIdle(logicalDevice.device());
+    cleanSwapchain();
+    swapChain.create(physicalDevice, logicalDevice, surface, *window);
+    pipeline.create(logicalDevice, swapChain);
+    framebuffer.create(logicalDevice, swapChain, pipeline);
+    commandPool.createCommandBuffers(logicalDevice, framebuffer, pipeline, swapChain);
+}
+
+void MoeVkRenderer::cleanSwapchain() {
+    framebuffer.destroyBuffers(logicalDevice);
+    commandPool.destroyCommandBuffers(logicalDevice);
+    pipeline.destroy(logicalDevice);
+    swapChain.destroy(logicalDevice);
+}
 
 void MoeVkRenderer::createSurface(moe::VkWindow *window) {
     if (!window) {

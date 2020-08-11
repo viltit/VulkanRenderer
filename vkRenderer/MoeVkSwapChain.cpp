@@ -154,6 +154,7 @@ VkPresentModeKHR MoeVkSwapChain::fetchBestPresentMode() const {
 VkExtent2D MoeVkSwapChain::fetchBestExtent(const VkWindow& window) {
     // the window system already set the value to its size:
     if (_capabilities.currentExtent.width != UINT32_MAX) {
+        std::cout << "Setting surface extent to " << _capabilities.currentExtent.width << " / " << _capabilities.currentExtent.height << std::endl;
         return _capabilities.currentExtent;
     }
     // we need to get the size ourselfes:
@@ -164,6 +165,8 @@ VkExtent2D MoeVkSwapChain::fetchBestExtent(const VkWindow& window) {
 
     result.width = std::max(_capabilities.minImageExtent.width, std::min(_capabilities.maxImageExtent.width, result.width));
     result.height = std::max(_capabilities.minImageExtent.height, std::min(_capabilities.maxImageExtent.height, result.height));
+
+    std::cout << "Setting surface extent to " << result.width << " / " << result.height << std::endl;
 
     return result;
 }

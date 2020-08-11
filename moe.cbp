@@ -5,7 +5,7 @@
 		<Option title="moe"/>
 		<Option makefile_is_custom="1"/>
 		<Option compiler="gcc"/>
-		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\..\;CMake Files\..\..\..\..\..\usr\;CMake Files\..\..\..\..\..\usr\lib\;CMake Files\..\..\..\..\..\usr\lib\x86_64-linux-gnu\;CMake Files\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\;CMake Files\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\SDL2\;CMake Files\external\;CMake Files\external\spdlog\;CMake Files\external\spdlog\cmake\;"/>
+		<Option virtualFolders="CMake Files\;CMake Files\vkRenderer\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\..\;CMake Files\..\..\..\..\..\usr\;CMake Files\..\..\..\..\..\usr\lib\;CMake Files\..\..\..\..\..\usr\lib\x86_64-linux-gnu\;CMake Files\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\;CMake Files\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\SDL2\;CMake Files\external\;CMake Files\external\spdlog\;CMake Files\external\spdlog\cmake\;"/>
 		<Build>
 			<Target title="all">
 				<Option working_dir="/home/titus/programming/c++/vkEngine"/>
@@ -35,7 +35,6 @@
 				<Option compiler="gcc"/>
 				<Compiler>
 					<Add option="-DSPDLOG_COMPILED_LIB"/>
-					<Add directory="/usr/include/SDL2"/>
 					<Add directory="/home/titus/programming/c++/vkEngine/external/spdlog/include"/>
 				</Compiler>
 				<MakeCommands>
@@ -53,7 +52,6 @@
 				<Option compiler="gcc"/>
 				<Compiler>
 					<Add option="-DSPDLOG_COMPILED_LIB"/>
-					<Add directory="/usr/include/SDL2"/>
 					<Add directory="/home/titus/programming/c++/vkEngine/external/spdlog/include"/>
 				</Compiler>
 				<MakeCommands>
@@ -71,6 +69,40 @@
 					<CompileFile command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="vkRenderer">
+				<Option output="/home/titus/programming/c++/vkEngine/vkRenderer/libvkRenderer.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/titus/programming/c++/vkEngine/vkRenderer"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/titus/programming/c++/vkEngine/vkRenderer/.."/>
+					<Add directory="/usr/include/SDL2"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 vkRenderer"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="vkRenderer/fast">
+				<Option output="/home/titus/programming/c++/vkEngine/vkRenderer/libvkRenderer.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/titus/programming/c++/vkEngine/vkRenderer"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/titus/programming/c++/vkEngine/vkRenderer/.."/>
+					<Add directory="/usr/include/SDL2"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 vkRenderer/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="spdlog">
@@ -382,82 +414,85 @@
 			<Option target="vkEngine"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkCommandPool.cpp">
-			<Option target="vkEngine"/>
+			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkCommandPool.hpp">
-			<Option target="vkEngine"/>
+			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkFence.cpp">
-			<Option target="vkEngine"/>
+			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkFence.hpp">
-			<Option target="vkEngine"/>
+			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkFramebuffer.cpp">
-			<Option target="vkEngine"/>
+			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkFramebuffer.hpp">
-			<Option target="vkEngine"/>
+			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkFunctions.hpp">
-			<Option target="vkEngine"/>
+			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkInstance.cpp">
-			<Option target="vkEngine"/>
+			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkInstance.hpp">
-			<Option target="vkEngine"/>
+			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkLogicalDevice.cpp">
-			<Option target="vkEngine"/>
+			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkLogicalDevice.hpp">
-			<Option target="vkEngine"/>
+			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkPhysicalDevice.cpp">
-			<Option target="vkEngine"/>
+			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkPhysicalDevice.hpp">
-			<Option target="vkEngine"/>
+			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkPipeline.cpp">
-			<Option target="vkEngine"/>
+			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkPipeline.hpp">
-			<Option target="vkEngine"/>
+			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkQueueFamily.hpp">
-			<Option target="vkEngine"/>
+			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkRenderer.cpp">
-			<Option target="vkEngine"/>
+			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkRenderer.hpp">
-			<Option target="vkEngine"/>
+			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkSemaphore.cpp">
-			<Option target="vkEngine"/>
+			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkSemaphore.hpp">
-			<Option target="vkEngine"/>
+			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkSwapChain.cpp">
-			<Option target="vkEngine"/>
+			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkSwapChain.hpp">
-			<Option target="vkEngine"/>
+			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkSwapChainProps.hpp">
-			<Option target="vkEngine"/>
+			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/VkWindow.cpp">
-			<Option target="vkEngine"/>
+			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/VkWindow.hpp">
-			<Option target="vkEngine"/>
+			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\vkRenderer\"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/../../../../../usr/lib/x86_64-linux-gnu/cmake/SDL2/sdl2-config.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\SDL2\"/>

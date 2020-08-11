@@ -23,19 +23,22 @@ public:
     ~MoeVkRenderer();
 
     void draw();
+    void recreateSwapChain();
 
 private:
 
     static constexpr int maxFramesInFlight = 2;
 
     void createSurface(VkWindow* window);
+    void cleanSwapchain();
+
+    VkWindow*                   window;
 
     MoeVkInstance               instance;
     MoeVkSwapChain              swapChain;
     MoeVkPipeline               pipeline;
     MoeVkFramebuffer            framebuffer;
     MoeVkCommandPool            commandPool;
-
     VkSurfaceKHR                surface;
 
     MoeVkPhysicalDevice         physicalDevice;

@@ -28,9 +28,17 @@ int main() {
                         if (e.window.event == SDL_WINDOWEVENT_RESIZED) {
                             std::cout << "Window resize\n";
                             std::cout << e.window.data1 << " / " << e.window.data2 << std::endl;
-                            window.resize(e.window.data1, e.window.data2);
+                            // TODO: Calling resize leads to unexpected window height growth -> it seems unnecessary??
+                            // window.resize(e.window.data1, e.window.data2);
                             // vulkan->resize();
+                            // TODO: Some drivers may not set VK_ERROR_OUT_OF_DATE_KHR when the window resized -> explicitly tell the renderer
                         }
+                        else if (e.window.event == SDL_WINDOWEVENT_MINIMIZED) {
+                            // skip drawing
+                            std::cout << "Window minimized\n";
+                            continue;
+                        }
+                        // TODO: Window hidden?
                         break;
                     case SDL_KEYDOWN:
                         switch(e.key.keysym.sym) {

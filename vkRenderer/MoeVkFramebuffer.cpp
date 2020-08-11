@@ -35,6 +35,12 @@ void MoeVkFramebuffer::create(MoeVkLogicalDevice& device, MoeVkSwapChain &swapCh
     }
 }
 
+void MoeVkFramebuffer::destroyBuffers(MoeVkLogicalDevice& device) {
+    for (size_t i = 0; i < _framebuffers.size(); i++) {
+        vkDestroyFramebuffer(device.device(), _framebuffers[i], nullptr);
+    }
+}
+
 void MoeVkFramebuffer::destroy(MoeVkLogicalDevice& device) {
     std::cout << "Destroying Framebuffer" << std::endl;
     for (size_t i = 0; i < _framebuffers.size(); i++) {
