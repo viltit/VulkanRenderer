@@ -78,7 +78,7 @@
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/home/titus/programming/c++/vkEngine/vkRenderer/.."/>
+					<Add directory="/home/titus/programming/c++/vkEngine/vkRenderer/../glm"/>
 					<Add directory="/usr/include/SDL2"/>
 				</Compiler>
 				<MakeCommands>
@@ -95,7 +95,7 @@
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/home/titus/programming/c++/vkEngine/vkRenderer/.."/>
+					<Add directory="/home/titus/programming/c++/vkEngine/vkRenderer/../glm"/>
 					<Add directory="/usr/include/SDL2"/>
 				</Compiler>
 				<MakeCommands>
@@ -413,6 +413,9 @@
 		<Unit filename="/home/titus/programming/c++/vkEngine/main.cpp">
 			<Option target="vkEngine"/>
 		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVertex.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkCommandPool.cpp">
 			<Option target="vkRenderer"/>
 		</Unit>
@@ -480,6 +483,12 @@
 			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkSwapChainProps.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/VertexBuffer.cpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/VertexBuffer.hpp">
 			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/VkWindow.cpp">

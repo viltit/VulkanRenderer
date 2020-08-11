@@ -1,5 +1,7 @@
 
 #include "MoeVkPipeline.hpp"
+#include "MoeVertex.hpp"
+
 #include "../Exceptions/InitException.hpp"
 
 #include <fstream>
@@ -42,15 +44,19 @@ void MoeVkPipeline::create(MoeVkLogicalDevice& device, const MoeVkSwapChain& swa
     VkPipelineShaderStageCreateInfo shaderStages[] = { vertexCreateInfo, fragmentCreateInfo };
 
     /* Pipeline stages ---------------------------------------------------- */
+    // TODO: How can we be more flexie in the vertex binding description, ie. drawing shapes with colors and shapes
+    // with textures at the same time
+    auto bindingDesciption = Vertex::getBindingDescription();
+    auto attributeDescription = Vertex::getAttributeDescription();
+
     VkPipelineVertexInputStateCreateInfo vertexInputCreateInfo { };
     vertexInputCreateInfo.sType         = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
     vertexInputCreateInfo.pNext         = nullptr;
     vertexInputCreateInfo.flags         = 0;
-    // TODO later: We can only use 0 here because we have a hardcoded triangle in the shader
-    vertexInputCreateInfo.vertexBindingDescriptionCount = 0;
-    vertexInputCreateInfo.pVertexBindingDescriptions = nullptr;
-    vertexInputCreateInfo.vertexAttributeDescriptionCount = 0;
-    vertexInputCreateInfo.pVertexAttributeDescriptions = nullptr;
+    vertexInputCreateInfo.vertexBindingDescriptionCount = 1;
+    vertexInputCreateInfo.pVertexBindingDescriptions = &bindingDesciption;
+    vertexInputCreateInfo.vertexAttributeDescriptionCount = static_cast<uint32_t >(attributeDescription.size());
+    vertexInputCreateInfo.pVertexAttributeDescriptions = attributeDescription.data();
 
     VkPipelineInputAssemblyStateCreateInfo inputAssemblyCreateInfo { };
     inputAssemblyCreateInfo.sType       = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
@@ -204,6 +210,7 @@ void MoeVkPipeline::create(MoeVkLogicalDevice& device, const MoeVkSwapChain& swa
 }
 
 void MoeVkPipeline::destroy(MoeVkLogicalDevice& device) {
+
     vkDestroyPipelineLayout(device.device(), _layout, nullptr);
     vkDestroyRenderPass(device.device(), _renderPass, nullptr);
     vkDestroyPipeline(device.device(), _pipeline, nullptr);

@@ -10,6 +10,8 @@
 #include "MoeVkCommandPool.hpp"
 #include "MoeVkSemaphore.hpp"
 #include "MoeVkFence.hpp"
+#include "MoeVkVertexBuffer.hpp"
+#include "MoeVertex.hpp"
 
 namespace moe {
 
@@ -55,6 +57,10 @@ private:
 
     // keep track of the frame
     size_t currentFrame = 0;
+
+    // TODO: This should be in an own class "scene" in the long termn
+    std::vector<Vertex>         vertices;
+    MoeVkVertexBuffer*           vertexBuffer;
 
 };
 }

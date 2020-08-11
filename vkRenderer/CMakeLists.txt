@@ -1,10 +1,12 @@
-include_directories(..)
-
 project(vkRenderer)
+
+# Vector math header only lib, see https://glm.g-truc.net/0.9.9/index.html
+include_directories(../glm)
 
 #Locate SDL
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
+
 
 #Locate Vulkan
 find_package(Vulkan REQUIRED)
@@ -26,6 +28,8 @@ add_library(
         MoeVkCommandPool.cpp
         MoeVkSemaphore.cpp
         MoeVkFence.cpp
+        MoeVertex.hpp
+        MoeVkVertexBuffer.cpp
 )
 
 target_link_libraries(vkRenderer

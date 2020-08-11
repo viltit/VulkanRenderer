@@ -13,7 +13,6 @@ add_subdirectory(external/spdlog)
 
 
 add_executable(vkEngine main.cpp
-
         Colors/ColorRGB.hpp)
 
 

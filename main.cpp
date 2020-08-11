@@ -1,6 +1,7 @@
 #include <iostream>
 #include "vkRenderer/MoeVkRenderer.hpp"
 #include "vkRenderer/VkWindow.hpp"
+#include "vkRenderer/MoeVertex.hpp"
 #include "Exceptions/InitException.hpp"
 
 #include "spdlog/spdlog.h"

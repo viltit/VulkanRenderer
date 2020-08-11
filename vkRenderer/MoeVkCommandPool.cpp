@@ -5,7 +5,12 @@
 
 namespace moe {
 
-void MoeVkCommandPool::create(MoeVkLogicalDevice &device, MoeVkQueueFamily queueFamily, MoeVkFramebuffer& framebuffer, MoeVkPipeline& pipeline, MoeVkSwapChain& swapChain) {
+void MoeVkCommandPool::create(MoeVkLogicalDevice &device,
+        MoeVkQueueFamily queueFamily,
+        MoeVkFramebuffer& framebuffer,
+        MoeVkPipeline& pipeline,
+        MoeVkSwapChain& swapChain,
+        MoeVkVertexBuffer& vertexBuffer) {
 
     // because we only submit commands for drawing, we use the graphics queue here
     auto indices = queueFamily.selectedGraphicsIndex;
@@ -19,7 +24,7 @@ void MoeVkCommandPool::create(MoeVkLogicalDevice &device, MoeVkQueueFamily queue
         throw InitException("Failed to create a command Pool.", __FILE__, __FUNCTION__, __LINE__);
     }
 
-    createCommandBuffers(device, framebuffer, pipeline, swapChain);
+    createCommandBuffers(device, framebuffer, pipeline, swapChain, vertexBuffer);
 }
 
 void MoeVkCommandPool::destroy(moe::MoeVkLogicalDevice &device) {
@@ -27,7 +32,12 @@ void MoeVkCommandPool::destroy(moe::MoeVkLogicalDevice &device) {
     vkDestroyCommandPool(device.device(), pool, nullptr);
 }
 
-void MoeVkCommandPool::createCommandBuffers(moe::MoeVkLogicalDevice &device, MoeVkFramebuffer& framebuffer, MoeVkPipeline& pipeline, MoeVkSwapChain& swapChain) {
+// TODO: More flexibility. Right now this is hardcoded for a specific vertex setup
+void MoeVkCommandPool::createCommandBuffers(moe::MoeVkLogicalDevice &device,
+        MoeVkFramebuffer& framebuffer,
+        MoeVkPipeline& pipeline,
+        MoeVkSwapChain& swapChain,
+        MoeVkVertexBuffer& vertexBuffer) {
     buffer.resize(framebuffer.buffers().size());
 
     VkCommandBufferAllocateInfo allocInfo { };
@@ -67,6 +77,12 @@ void MoeVkCommandPool::createCommandBuffers(moe::MoeVkLogicalDevice &device, Moe
         // start recording
         vkCmdBeginRenderPass(buffer[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
         vkCmdBindPipeline(buffer[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.pipeline());
+
+        // bind vertex buffer
+        VkBuffer vertexBuffers[] = { vertexBuffer.buffer() };
+        VkDeviceSize offsets[] = { 0 };
+        vkCmdBindVertexBuffers(buffer[i], 0, 1, vertexBuffers, offsets);
+
         // vertex count, instance count, firstVertex, firstInstance
         vkCmdDraw(buffer[i], 3, 1, 0, 0);
         vkCmdEndRenderPass(buffer[i]);

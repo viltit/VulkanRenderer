@@ -2,6 +2,7 @@
 
 #include "MoeVkLogicalDevice.hpp"
 #include "MoeVkFramebuffer.hpp"
+#include "MoeVkVertexBuffer.hpp"
 
 #include <vector>
 #include <assert.h>
@@ -12,7 +13,12 @@ public:
     MoeVkCommandPool() { }
     ~MoeVkCommandPool() { }
 
-    void create(MoeVkLogicalDevice& device, MoeVkQueueFamily queueFamily, MoeVkFramebuffer& framebuffer, MoeVkPipeline& pipeline, MoeVkSwapChain& swapChain);
+    void create(MoeVkLogicalDevice& device,
+            MoeVkQueueFamily queueFamily,
+            MoeVkFramebuffer& framebuffer,
+            MoeVkPipeline& pipeline,
+            MoeVkSwapChain& swapChain,
+            MoeVkVertexBuffer& vertexBuffer);
     void destroy(MoeVkLogicalDevice& device);
 
     VkCommandBuffer& commandBuffer(unsigned int index) {
@@ -20,7 +26,11 @@ public:
         return buffer[index];
     }
 
-    void createCommandBuffers(MoeVkLogicalDevice& device, MoeVkFramebuffer& framebuffer, MoeVkPipeline& pipeline, MoeVkSwapChain& swapChain);
+    void createCommandBuffers(MoeVkLogicalDevice& device,
+            MoeVkFramebuffer& framebuffer,
+            MoeVkPipeline& pipeline,
+            MoeVkSwapChain& swapChain,
+            MoeVkVertexBuffer& vertexBuffer);
     void destroyCommandBuffers(MoeVkLogicalDevice& device);
 
 private:

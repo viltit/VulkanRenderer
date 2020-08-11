@@ -14,6 +14,12 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, RendererOptions options)
         surface         { VK_NULL_HANDLE },
         window          { window }
 {
+    vertices = {
+            { { 0.f, -0.5f, 0.f }, { 1.f, 0.8f, 0.8f } },
+            { { 0.5f, 0.5f, 0.f }, { 0.8f, 1.f, 0.8f } },
+            { { -0.5f, 0.5f, 0.f }, { 0.8f, 0.8f, 1.f } }
+    };
+
     const std::vector<const char*> extensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
     createSurface(window);
     physicalDevice.create(instance.instance(), surface, extensions);
@@ -21,7 +27,9 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, RendererOptions options)
     swapChain.create(physicalDevice, logicalDevice, surface, *window);
     pipeline.create(logicalDevice, swapChain);
     framebuffer.create(logicalDevice, swapChain, pipeline);
-    commandPool.create(logicalDevice, physicalDevice.queueFamily(), framebuffer, pipeline, swapChain);
+
+    vertexBuffer = new MoeVkVertexBuffer(physicalDevice, logicalDevice, vertices);
+    commandPool.create(logicalDevice, physicalDevice.queueFamily(), framebuffer, pipeline, swapChain, *vertexBuffer);
 
     // create semaphores:
     imageAvalaibleSemaphore.resize(maxFramesInFlight);
@@ -38,6 +46,11 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, RendererOptions options)
 MoeVkRenderer::~MoeVkRenderer() {
     // because drawing command are executed asynchrounously, we need to wait until we destroy the resources:
     vkDeviceWaitIdle(logicalDevice.device());
+
+    if (vertexBuffer != nullptr) {
+        delete vertexBuffer;
+    }
+
     for (size_t i = 0; i < maxFramesInFlight; i++) {
         imageAvalaibleSemaphore[i].destroy(logicalDevice);
         renderFinishedSemaphore[i].destroy(logicalDevice);
@@ -129,7 +142,7 @@ void MoeVkRenderer::recreateSwapChain() {
     swapChain.create(physicalDevice, logicalDevice, surface, *window);
     pipeline.create(logicalDevice, swapChain);
     framebuffer.create(logicalDevice, swapChain, pipeline);
-    commandPool.createCommandBuffers(logicalDevice, framebuffer, pipeline, swapChain);
+    commandPool.createCommandBuffers(logicalDevice, framebuffer, pipeline, swapChain, *vertexBuffer);
 }
 
 void MoeVkRenderer::cleanSwapchain() {
