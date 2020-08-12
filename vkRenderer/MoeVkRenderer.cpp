@@ -140,7 +140,7 @@ void MoeVkRenderer::recreateSwapChain() {
     vkDeviceWaitIdle(logicalDevice.device());
     cleanSwapchain();
     swapChain.create(physicalDevice, logicalDevice, surface, *window);
-    pipeline.create(logicalDevice, swapChain);
+    // pipeline.create(logicalDevice, swapChain);
     framebuffer.create(logicalDevice, swapChain, pipeline);
     commandPool.createCommandBuffers(logicalDevice, framebuffer, pipeline, swapChain, *vertexBuffer);
 }
@@ -148,7 +148,7 @@ void MoeVkRenderer::recreateSwapChain() {
 void MoeVkRenderer::cleanSwapchain() {
     framebuffer.destroyBuffers(logicalDevice);
     commandPool.destroyCommandBuffers(logicalDevice);
-    pipeline.destroy(logicalDevice);
+    // pipeline.destroy(logicalDevice);
     swapChain.destroy(logicalDevice);
 }
 

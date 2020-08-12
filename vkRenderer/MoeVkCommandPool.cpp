@@ -78,6 +78,21 @@ void MoeVkCommandPool::createCommandBuffers(moe::MoeVkLogicalDevice &device,
         vkCmdBeginRenderPass(buffer[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
         vkCmdBindPipeline(buffer[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.pipeline());
 
+        // When setting viewport as dynamic state in the pipeline creation, we MUST set it here
+        VkViewport viewport;
+        viewport.x = 0.f;
+        viewport.y = 0.f;
+        viewport.width = swapChain.extent().width;
+        viewport.height = swapChain.extent().height;
+        viewport.minDepth = 0.f;
+        viewport.maxDepth = 1.f;
+        vkCmdSetViewport(buffer[i], 0, 1, &viewport);
+
+        VkRect2D scissor;
+        scissor.offset = { 0, 0 };
+        scissor.extent = { swapChain.extent().width, swapChain.extent().height };
+        vkCmdSetScissor(buffer[i], 0, 1, &scissor);
+
         // bind vertex buffer
         VkBuffer vertexBuffers[] = { vertexBuffer.buffer() };
         VkDeviceSize offsets[] = { 0 };

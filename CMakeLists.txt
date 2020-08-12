@@ -5,12 +5,16 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
 
 project(moe)
 
+# compile shaders
+execute_process(
+        COMMAND cd Shaders/ && bash compile.sh
+)
+
 add_subdirectory(vkRenderer)
 
 # Staticly link spdlog, a logger library for C++
 # See https://github.com/gabime/spdlog
 add_subdirectory(external/spdlog)
-
 
 add_executable(vkEngine main.cpp
         Colors/ColorRGB.hpp)

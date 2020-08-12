@@ -52,6 +52,7 @@ int main() {
             }
             vkApp.draw();
         }
+        spdlog::info("Shutting down.");
         // SDL_Quit();
 
 

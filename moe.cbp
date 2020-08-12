@@ -485,10 +485,10 @@
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkSwapChainProps.hpp">
 			<Option target="vkRenderer"/>
 		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/VertexBuffer.cpp">
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkVertexBuffer.cpp">
 			<Option target="vkRenderer"/>
 		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/VertexBuffer.hpp">
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkVertexBuffer.hpp">
 			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/VkWindow.cpp">

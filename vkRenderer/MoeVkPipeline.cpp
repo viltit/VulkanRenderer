@@ -147,6 +147,18 @@ void MoeVkPipeline::create(MoeVkLogicalDevice& device, const MoeVkSwapChain& swa
 
     // TODO later: VkDynamicState to avoid recrating the pipeline because, for example, we want a line width of 2
 
+    // Define dynamic states so that we do not need to re-recreate the pipeline from scratch after a window resize
+    VkDynamicState dynamicStates[] = {
+            VK_DYNAMIC_STATE_VIEWPORT,
+            VK_DYNAMIC_STATE_SCISSOR
+    };
+    VkPipelineDynamicStateCreateInfo dynamicStateCreateInfo { };
+    dynamicStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+    dynamicStateCreateInfo.flags = 0;
+    dynamicStateCreateInfo.pNext = nullptr;
+    dynamicStateCreateInfo.dynamicStateCount = 2;
+    dynamicStateCreateInfo.pDynamicStates = dynamicStates;
+
     // TODO later: We have to define the uniforms our shader is using here
     VkPipelineLayoutCreateInfo layoutCreateInfo { };
     layoutCreateInfo.sType                  = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -182,7 +194,7 @@ void MoeVkPipeline::create(MoeVkLogicalDevice& device, const MoeVkSwapChain& swa
     pipelineCreateInfo.pMultisampleState    = &multisampleCreateInfo;
     pipelineCreateInfo.pDepthStencilState   = nullptr;
     pipelineCreateInfo.pColorBlendState     = &blendingCreateInfo;
-    pipelineCreateInfo.pDynamicState        = nullptr;
+    pipelineCreateInfo.pDynamicState        = &dynamicStateCreateInfo;   // allows to change viewport when recording command buffers
     pipelineCreateInfo.layout               = _layout;
     pipelineCreateInfo.renderPass           = _renderPass;
     pipelineCreateInfo.subpass              = 0;
