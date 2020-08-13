@@ -2,12 +2,15 @@
 
 #include "MoeVkLogicalDevice.hpp"
 #include "MoeVkFramebuffer.hpp"
-#include "MoeVkVertexBuffer.hpp"
+
 
 #include <vector>
 #include <assert.h>
 
 namespace moe {
+
+class MoeVkVertexBuffer;
+
 class MoeVkCommandPool {
 public:
     MoeVkCommandPool() { }
@@ -17,8 +20,7 @@ public:
             MoeVkQueueFamily queueFamily,
             MoeVkFramebuffer& framebuffer,
             MoeVkPipeline& pipeline,
-            MoeVkSwapChain& swapChain,
-            MoeVkVertexBuffer& vertexBuffer);
+            MoeVkSwapChain& swapChain);
     void destroy(MoeVkLogicalDevice& device);
 
     VkCommandBuffer& commandBuffer(unsigned int index) {
@@ -33,8 +35,10 @@ public:
             MoeVkVertexBuffer& vertexBuffer);
     void destroyCommandBuffers(MoeVkLogicalDevice& device);
 
+    VkCommandPool& pool() { return _pool; }
+
 private:
-    VkCommandPool pool;
+    VkCommandPool _pool;
 
     /**
      * allocates and records the commands for each swap chain image

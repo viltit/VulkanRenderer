@@ -1,6 +1,8 @@
 #include "MoeVkCommandPool.hpp"
 #include "../Exceptions/InitException.hpp"
 
+#include "MoeVkVertexBuffer.hpp"
+
 #include <iostream>
 
 namespace moe {
@@ -9,8 +11,7 @@ void MoeVkCommandPool::create(MoeVkLogicalDevice &device,
         MoeVkQueueFamily queueFamily,
         MoeVkFramebuffer& framebuffer,
         MoeVkPipeline& pipeline,
-        MoeVkSwapChain& swapChain,
-        MoeVkVertexBuffer& vertexBuffer) {
+        MoeVkSwapChain& swapChain) {
 
     // because we only submit commands for drawing, we use the graphics queue here
     auto indices = queueFamily.selectedGraphicsIndex;
@@ -20,16 +21,14 @@ void MoeVkCommandPool::create(MoeVkLogicalDevice &device,
     createInfo.queueFamilyIndex = indices;
     createInfo.flags = 0;   // can give hints that the buffer is re-recorded regularly
 
-    if (vkCreateCommandPool(device.device(), &createInfo, nullptr, &pool) != VK_SUCCESS) {
+    if (vkCreateCommandPool(device.device(), &createInfo, nullptr, &_pool) != VK_SUCCESS) {
         throw InitException("Failed to create a command Pool.", __FILE__, __FUNCTION__, __LINE__);
     }
-
-    createCommandBuffers(device, framebuffer, pipeline, swapChain, vertexBuffer);
 }
 
 void MoeVkCommandPool::destroy(moe::MoeVkLogicalDevice &device) {
     std::cout << "Destroying Command Pool\n";
-    vkDestroyCommandPool(device.device(), pool, nullptr);
+    vkDestroyCommandPool(device.device(), _pool, nullptr);
 }
 
 // TODO: More flexibility. Right now this is hardcoded for a specific vertex setup
@@ -42,7 +41,7 @@ void MoeVkCommandPool::createCommandBuffers(moe::MoeVkLogicalDevice &device,
 
     VkCommandBufferAllocateInfo allocInfo { };
     allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-    allocInfo.commandPool = pool;
+    allocInfo.commandPool = _pool;
     allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     allocInfo.commandBufferCount = (uint32_t)buffer.size();
 
@@ -109,7 +108,7 @@ void MoeVkCommandPool::createCommandBuffers(moe::MoeVkLogicalDevice &device,
 }
 
 void MoeVkCommandPool::destroyCommandBuffers(MoeVkLogicalDevice& device) {
-    vkFreeCommandBuffers(device.device(), pool, static_cast<uint32_t>(buffer.size()), buffer.data());
+    vkFreeCommandBuffers(device.device(), _pool, static_cast<uint32_t>(buffer.size()), buffer.data());
 }
 
 }

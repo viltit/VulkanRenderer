@@ -30,6 +30,7 @@ add_library(
         MoeVkFence.cpp
         MoeVertex.hpp
         MoeVkVertexBuffer.cpp
+        MoeVkBuffer.cpp
 )
 
 target_link_libraries(vkRenderer

@@ -28,8 +28,9 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, RendererOptions options)
     pipeline.create(logicalDevice, swapChain);
     framebuffer.create(logicalDevice, swapChain, pipeline);
 
-    vertexBuffer = new MoeVkVertexBuffer(physicalDevice, logicalDevice, vertices);
-    commandPool.create(logicalDevice, physicalDevice.queueFamily(), framebuffer, pipeline, swapChain, *vertexBuffer);
+    commandPool.create(logicalDevice, physicalDevice.queueFamily(), framebuffer, pipeline, swapChain);
+    vertexBuffer = new MoeVkVertexBuffer(physicalDevice, logicalDevice, commandPool, vertices);
+    commandPool.createCommandBuffers(logicalDevice, framebuffer, pipeline, swapChain, *vertexBuffer);
 
     // create semaphores:
     imageAvalaibleSemaphore.resize(maxFramesInFlight);
