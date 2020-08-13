@@ -1,7 +1,7 @@
 #include "MoeVkCommandPool.hpp"
 #include "../Exceptions/InitException.hpp"
 
-#include "MoeVkVertexBuffer.hpp"
+#include "MoeVkArrayBuffer.hpp"
 
 #include <iostream>
 
@@ -31,12 +31,10 @@ void MoeVkCommandPool::destroy(moe::MoeVkLogicalDevice &device) {
     vkDestroyCommandPool(device.device(), _pool, nullptr);
 }
 
-// TODO: More flexibility. Right now this is hardcoded for a specific vertex setup
-void MoeVkCommandPool::createCommandBuffers(moe::MoeVkLogicalDevice &device,
-        MoeVkFramebuffer& framebuffer,
-        MoeVkPipeline& pipeline,
-        MoeVkSwapChain& swapChain,
-        MoeVkVertexBuffer& vertexBuffer) {
+void MoeVkCommandPool::createCommandBuffers(moe::MoeVkLogicalDevice &device, moe::MoeVkFramebuffer &framebuffer,
+                                            moe::MoeVkPipeline &pipeline, moe::MoeVkSwapChain &swapChain,
+                                            moe::MoeVkArrayBuffer<moe::Vertex> &vertexBuffer,
+                                            moe::MoeVkArrayBuffer<uint32_t>& indexBuffer) {
     buffer.resize(framebuffer.buffers().size());
 
     VkCommandBufferAllocateInfo allocInfo { };
@@ -52,7 +50,7 @@ void MoeVkCommandPool::createCommandBuffers(moe::MoeVkLogicalDevice &device,
     for (size_t i = 0; i < buffer.size(); i++) {
         // setup rendering recording
         // TODO: Customize recording options
-        VkCommandBufferBeginInfo info { };
+        VkCommandBufferBeginInfo info{};
         info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
         info.flags = 0;
         info.pInheritanceInfo = nullptr;
@@ -61,14 +59,14 @@ void MoeVkCommandPool::createCommandBuffers(moe::MoeVkLogicalDevice &device,
         }
 
         // TODO: Let user decide
-        VkClearValue clearColor = { 0.f, 0.f, 0.f, 1.f };
+        VkClearValue clearColor = {0.f, 0.f, 0.f, 1.f};
 
         // once a command buffer is recorded, it can not be appended
-        VkRenderPassBeginInfo renderPassInfo { };
+        VkRenderPassBeginInfo renderPassInfo{};
         renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
         renderPassInfo.renderPass = pipeline.renderPass();
         renderPassInfo.framebuffer = framebuffer.buffers()[i];
-        renderPassInfo.renderArea.offset = { 0,0 };
+        renderPassInfo.renderArea.offset = {0, 0};
         renderPassInfo.renderArea.extent = swapChain.extent();
         renderPassInfo.clearValueCount = 1;
         renderPassInfo.pClearValues = &clearColor;
@@ -88,17 +86,18 @@ void MoeVkCommandPool::createCommandBuffers(moe::MoeVkLogicalDevice &device,
         vkCmdSetViewport(buffer[i], 0, 1, &viewport);
 
         VkRect2D scissor;
-        scissor.offset = { 0, 0 };
-        scissor.extent = { swapChain.extent().width, swapChain.extent().height };
+        scissor.offset = {0, 0};
+        scissor.extent = {swapChain.extent().width, swapChain.extent().height};
         vkCmdSetScissor(buffer[i], 0, 1, &scissor);
 
         // bind vertex buffer
-        VkBuffer vertexBuffers[] = { vertexBuffer.buffer() };
-        VkDeviceSize offsets[] = { 0 };
+        VkBuffer vertexBuffers[] = {vertexBuffer.buffer()};
+        VkDeviceSize offsets[] = {0};
         vkCmdBindVertexBuffers(buffer[i], 0, 1, vertexBuffers, offsets);
+        vkCmdBindIndexBuffer(buffer[i], indexBuffer.buffer(), 0, VK_INDEX_TYPE_UINT32);
 
         // vertex count, instance count, firstVertex, firstInstance
-        vkCmdDraw(buffer[i], 3, 1, 0, 0);
+        vkCmdDrawIndexed(buffer[i], indexBuffer.numVertices(), 1, 0, 0, 0);
         vkCmdEndRenderPass(buffer[i]);
 
         if (vkEndCommandBuffer(buffer[i]) != VK_SUCCESS) {

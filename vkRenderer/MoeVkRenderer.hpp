@@ -10,8 +10,8 @@
 #include "MoeVkCommandPool.hpp"
 #include "MoeVkSemaphore.hpp"
 #include "MoeVkFence.hpp"
-#include "MoeVkVertexBuffer.hpp"
-#include "MoeVertex.hpp"
+#include "MoeVkArrayBuffer.hpp"
+#include "MoeDrawable.hpp"
 
 namespace moe {
 
@@ -59,8 +59,9 @@ private:
     size_t currentFrame = 0;
 
     // TODO: This should be in an own class "scene" in the long termn
-    std::vector<Vertex>         vertices;
-    MoeVkVertexBuffer*           vertexBuffer;
+    Drawable                        drawable;
+    MoeVkArrayBuffer<Vertex>*       vertexBuffer;
+    MoeVkArrayBuffer<uint32_t>*     indexBuffer;
 
 };
 }

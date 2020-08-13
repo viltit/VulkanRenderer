@@ -1,5 +1,6 @@
 
 #include "MoeVkBuffer.hpp"
+#include "MoeVkCommandPool.hpp"
 
 namespace moe {
 
@@ -38,7 +39,6 @@ MoeVkBuffer::~MoeVkBuffer() {
 
 void MoeVkBuffer::copyToDst(MoeVkBuffer& destination, MoeVkCommandPool& commandPool, VkDeviceSize size) {
 
-    // TODO: Use class MoeVkCommandBuffer
     VkCommandBufferAllocateInfo info { };
     info.sType          = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     info.pNext          = nullptr;

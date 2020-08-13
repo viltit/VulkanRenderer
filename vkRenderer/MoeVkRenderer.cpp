@@ -14,11 +14,19 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, RendererOptions options)
         surface         { VK_NULL_HANDLE },
         window          { window }
 {
-    vertices = {
-            { { 0.f, -0.5f, 0.f }, { 1.f, 0.8f, 0.8f } },
+    const std::vector<Vertex> vertices = {
+            // first triangle
+            { { -0.5f, -0.5f, 0.f }, { 1.f, 0.8f, 0.8f } },
             { { 0.5f, 0.5f, 0.f }, { 0.8f, 1.f, 0.8f } },
-            { { -0.5f, 0.5f, 0.f }, { 0.8f, 0.8f, 1.f } }
+            { { -0.5f, 0.5f, 0.f }, { 0.8f, 0.8f, 1.f } },
+            { { 0.5f, -0.5f, 0.f }, { 0.8f, 1.f, 0.8f } },
     };
+    const std::vector<uint32_t> indices = {
+            0, 1, 2,
+            0, 3, 1
+    };
+    drawable = Drawable(vertices, indices);
+
 
     const std::vector<const char*> extensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
     createSurface(window);
@@ -29,8 +37,15 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, RendererOptions options)
     framebuffer.create(logicalDevice, swapChain, pipeline);
 
     commandPool.create(logicalDevice, physicalDevice.queueFamily(), framebuffer, pipeline, swapChain);
-    vertexBuffer = new MoeVkVertexBuffer(physicalDevice, logicalDevice, commandPool, vertices);
-    commandPool.createCommandBuffers(logicalDevice, framebuffer, pipeline, swapChain, *vertexBuffer);
+    vertexBuffer = new MoeVkArrayBuffer<Vertex>(physicalDevice, logicalDevice,
+            commandPool,
+            vertices,
+            MoeBufferUsage::vertexBuffer);
+    indexBuffer = new MoeVkArrayBuffer<uint32_t>(physicalDevice, logicalDevice,
+            commandPool,
+            indices,
+            MoeBufferUsage::indexBuffer);
+    commandPool.createCommandBuffers(logicalDevice, framebuffer, pipeline, swapChain, *vertexBuffer, *indexBuffer);
 
     // create semaphores:
     imageAvalaibleSemaphore.resize(maxFramesInFlight);
@@ -50,6 +65,9 @@ MoeVkRenderer::~MoeVkRenderer() {
 
     if (vertexBuffer != nullptr) {
         delete vertexBuffer;
+    }
+    if (indexBuffer != nullptr) {
+        delete indexBuffer;
     }
 
     for (size_t i = 0; i < maxFramesInFlight; i++) {
@@ -143,7 +161,7 @@ void MoeVkRenderer::recreateSwapChain() {
     swapChain.create(physicalDevice, logicalDevice, surface, *window);
     // pipeline.create(logicalDevice, swapChain);
     framebuffer.create(logicalDevice, swapChain, pipeline);
-    commandPool.createCommandBuffers(logicalDevice, framebuffer, pipeline, swapChain, *vertexBuffer);
+    commandPool.createCommandBuffers(logicalDevice, framebuffer, pipeline, swapChain, *vertexBuffer, *indexBuffer);
 }
 
 void MoeVkRenderer::cleanSwapchain() {

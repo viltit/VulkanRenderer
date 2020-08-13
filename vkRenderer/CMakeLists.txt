@@ -29,8 +29,9 @@ add_library(
         MoeVkSemaphore.cpp
         MoeVkFence.cpp
         MoeVertex.hpp
-        MoeVkVertexBuffer.cpp
+        MoeVkArrayBuffer.hpp
         MoeVkBuffer.cpp
+        MoeDrawable.hpp
 )
 
 target_link_libraries(vkRenderer

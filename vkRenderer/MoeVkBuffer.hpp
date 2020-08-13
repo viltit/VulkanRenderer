@@ -4,12 +4,11 @@
 #include "MoeVkLogicalDevice.hpp"
 #include <vulkan/vulkan.h>
 #include "../Exceptions/InitException.hpp"
-#include "MoeVkCommandPool.hpp"
-
-
-// TODO: Make this part of the class Device ?
 
 namespace moe {
+
+class MoeVkCommandPool;
+
 class MoeVkBuffer {
 public:
     MoeVkBuffer(MoeVkPhysicalDevice& physDevice, MoeVkLogicalDevice &device,

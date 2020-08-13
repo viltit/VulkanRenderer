@@ -2,14 +2,12 @@
 
 #include "MoeVkLogicalDevice.hpp"
 #include "MoeVkFramebuffer.hpp"
-
+#include "MoeVkArrayBuffer.hpp"
 
 #include <vector>
 #include <assert.h>
 
 namespace moe {
-
-class MoeVkVertexBuffer;
 
 class MoeVkCommandPool {
 public:
@@ -29,10 +27,12 @@ public:
     }
 
     void createCommandBuffers(MoeVkLogicalDevice& device,
-            MoeVkFramebuffer& framebuffer,
-            MoeVkPipeline& pipeline,
-            MoeVkSwapChain& swapChain,
-            MoeVkVertexBuffer& vertexBuffer);
+                              MoeVkFramebuffer& framebuffer,
+                              MoeVkPipeline& pipeline,
+                              MoeVkSwapChain& swapChain,
+                              MoeVkArrayBuffer<Vertex>& vertexBuffer,
+                              MoeVkArrayBuffer<uint32_t>& indexBuffer);
+
     void destroyCommandBuffers(MoeVkLogicalDevice& device);
 
     VkCommandPool& pool() { return _pool; }
