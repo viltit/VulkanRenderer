@@ -17,6 +17,7 @@ add_subdirectory(vkRenderer)
 add_subdirectory(external/spdlog)
 
 add_executable(vkEngine main.cpp
+        Timer.hpp
         Colors/ColorRGB.hpp)
 
 

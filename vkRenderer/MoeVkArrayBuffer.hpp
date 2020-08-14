@@ -18,23 +18,23 @@ class MoeVkArrayBuffer {
 public:
     MoeVkArrayBuffer(MoeVkPhysicalDevice& physDevice, MoeVkLogicalDevice& device,
                      MoeVkCommandPool& commandPool,
-                     const std::vector<T>& vertices,
+                     const std::vector<T>& data,
                      MoeBufferUsage usage
                      )
-        :   _buffer        { physDevice, device, sizeof(Vertex) * vertices.size(),
+        :   _buffer        { physDevice, device, sizeof(Vertex) * data.size(),
                              static_cast<VkBufferUsageFlags>(usage) | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
                              VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT },
-            _numVertices   { (uint32_t)vertices.size() }
+            _numVertices   { (uint32_t)data.size() }
     {
-        MoeVkBuffer stagingBuffer { physDevice, device, sizeof(Vertex) * vertices.size(),
+        MoeVkBuffer stagingBuffer { physDevice, device, sizeof(Vertex) * data.size(),
                                     VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
                                     VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT };
 
         // fill the vertex buffer by mapping the buffer memory
-        VkDeviceSize size = sizeof(T) * vertices.size();
-        void* data;
-        vkMapMemory(device.device(), stagingBuffer.memory(), 0, size, 0, &data);
-        memcpy(data, vertices.data(), (size_t)size);
+        VkDeviceSize size = sizeof(T) * data.size();
+        void* bufferData;
+        vkMapMemory(device.device(), stagingBuffer.memory(), 0, size, 0, &bufferData);
+        memcpy(bufferData, data.data(), (size_t)size);
         vkUnmapMemory(device.device(), stagingBuffer.memory());
         stagingBuffer.copyToDst(_buffer, commandPool, size);
     }

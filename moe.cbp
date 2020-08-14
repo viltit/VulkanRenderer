@@ -143,6 +143,12 @@
 		<Unit filename="/home/titus/programming/c++/vkEngine/Colors/ColorRGB.hpp">
 			<Option target="vkEngine"/>
 		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/Timer.cpp">
+			<Option target="vkEngine"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/Timer.hpp">
+			<Option target="vkEngine"/>
+		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/external/spdlog/include/spdlog/async.h">
 			<Option target="spdlog"/>
 		</Unit>
@@ -419,6 +425,9 @@
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVertex.hpp">
 			<Option target="vkRenderer"/>
 		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkArrayBuffer.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkBuffer.cpp">
 			<Option target="vkRenderer"/>
 		</Unit>
@@ -494,10 +503,10 @@
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkSwapChainProps.hpp">
 			<Option target="vkRenderer"/>
 		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkVertexBuffer.cpp">
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkUniformBuffer.cpp">
 			<Option target="vkRenderer"/>
 		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkVertexBuffer.hpp">
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkUniformBuffer.hpp">
 			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/VkWindow.cpp">

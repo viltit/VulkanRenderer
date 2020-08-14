@@ -32,6 +32,7 @@ add_library(
         MoeVkArrayBuffer.hpp
         MoeVkBuffer.cpp
         MoeDrawable.hpp
+        MoeVkUniformBuffer.cpp
 )
 
 target_link_libraries(vkRenderer

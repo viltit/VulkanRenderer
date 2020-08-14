@@ -31,7 +31,8 @@ public:
                               MoeVkPipeline& pipeline,
                               MoeVkSwapChain& swapChain,
                               MoeVkArrayBuffer<Vertex>& vertexBuffer,
-                              MoeVkArrayBuffer<uint32_t>& indexBuffer);
+                              MoeVkArrayBuffer<uint32_t>& indexBuffer,
+                              MoeVkUniformBuffer& uniformBuffer);
 
     void destroyCommandBuffers(MoeVkLogicalDevice& device);
 

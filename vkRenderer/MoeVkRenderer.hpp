@@ -12,6 +12,7 @@
 #include "MoeVkFence.hpp"
 #include "MoeVkArrayBuffer.hpp"
 #include "MoeDrawable.hpp"
+#include "MoeVkUniformBuffer.hpp"
 
 namespace moe {
 
@@ -21,7 +22,7 @@ class VkWindow;
 class MoeVkRenderer {
 
 public:
-    MoeVkRenderer(VkWindow* window, RendererOptions options = RendererOptions::none);
+    MoeVkRenderer(VkWindow* window, Drawable& drawable, RendererOptions options = RendererOptions::none);
     ~MoeVkRenderer();
 
     void draw();
@@ -59,9 +60,14 @@ private:
     size_t currentFrame = 0;
 
     // TODO: This should be in an own class "scene" in the long termn
-    Drawable                        drawable;
+    Drawable&                       drawable;
+
     MoeVkArrayBuffer<Vertex>*       vertexBuffer;
     MoeVkArrayBuffer<uint32_t>*     indexBuffer;
+    MoeVkUniformBuffer              uniformBuffer;
+
+    // TODO: This should be part of a camera class
+    glm::mat4                       VP;
 
 };
 }

@@ -11,6 +11,7 @@ class MoeVkCommandPool;
 
 class MoeVkBuffer {
 public:
+    MoeVkBuffer() { }
     MoeVkBuffer(MoeVkPhysicalDevice& physDevice, MoeVkLogicalDevice &device,
             VkDeviceSize size, VkBufferUsageFlags bufferFlags,
             VkMemoryPropertyFlags memoryFlags);

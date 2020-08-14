@@ -4,28 +4,19 @@
 
 #include <iostream>
 #include <SDL_vulkan.h>
+#include <memory>
 
 #define __DEBUG__
 
 namespace moe {
 
-MoeVkRenderer::MoeVkRenderer(VkWindow* window, RendererOptions options)
+MoeVkRenderer::MoeVkRenderer(VkWindow* window, Drawable& drawable, RendererOptions options)
     :   instance        { window, options },
         surface         { VK_NULL_HANDLE },
-        window          { window }
+        window          { window },
+        drawable        { drawable }
 {
-    const std::vector<Vertex> vertices = {
-            // first triangle
-            { { -0.5f, -0.5f, 0.f }, { 1.f, 0.8f, 0.8f } },
-            { { 0.5f, 0.5f, 0.f }, { 0.8f, 1.f, 0.8f } },
-            { { -0.5f, 0.5f, 0.f }, { 0.8f, 0.8f, 1.f } },
-            { { 0.5f, -0.5f, 0.f }, { 0.8f, 1.f, 0.8f } },
-    };
-    const std::vector<uint32_t> indices = {
-            0, 1, 2,
-            0, 3, 1
-    };
-    drawable = Drawable(vertices, indices);
+
 
 
     const std::vector<const char*> extensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
@@ -33,19 +24,25 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, RendererOptions options)
     physicalDevice.create(instance.instance(), surface, extensions);
     logicalDevice.create(instance.instance(), physicalDevice, extensions);
     swapChain.create(physicalDevice, logicalDevice, surface, *window);
-    pipeline.create(logicalDevice, swapChain);
+
+    uniformBuffer.create(physicalDevice, logicalDevice);
+
+    pipeline.create(logicalDevice, swapChain, uniformBuffer);
     framebuffer.create(logicalDevice, swapChain, pipeline);
 
     commandPool.create(logicalDevice, physicalDevice.queueFamily(), framebuffer, pipeline, swapChain);
     vertexBuffer = new MoeVkArrayBuffer<Vertex>(physicalDevice, logicalDevice,
             commandPool,
-            vertices,
+            drawable.vertices,
             MoeBufferUsage::vertexBuffer);
     indexBuffer = new MoeVkArrayBuffer<uint32_t>(physicalDevice, logicalDevice,
             commandPool,
-            indices,
+            drawable.indices,
             MoeBufferUsage::indexBuffer);
-    commandPool.createCommandBuffers(logicalDevice, framebuffer, pipeline, swapChain, *vertexBuffer, *indexBuffer);
+
+    commandPool.createCommandBuffers(logicalDevice, framebuffer, pipeline, swapChain,
+            *vertexBuffer, *indexBuffer,
+            uniformBuffer);
 
     // create semaphores:
     imageAvalaibleSemaphore.resize(maxFramesInFlight);
@@ -62,6 +59,8 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, RendererOptions options)
 MoeVkRenderer::~MoeVkRenderer() {
     // because drawing command are executed asynchrounously, we need to wait until we destroy the resources:
     vkDeviceWaitIdle(logicalDevice.device());
+
+    uniformBuffer.destroy(logicalDevice);
 
     if (vertexBuffer != nullptr) {
         delete vertexBuffer;
@@ -83,6 +82,19 @@ MoeVkRenderer::~MoeVkRenderer() {
 }
 
 void MoeVkRenderer::draw() {
+
+    // TODO: This should be part of a camera class
+    glm::mat4 V = glm::lookAt(glm::vec3{ 1.f, 1.f, 1.f }, glm::vec3{ 0.f, 0.f, 0.f }, glm::vec3{ 0.f, 0.f, 1.f });
+    glm::mat4 P = glm::perspective(glm::radians(60.f), (float)swapChain.extent().width / (float)swapChain.extent().height, 0.01f, 10.f);
+
+    // glm is made for openGL, where the y-Axis goes from bottom to top
+    P[1][1] *= -1.f;
+    glm::mat4 MVP = P * V * drawable.M;
+
+    void* data;
+    vkMapMemory(logicalDevice.device(), uniformBuffer.memory(), 0, sizeof(MVP), 0, &data);
+    memcpy(data, &MVP, sizeof(MVP));
+    vkUnmapMemory(logicalDevice.device(), uniformBuffer.memory());
 
     fences[currentFrame].wait(logicalDevice, UINT64_MAX);
 
@@ -161,7 +173,7 @@ void MoeVkRenderer::recreateSwapChain() {
     swapChain.create(physicalDevice, logicalDevice, surface, *window);
     // pipeline.create(logicalDevice, swapChain);
     framebuffer.create(logicalDevice, swapChain, pipeline);
-    commandPool.createCommandBuffers(logicalDevice, framebuffer, pipeline, swapChain, *vertexBuffer, *indexBuffer);
+    commandPool.createCommandBuffers(logicalDevice, framebuffer, pipeline, swapChain, *vertexBuffer, *indexBuffer, uniformBuffer);
 }
 
 void MoeVkRenderer::cleanSwapchain() {

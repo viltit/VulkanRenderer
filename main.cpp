@@ -2,6 +2,8 @@
 #include "vkRenderer/MoeVkRenderer.hpp"
 #include "vkRenderer/VkWindow.hpp"
 #include "Exceptions/InitException.hpp"
+#include "Timer.hpp"
+#include "vkRenderer/MoeDrawable.hpp"
 
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/basic_file_sink.h"
@@ -12,8 +14,25 @@ int main() {
     try {
         spdlog::info("App is starting");
 
+        // define a simple square
+        const std::vector<Vertex> vertices = {
+                // first triangle
+                { { -0.5f, -0.5f, 0.f }, { 1.f, 0.8f, 0.8f } },
+                { { 0.5f, 0.5f, 0.f }, { 0.8f, 1.f, 0.8f } },
+                { { -0.5f, 0.5f, 0.f }, { 0.8f, 0.8f, 1.f } },
+                { { 0.5f, -0.5f, 0.f }, { 0.8f, 1.f, 0.8f } },
+        };
+        const std::vector<uint32_t> indices = {
+                0, 1, 2,
+                0, 3, 1
+        };
+        Drawable drawable = Drawable(vertices, indices);
+
         VkWindow window = VkWindow("Vulkan Barebones", 500, 500, ColorRGB::black());
-        MoeVkRenderer vkApp = MoeVkRenderer(&window, RendererOptions::validation);
+        MoeVkRenderer vkApp = MoeVkRenderer(&window, drawable, RendererOptions::validation);
+
+        Timer timer;
+        timer.start();
 
         bool isRunning = true;
         while(isRunning) {
@@ -49,6 +68,8 @@ int main() {
                         break;
                 }
             }
+            auto time = timer.elapsed();
+            drawable.update(time);
             vkApp.draw();
         }
         spdlog::info("Shutting down.");

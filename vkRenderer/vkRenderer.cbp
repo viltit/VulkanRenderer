@@ -58,6 +58,9 @@
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVertex.hpp">
 			<Option target="vkRenderer"/>
 		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkArrayBuffer.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkBuffer.cpp">
 			<Option target="vkRenderer"/>
 		</Unit>
@@ -133,10 +136,10 @@
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkSwapChainProps.hpp">
 			<Option target="vkRenderer"/>
 		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkVertexBuffer.cpp">
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkUniformBuffer.cpp">
 			<Option target="vkRenderer"/>
 		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkVertexBuffer.hpp">
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkUniformBuffer.hpp">
 			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/VkWindow.cpp">

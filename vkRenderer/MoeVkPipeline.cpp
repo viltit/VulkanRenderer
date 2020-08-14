@@ -12,7 +12,7 @@ MoeVkPipeline::MoeVkPipeline() { }
 
 MoeVkPipeline::~MoeVkPipeline() { }
 
-void MoeVkPipeline::create(MoeVkLogicalDevice& device, const MoeVkSwapChain& swapChain) {
+void MoeVkPipeline::create(MoeVkLogicalDevice& device, const MoeVkSwapChain& swapChain, MoeVkUniformBuffer& uniformBuffer) {
 
     // TODO later: Do not hardcode shader path
     auto vertexCode = readShader("Shaders/triangle.vert.spv");
@@ -98,7 +98,7 @@ void MoeVkPipeline::create(MoeVkLogicalDevice& device, const MoeVkSwapChain& swa
     rasterizationCreateInfo.rasterizerDiscardEnable = VK_FALSE;
     // use LINE for wireframes
     rasterizationCreateInfo.polygonMode             = VK_POLYGON_MODE_FILL;
-    rasterizationCreateInfo.cullMode                = VK_CULL_MODE_BACK_BIT;
+    rasterizationCreateInfo.cullMode                = VK_CULL_MODE_NONE;
     rasterizationCreateInfo.frontFace               = VK_FRONT_FACE_CLOCKWISE;
     rasterizationCreateInfo.depthBiasEnable         = VK_FALSE;
     rasterizationCreateInfo.depthBiasConstantFactor = 0;
@@ -164,8 +164,8 @@ void MoeVkPipeline::create(MoeVkLogicalDevice& device, const MoeVkSwapChain& swa
     layoutCreateInfo.sType                  = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     layoutCreateInfo.pNext                  = nullptr;
     layoutCreateInfo.flags                  = 0;
-    layoutCreateInfo.setLayoutCount         = 0;
-    layoutCreateInfo.pSetLayouts            = nullptr;
+    layoutCreateInfo.setLayoutCount         = 1;
+    layoutCreateInfo.pSetLayouts            = &(uniformBuffer.layout());
     layoutCreateInfo.pushConstantRangeCount = 0;
     layoutCreateInfo.pPushConstantRanges    = nullptr;
 

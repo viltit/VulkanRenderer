@@ -31,10 +31,11 @@ void MoeVkCommandPool::destroy(moe::MoeVkLogicalDevice &device) {
     vkDestroyCommandPool(device.device(), _pool, nullptr);
 }
 
-void MoeVkCommandPool::createCommandBuffers(moe::MoeVkLogicalDevice &device, moe::MoeVkFramebuffer &framebuffer,
-                                            moe::MoeVkPipeline &pipeline, moe::MoeVkSwapChain &swapChain,
-                                            moe::MoeVkArrayBuffer<moe::Vertex> &vertexBuffer,
-                                            moe::MoeVkArrayBuffer<uint32_t>& indexBuffer) {
+void MoeVkCommandPool::createCommandBuffers(MoeVkLogicalDevice &device, MoeVkFramebuffer &framebuffer,
+                                            MoeVkPipeline &pipeline, MoeVkSwapChain &swapChain,
+                                            MoeVkArrayBuffer<moe::Vertex> &vertexBuffer,
+                                            MoeVkArrayBuffer<uint32_t>& indexBuffer,
+                                            MoeVkUniformBuffer& uniformBuffer) {
     buffer.resize(framebuffer.buffers().size());
 
     VkCommandBufferAllocateInfo allocInfo { };
@@ -95,6 +96,11 @@ void MoeVkCommandPool::createCommandBuffers(moe::MoeVkLogicalDevice &device, moe
         VkDeviceSize offsets[] = {0};
         vkCmdBindVertexBuffers(buffer[i], 0, 1, vertexBuffers, offsets);
         vkCmdBindIndexBuffer(buffer[i], indexBuffer.buffer(), 0, VK_INDEX_TYPE_UINT32);
+
+        // bind descriptor set
+        vkCmdBindDescriptorSets(buffer[i], VK_PIPELINE_BIND_POINT_GRAPHICS,
+                pipeline.layout(), 0, 1,
+                &(uniformBuffer.set()), 0, nullptr);
 
         // vertex count, instance count, firstVertex, firstInstance
         vkCmdDrawIndexed(buffer[i], indexBuffer.numVertices(), 1, 0, 0, 0);
