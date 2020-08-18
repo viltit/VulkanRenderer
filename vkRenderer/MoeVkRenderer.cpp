@@ -31,6 +31,7 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, Drawable& drawable, RendererOptio
     framebuffer.create(logicalDevice, swapChain, pipeline);
 
     commandPool.create(logicalDevice, physicalDevice.queueFamily(), framebuffer, pipeline, swapChain);
+    loadTexture();
     vertexBuffer = new MoeVkArrayBuffer<Vertex>(physicalDevice, logicalDevice,
             commandPool,
             drawable.vertices,
@@ -54,6 +55,11 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, Drawable& drawable, RendererOptio
         renderFinishedSemaphore[i].create(logicalDevice);
         fences[i].create(logicalDevice);
     }
+}
+
+// TODO: Remove from here
+void MoeVkRenderer::loadTexture() {
+    image.load("Textures/planks_Diffuse.png");
 }
 
 MoeVkRenderer::~MoeVkRenderer() {

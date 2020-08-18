@@ -8,7 +8,6 @@ struct Vertex {
     glm::vec3 pos;
     glm::vec3 color;
 
-    // TODO: Move this elsewhere.
     static VkVertexInputBindingDescription getBindingDescription() {
         VkVertexInputBindingDescription description { };
         description.binding = 0;

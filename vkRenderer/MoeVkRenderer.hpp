@@ -1,18 +1,19 @@
 #include <vulkan/vulkan.h>
 #include <vector>
 
-#include "MoeVkPhysicalDevice.hpp"
-#include "MoeVkLogicalDevice.hpp"
-#include "MoeVkInstance.hpp"
-#include "MoeVkSwapChain.hpp"
-#include "MoeVkPipeline.hpp"
-#include "MoeVkFramebuffer.hpp"
-#include "MoeVkCommandPool.hpp"
-#include "MoeVkSemaphore.hpp"
-#include "MoeVkFence.hpp"
-#include "MoeVkArrayBuffer.hpp"
+#include "wrapper/MoeVkPhysicalDevice.hpp"
+#include "wrapper/MoeVkLogicalDevice.hpp"
+#include "wrapper/MoeVkInstance.hpp"
+#include "wrapper/MoeVkSwapChain.hpp"
+#include "wrapper/MoeVkPipeline.hpp"
+#include "wrapper/MoeVkFramebuffer.hpp"
+#include "wrapper/MoeVkCommandPool.hpp"
+#include "wrapper/MoeVkSemaphore.hpp"
+#include "wrapper/MoeVkFence.hpp"
+#include "wrapper/MoeVkArrayBuffer.hpp"
 #include "MoeDrawable.hpp"
-#include "MoeVkUniformBuffer.hpp"
+#include "wrapper/MoeVkUniformBuffer.hpp"
+#include "Image.hpp"
 
 namespace moe {
 
@@ -69,5 +70,8 @@ private:
     // TODO: This should be part of a camera class
     glm::mat4                       VP;
 
+    // TODO: This will be part of a "MoeTexture" class
+    Image                           image;
+    void loadTexture(/*filename*/);
 };
 }

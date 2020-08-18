@@ -14,25 +14,30 @@ include_directories(${Vulkan_INCLUDE_DIRS})
 
 add_library(
         vkRenderer
-        MoeVkFunctions.hpp
-        MoeVkInstance.cpp
+        stb_image.h
+        Image.cpp
+        wrapper/MoeVkFunctions.hpp
+        wrapper/MoeVkInstance.cpp
         MoeVkRenderer.cpp
-        MoeVkQueueFamily.hpp
+        wrapper/MoeVkQueueFamily.hpp
         VkWindow.cpp
-        MoeVkPhysicalDevice.cpp
-        MoeVkLogicalDevice.cpp
-        MoeVkSwapChain.cpp
-        MoeVkSwapChainProps.hpp
-        MoeVkPipeline.cpp
-        MoeVkFramebuffer.cpp
-        MoeVkCommandPool.cpp
-        MoeVkSemaphore.cpp
-        MoeVkFence.cpp
+        wrapper/MoeVkPhysicalDevice.cpp
+        wrapper/MoeVkLogicalDevice.cpp
+        wrapper/MoeVkSwapChain.cpp
+        wrapper/MoeVkSwapChainProps.hpp
+        wrapper/MoeVkPipeline.cpp
+        wrapper/MoeVkFramebuffer.cpp
+        wrapper/MoeVkCommandPool.cpp
+        wrapper/MoeVkSemaphore.cpp
+        wrapper/MoeVkFence.cpp
+        wrapper/MoeVkUtils.hpp
+        wrapper/MoeVkUniformBuffer.cpp
+        wrapper/MoeVkCommandBuffer.cpp
         MoeVertex.hpp
-        MoeVkArrayBuffer.hpp
-        MoeVkBuffer.cpp
+        wrapper/MoeVkArrayBuffer.hpp
+        wrapper/MoeVkBuffer.cpp
         MoeDrawable.hpp
-        MoeVkUniformBuffer.cpp
+        wrapper/MoeVkUniformBuffer.cpp
 )
 
 target_link_libraries(vkRenderer

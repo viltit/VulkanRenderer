@@ -1,9 +1,9 @@
 #pragma once
 
 #include <vector>
-#include "MoeVertex.hpp"
-
 #include <glm/gtc/matrix_transform.hpp>
+
+#include "MoeVertex.hpp"
 
 namespace moe {
 struct Drawable {

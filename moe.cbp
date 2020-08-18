@@ -143,9 +143,6 @@
 		<Unit filename="/home/titus/programming/c++/vkEngine/Colors/ColorRGB.hpp">
 			<Option target="vkEngine"/>
 		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/Timer.cpp">
-			<Option target="vkEngine"/>
-		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/Timer.hpp">
 			<Option target="vkEngine"/>
 		</Unit>
@@ -419,67 +416,16 @@
 		<Unit filename="/home/titus/programming/c++/vkEngine/main.cpp">
 			<Option target="vkEngine"/>
 		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/Image.cpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/Image.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeDrawable.hpp">
 			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVertex.hpp">
-			<Option target="vkRenderer"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkArrayBuffer.hpp">
-			<Option target="vkRenderer"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkBuffer.cpp">
-			<Option target="vkRenderer"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkBuffer.hpp">
-			<Option target="vkRenderer"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkCommandPool.cpp">
-			<Option target="vkRenderer"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkCommandPool.hpp">
-			<Option target="vkRenderer"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkFence.cpp">
-			<Option target="vkRenderer"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkFence.hpp">
-			<Option target="vkRenderer"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkFramebuffer.cpp">
-			<Option target="vkRenderer"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkFramebuffer.hpp">
-			<Option target="vkRenderer"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkFunctions.hpp">
-			<Option target="vkRenderer"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkInstance.cpp">
-			<Option target="vkRenderer"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkInstance.hpp">
-			<Option target="vkRenderer"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkLogicalDevice.cpp">
-			<Option target="vkRenderer"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkLogicalDevice.hpp">
-			<Option target="vkRenderer"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkPhysicalDevice.cpp">
-			<Option target="vkRenderer"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkPhysicalDevice.hpp">
-			<Option target="vkRenderer"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkPipeline.cpp">
-			<Option target="vkRenderer"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkPipeline.hpp">
-			<Option target="vkRenderer"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkQueueFamily.hpp">
 			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkRenderer.cpp">
@@ -488,31 +434,100 @@
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkRenderer.hpp">
 			<Option target="vkRenderer"/>
 		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkSemaphore.cpp">
-			<Option target="vkRenderer"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkSemaphore.hpp">
-			<Option target="vkRenderer"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkSwapChain.cpp">
-			<Option target="vkRenderer"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkSwapChain.hpp">
-			<Option target="vkRenderer"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkSwapChainProps.hpp">
-			<Option target="vkRenderer"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkUniformBuffer.cpp">
-			<Option target="vkRenderer"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVkUniformBuffer.hpp">
-			<Option target="vkRenderer"/>
-		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/VkWindow.cpp">
 			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/VkWindow.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/stb_image.h">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkArrayBuffer.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkBuffer.cpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkBuffer.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkCommandBuffer.cpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkCommandBuffer.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkCommandPool.cpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkCommandPool.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkFence.cpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkFence.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkFramebuffer.cpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkFramebuffer.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkFunctions.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkInstance.cpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkInstance.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkLogicalDevice.cpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkLogicalDevice.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkPhysicalDevice.cpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkPhysicalDevice.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkPipeline.cpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkPipeline.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkQueueFamily.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkSemaphore.cpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkSemaphore.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkSwapChain.cpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkSwapChain.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkSwapChainProps.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkUniformBuffer.cpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkUniformBuffer.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkUtils.hpp">
 			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/CMakeLists.txt">
