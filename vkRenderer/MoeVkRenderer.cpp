@@ -25,13 +25,15 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, Drawable& drawable, RendererOptio
     logicalDevice.create(instance.instance(), physicalDevice, extensions);
     swapChain.create(physicalDevice, logicalDevice, surface, *window);
 
-    uniformBuffer.create(physicalDevice, logicalDevice);
+    uniformBuffer.createLayout(physicalDevice, logicalDevice);
+    uniformBuffer.createPool(physicalDevice, logicalDevice);
 
     pipeline.create(logicalDevice, swapChain, uniformBuffer);
     framebuffer.create(logicalDevice, swapChain, pipeline);
 
     commandPool.create(logicalDevice, physicalDevice.queueFamily(), framebuffer, pipeline, swapChain);
     loadTexture();
+    uniformBuffer.updateSets(physicalDevice, logicalDevice, image);
     vertexBuffer = new MoeVkArrayBuffer<Vertex>(physicalDevice, logicalDevice,
             commandPool,
             drawable.vertices,
@@ -60,6 +62,7 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, Drawable& drawable, RendererOptio
 // TODO: Remove from here
 void MoeVkRenderer::loadTexture() {
     image.load("Textures/planks_Diffuse.png");
+    image.upload(logicalDevice, physicalDevice, commandPool, logicalDevice.graphicsQueue());
 }
 
 MoeVkRenderer::~MoeVkRenderer() {

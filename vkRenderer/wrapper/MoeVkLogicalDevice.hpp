@@ -15,6 +15,14 @@ public:
     MoeVkLogicalDevice();
     ~MoeVkLogicalDevice();
 
+    // weird thing may happen on a shallow copy (like trying to allocate stuff from a VK_NULL_HANDLE)
+    // TODO: Either implement copy / move or delete them for ALL wrappers
+    MoeVkLogicalDevice(const MoeVkLogicalDevice& other) = delete;
+    MoeVkLogicalDevice(MoeVkLogicalDevice&& other) = delete;
+    MoeVkLogicalDevice& operator=(const MoeVkLogicalDevice& other) = delete;
+    MoeVkLogicalDevice& operator=(MoeVkLogicalDevice&& other) = delete;
+
+
     void create(VkInstance instance, MoeVkPhysicalDevice& device,
             const std::vector<const char*>& extensions,
             unsigned int desiredQueueCount = 4);

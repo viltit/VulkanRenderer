@@ -17,10 +17,10 @@ int main() {
         // define a simple square
         const std::vector<Vertex> vertices = {
                 // first triangle
-                { { -0.5f, -0.5f, 0.f }, { 1.f, 0.8f, 0.8f } },
-                { { 0.5f, 0.5f, 0.f }, { 0.8f, 1.f, 0.8f } },
-                { { -0.5f, 0.5f, 0.f }, { 0.8f, 0.8f, 1.f } },
-                { { 0.5f, -0.5f, 0.f }, { 0.8f, 1.f, 0.8f } },
+                { { -0.5f, -0.5f, 0.f }, { 1.f, 0.8f, 0.8f }, { 0.f, 0.f } },
+                { { 0.5f, 0.5f, 0.f }, { 0.8f, 1.f, 0.8f }, { 1.0, 1.0 } },
+                { { -0.5f, 0.5f, 0.f }, { 0.8f, 0.8f, 1.f }, { 0.f, 1.f} },
+                { { 0.5f, -0.5f, 0.f }, { 0.8f, 1.f, 0.8f }, { 1.f, 0.f } }
         };
         const std::vector<uint32_t> indices = {
                 0, 1, 2,

@@ -42,6 +42,7 @@ void MoeVkLogicalDevice::create(VkInstance instance, MoeVkPhysicalDevice& physDe
     // TODO - add specific features we need from the gpu -> only add features we really use !
     VkPhysicalDeviceFeatures features = { };
     features.geometryShader = true;
+    features.samplerAnisotropy = true;  // TODO: Optional
 
     VkDeviceCreateInfo createInfo { };
     createInfo.sType                    = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;

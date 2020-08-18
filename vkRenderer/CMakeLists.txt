@@ -15,7 +15,7 @@ include_directories(${Vulkan_INCLUDE_DIRS})
 add_library(
         vkRenderer
         stb_image.h
-        Image.cpp
+        wrapper/MoeVkImage.cpp
         wrapper/MoeVkFunctions.hpp
         wrapper/MoeVkInstance.cpp
         MoeVkRenderer.cpp

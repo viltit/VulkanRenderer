@@ -5,10 +5,18 @@
 #include "MoeVkBuffer.hpp"
 
 namespace moe {
+
+class MoeVkImage;
+
 class MoeVkUniformBuffer {
+
+
 public:
     MoeVkUniformBuffer() { }
-    void create(MoeVkPhysicalDevice& phyDevice, MoeVkLogicalDevice& device);
+    void createLayout(MoeVkPhysicalDevice& phyDevice, MoeVkLogicalDevice& device);
+    void createPool(MoeVkPhysicalDevice& phyDevice, MoeVkLogicalDevice& device);
+    void updateSets(MoeVkPhysicalDevice& phyDevice, MoeVkLogicalDevice& device, MoeVkImage& image);
+
     void destroy(MoeVkLogicalDevice& device);
 
     VkDeviceMemory& memory() { return _buffer->memory(); }
