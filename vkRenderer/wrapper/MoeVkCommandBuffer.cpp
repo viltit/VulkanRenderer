@@ -32,8 +32,37 @@ void MoeVkCommandBuffer::destroy() {
     vkFreeCommandBuffers(_device, _pool, static_cast<uint32_t>(_buffers.size()), _buffers.data());
 }
 
-VkCommandBuffer &MoeVkCommandBuffer::at(int index) {
-    assert(index < _buffers.size());
-    return _buffers[index];
+void MoeVkCommandBuffer::startRecording(MoeVkCommandPool& commandPool, VkCommandBufferUsageFlags flags, int bufferIndex) {
+
+    // TODO: Add functions "begin()" and "end()" to MoeVkCommandBuffer
+    VkCommandBufferBeginInfo commandBeginInfo { };
+    commandBeginInfo.sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    commandBeginInfo.pNext              = nullptr;
+    commandBeginInfo.flags              = flags;
+    commandBeginInfo.pInheritanceInfo   = nullptr;
+
+    if (vkBeginCommandBuffer(_buffers.at(bufferIndex), &commandBeginInfo) != VK_SUCCESS) {
+        throw InitException("Failed to begin recording command buffer", __FILE__, __FUNCTION__, __LINE__);
+    }
+}
+
+void MoeVkCommandBuffer::stopRecording(VkQueue& queue, MoeVkCommandPool& commandPool, int bufferIndex) {
+
+    if (vkEndCommandBuffer(_buffers[bufferIndex]) != VK_SUCCESS) {
+        throw InitException("Failed to end command buffer recording", __FILE__, __FUNCTION__, __LINE__);
+    }
+
+    VkSubmitInfo submitInfo { };
+    submitInfo.sType                = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submitInfo.pNext                = nullptr;
+    submitInfo.waitSemaphoreCount   = 0;
+    submitInfo.pWaitSemaphores      = nullptr;
+    submitInfo.pWaitDstStageMask    = nullptr;
+    submitInfo.commandBufferCount   = 1;
+    submitInfo.pCommandBuffers      = &(_buffers[bufferIndex]);
+    submitInfo.signalSemaphoreCount = 0;
+    submitInfo.pSignalSemaphores    = nullptr;
+
+    vkQueueSubmit(queue, 1, &submitInfo, VK_NULL_HANDLE);
 }
 }

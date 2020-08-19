@@ -143,8 +143,6 @@ void MoeVkRenderer::draw() {
     memcpy(data, &ubo, sizeof(ubo));
     vkUnmapMemory(logicalDevice.device(), uniformBuffer.memory(imageIndex));
 
-
-
     VkSemaphore waitSemaphores[] = { imageAvalaibleSemaphore[currentFrame].semaphore() };
     VkSemaphore signalSemaphores[] = { renderFinishedSemaphore[currentFrame].semaphore() };
     VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };

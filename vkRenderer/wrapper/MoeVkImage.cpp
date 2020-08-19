@@ -164,17 +164,7 @@ namespace moe {
 
         MoeVkCommandBuffer buffer { };
         buffer.create(*_device, commandPool, 1);
-
-        // TODO: Add functions "begin()" and "end()" to MoeVkCommandBuffer
-        VkCommandBufferBeginInfo commandBeginInfo { };
-        commandBeginInfo.sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-        commandBeginInfo.pNext              = nullptr;
-        commandBeginInfo.flags              = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-        commandBeginInfo.pInheritanceInfo   = nullptr;
-
-        if (vkBeginCommandBuffer(buffer.at(0), &commandBeginInfo) != VK_SUCCESS) {
-            throw InitException("Failed to begin recording command buffer", __FILE__, __FUNCTION__, __LINE__);
-        }
+        buffer.startRecording(commandPool, VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT, 0);
 
         // start layouting the image. This happens with so called "image-memory-barrier".
         VkPipelineStageFlags sourceStage;
@@ -220,20 +210,8 @@ namespace moe {
                 1,
                 &barrier);
 
-        vkEndCommandBuffer(buffer.at(0));
+        buffer.stopRecording(queue, commandPool, 0);
 
-        VkSubmitInfo submitInfo { };
-        submitInfo.sType                = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-        submitInfo.pNext                = nullptr;
-        submitInfo.waitSemaphoreCount   = 0;
-        submitInfo.pWaitSemaphores      = nullptr;
-        submitInfo.pWaitDstStageMask    = nullptr;
-        submitInfo.commandBufferCount   = 1;
-        submitInfo.pCommandBuffers      = &(buffer.at(0));
-        submitInfo.signalSemaphoreCount = 0;
-        submitInfo.pSignalSemaphores    = nullptr;
-
-        vkQueueSubmit(queue, 1, &submitInfo, VK_NULL_HANDLE);
         // TODO: Wait for fence ??  --> Would make sence if we access this class in a multihtreaded environment
         vkQueueWaitIdle(queue);
         buffer.destroy();
@@ -244,17 +222,7 @@ namespace moe {
 
         MoeVkCommandBuffer commandBuffer { };
         commandBuffer.create(*_device, pool, 1);
-
-        // TODO: Add functions "begin()" and "end()" to MoeVkCommandBuffer
-        VkCommandBufferBeginInfo commandBeginInfo { };
-        commandBeginInfo.sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-        commandBeginInfo.pNext              = nullptr;
-        commandBeginInfo.flags              = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-        commandBeginInfo.pInheritanceInfo   = nullptr;
-
-        if (vkBeginCommandBuffer(commandBuffer.at(0), &commandBeginInfo) != VK_SUCCESS) {
-            throw InitException("Failed to begin recording command buffer", __FILE__, __FUNCTION__, __LINE__);
-        }
+        commandBuffer.startRecording(pool, VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT, 0);
 
         // copy image from staging buffer to discrete memory
         VkBufferImageCopy imageCopy;
@@ -274,21 +242,8 @@ namespace moe {
                 _image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                 1, &imageCopy);
 
-        // TODO: Add function "end()" to class MoeVkCommandBuffer
-        vkEndCommandBuffer(commandBuffer.at(0));
+        commandBuffer.stopRecording(queue, pool, 0);
 
-        VkSubmitInfo submitInfo { };
-        submitInfo.sType                = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-        submitInfo.pNext                = nullptr;
-        submitInfo.waitSemaphoreCount   = 0;
-        submitInfo.pWaitSemaphores      = nullptr;
-        submitInfo.pWaitDstStageMask    = nullptr;
-        submitInfo.commandBufferCount   = 1;
-        submitInfo.pCommandBuffers      = &(commandBuffer.at(0));
-        submitInfo.signalSemaphoreCount = 0;
-        submitInfo.pSignalSemaphores    = nullptr;
-
-        vkQueueSubmit(queue, 1, &submitInfo, VK_NULL_HANDLE);
         // TODO: Wait for fence ??  --> Would make sence if we access this class in a multihtreaded environment
         vkQueueWaitIdle(queue);
     }

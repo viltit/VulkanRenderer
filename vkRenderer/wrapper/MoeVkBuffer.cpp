@@ -50,16 +50,7 @@ void MoeVkBuffer::copyToDst(MoeVkBuffer& destination, MoeVkCommandPool& commandP
 
     MoeVkCommandBuffer commandBuffer { };
     commandBuffer.create(*_device, commandPool, 1);
-
-    VkCommandBufferBeginInfo bufferBeginInfo;
-    bufferBeginInfo.sType       = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    bufferBeginInfo.pNext       = nullptr;
-    bufferBeginInfo.flags       = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-    bufferBeginInfo.pInheritanceInfo = nullptr;
-
-    if (vkBeginCommandBuffer(commandBuffer.at(0), &bufferBeginInfo) != VK_SUCCESS) {
-        throw InitException("Could not beginn recording command buffer", __FILE__, __FUNCTION__, __LINE__);
-    }
+    commandBuffer.startRecording(commandPool, VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT, 0);
 
     VkBufferCopy copy;
     copy.dstOffset = 0;
@@ -67,25 +58,7 @@ void MoeVkBuffer::copyToDst(MoeVkBuffer& destination, MoeVkCommandPool& commandP
     copy.size = size;
     vkCmdCopyBuffer(commandBuffer.at(0), _buffer, destination.buffer(), 1, &copy);
 
-    if (vkEndCommandBuffer(commandBuffer.at(0)) != VK_SUCCESS) {
-        throw InitException("Failed to end command buffer recording.", __FILE__, __FUNCTION__, __LINE__);
-    }
-    VkSubmitInfo submitInfo { };
-    submitInfo.sType            = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    submitInfo.pNext            = nullptr;
-    submitInfo.waitSemaphoreCount = 0;
-    submitInfo.pWaitSemaphores = nullptr;
-    submitInfo.pWaitDstStageMask = nullptr;
-    submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers = &(commandBuffer.at(0));
-    submitInfo.signalSemaphoreCount = 0;
-    submitInfo.pSignalSemaphores = nullptr;
-
-    // graphics queue is guaranteed to allow memory tranfers. We COULD get some more performance by using
-    // a dedicated transfer queue.
-    if (vkQueueSubmit(_device->graphicsQueue(), 1, &submitInfo, VK_NULL_HANDLE) != VK_SUCCESS) {
-        throw InitException("Failed to end command buffer recording.", __FILE__, __FUNCTION__, __LINE__);
-    }
+    commandBuffer.stopRecording(_device->graphicsQueue(), commandPool, 0);
 
     // TODO: Use a fence here
     vkQueueWaitIdle(_device->graphicsQueue());

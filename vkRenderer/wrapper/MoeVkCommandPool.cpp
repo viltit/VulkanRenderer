@@ -42,13 +42,8 @@ void MoeVkCommandPool::createCommandBuffers(MoeVkLogicalDevice &device, MoeVkFra
     for (size_t i = 0; i < numBuffers; i++) {
         // setup rendering recording
         // TODO: Customize recording options
-        VkCommandBufferBeginInfo info{};
-        info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-        info.flags = 0;
-        info.pInheritanceInfo = nullptr;
-        if (vkBeginCommandBuffer(_buffer.at(i), &info) != VK_SUCCESS) {
-            throw InitException("Failed to beginn recoring command buffer", __FILE__, __FUNCTION__, __LINE__);
-        }
+
+        _buffer.startRecording(*this, 0, i);
 
         // TODO: Let user decide
         VkClearValue clearColor = {0.f, 0.f, 0.f, 1.f};
