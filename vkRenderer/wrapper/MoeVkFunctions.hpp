@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <spdlog/spdlog.h>
 
 namespace moe {
 
@@ -12,7 +13,18 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
         void* pUserData
 )
 {
-    std::cerr << "<Vulkan> Validation layer message: " << pData->pMessage << std::endl;
+
+    switch (severity) {
+        case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
+            spdlog::warn("<Vulkan> Validation layer message: " + std::string(pData->pMessage));
+            break;
+        case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
+            spdlog::error("<Vulkan> Validation layer message: " + std::string(pData->pMessage));
+            break;
+        default:
+            spdlog::info("<Vulkan> Validation layer message: " + std::string(pData->pMessage));
+
+    }
     return VK_FALSE;
 }
 

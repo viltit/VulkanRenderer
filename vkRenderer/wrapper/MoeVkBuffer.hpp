@@ -14,7 +14,8 @@ public:
     MoeVkBuffer() { }
     MoeVkBuffer(MoeVkPhysicalDevice& physDevice, MoeVkLogicalDevice &device,
             VkDeviceSize size, VkBufferUsageFlags bufferFlags,
-            VkMemoryPropertyFlags memoryFlags);
+            VkMemoryPropertyFlags memoryFlags,
+            const std::string& name = "");
 
     ~MoeVkBuffer();
 
@@ -34,5 +35,7 @@ private:
     MoeVkLogicalDevice*  _device;
     VkBuffer        _buffer;
     VkDeviceMemory  _memory;
+
+    const std::string _name;
 };
 }

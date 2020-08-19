@@ -98,8 +98,8 @@ void MoeVkPipeline::create(MoeVkLogicalDevice& device, const MoeVkSwapChain& swa
     rasterizationCreateInfo.rasterizerDiscardEnable = VK_FALSE;
     // use LINE for wireframes
     rasterizationCreateInfo.polygonMode             = VK_POLYGON_MODE_FILL;
-    rasterizationCreateInfo.cullMode                = VK_CULL_MODE_NONE;
-    rasterizationCreateInfo.frontFace               = VK_FRONT_FACE_CLOCKWISE;
+    rasterizationCreateInfo.cullMode                = VK_CULL_MODE_BACK_BIT;
+    rasterizationCreateInfo.frontFace               = VK_FRONT_FACE_COUNTER_CLOCKWISE;
     rasterizationCreateInfo.depthBiasEnable         = VK_FALSE;
     rasterizationCreateInfo.depthBiasConstantFactor = 0;
     rasterizationCreateInfo.depthBiasClamp          = VK_FALSE;

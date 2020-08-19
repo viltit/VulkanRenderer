@@ -5,7 +5,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
 
 project(moe)
 
-# compile shaders
+# compile shaders - DOES NOT WORK
 execute_process(
         COMMAND cd Shaders/ && bash compile.sh
 )
@@ -22,5 +22,5 @@ add_executable(vkEngine main.cpp
 
 
 target_link_libraries(vkEngine
-        spdlog
+        PUBLIC spdlog
         vkRenderer)

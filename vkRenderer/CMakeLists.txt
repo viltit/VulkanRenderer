@@ -41,5 +41,6 @@ add_library(
 )
 
 target_link_libraries(vkRenderer
+        PUBLIC spdlog
         ${SDL2_LIBRARIES}
         ${Vulkan_LIBRARIES})

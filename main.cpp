@@ -10,23 +10,31 @@
 
 using namespace moe;
 
-int main() {
+Drawable getCube(glm::vec3 size);
+
+int main(int argc, char* argv[]) {
+
+    // TODO long term: Map allowed arguments to enum
+    if (argc > 1) {
+        std::string argument = argv[1];
+        if (argument == "debug") {
+            spdlog::set_level(spdlog::level::debug);
+        }
+        else if (argument == "trace") {
+            spdlog::set_level(spdlog::level::trace);
+        }
+        else if (argument == "info") {
+            spdlog::set_level(spdlog::level::info);
+        }
+    }
+    else {
+        spdlog::set_level(spdlog::level::warn);
+    }
+
     try {
         spdlog::info("App is starting");
 
-        // define a simple square
-        const std::vector<Vertex> vertices = {
-                // first triangle
-                { { -0.5f, -0.5f, 0.f }, { 1.f, 0.8f, 0.8f }, { 0.f, 0.f } },
-                { { 0.5f, 0.5f, 0.f }, { 0.8f, 1.f, 0.8f }, { 1.0, 1.0 } },
-                { { -0.5f, 0.5f, 0.f }, { 0.8f, 0.8f, 1.f }, { 0.f, 1.f} },
-                { { 0.5f, -0.5f, 0.f }, { 0.8f, 1.f, 0.8f }, { 1.f, 0.f } }
-        };
-        const std::vector<uint32_t> indices = {
-                0, 1, 2,
-                0, 3, 1
-        };
-        Drawable drawable = Drawable(vertices, indices);
+        Drawable drawable = getCube(glm::vec3{ 1.f, 1.f, 1.f });
 
         VkWindow window = VkWindow("Vulkan Barebones", 500, 500, ColorRGB::black());
         MoeVkRenderer vkApp = MoeVkRenderer(&window, drawable, RendererOptions::validation);
@@ -82,4 +90,70 @@ int main() {
         std::cout << "In File " << e.file << " on Line " << e.line << " in function " << e.func << std::endl;
     }
     return 0;
+}
+
+
+Drawable getCube(glm::vec3 size) {
+
+    //we will need this variables at a later point:
+    float w = size.x / 2.0f;
+    float h = size.y / 2.0f;
+    float d = size.z / 2.0f;
+
+    float uv_w = 1.f;
+    float uv_h = 1.f;
+
+    std::vector<Vertex> vertices;
+    vertices.resize(36);
+    size_t index = 0;
+
+    vertices[index].pos = glm::vec3{-w, -h, d }; vertices[index++].uv = glm::vec2{0.0f, 0.0f };	/* front */
+    vertices[index].pos = glm::vec3{w, -h, d }; vertices[index++].uv = glm::vec2{uv_w, 0.0f };
+    vertices[index].pos = glm::vec3{w, h, d }; vertices[index++].uv = glm::vec2{uv_w, uv_h };
+    vertices[index].pos = glm::vec3{w, h, d }; vertices[index++].uv = glm::vec2{uv_w, uv_h };
+    vertices[index].pos = glm::vec3{-w, h, d }; vertices[index++].uv = glm::vec2{0.0f, uv_h };
+    vertices[index].pos = glm::vec3{-w, -h, d }; vertices[index++].uv = glm::vec2{0.0f, 0.0f };
+
+    vertices[index].pos = glm::vec3{-w, h, d }; vertices[index++].uv = glm::vec2{0.0f, uv_h };	/* left */
+    vertices[index].pos = glm::vec3{-w, h, -d }; vertices[index++].uv = glm::vec2{uv_w, uv_h };
+    vertices[index].pos = glm::vec3{-w, -h, -d }; vertices[index++].uv = glm::vec2{uv_w, 0.0f };
+    vertices[index].pos = glm::vec3{-w, -h, -d }; vertices[index++].uv = glm::vec2{uv_w, 0.0f };
+    vertices[index].pos = glm::vec3{-w, -h, d }; vertices[index++].uv = glm::vec2{0.0f, 0.0f };
+    vertices[index].pos = glm::vec3{-w, h, d }; vertices[index++].uv = glm::vec2{0.0f, uv_h };
+
+    vertices[index].pos = glm::vec3{w, h, -d }; vertices[index++].uv = glm::vec2{uv_w, uv_h };	/* back */
+    vertices[index].pos = glm::vec3{w, -h, -d }; vertices[index++].uv = glm::vec2{uv_w, 0.0f };
+    vertices[index].pos = glm::vec3{-w, -h, -d }; vertices[index++].uv = glm::vec2{0.0f, 0.0f };
+    vertices[index].pos = glm::vec3{-w, -h, -d }; vertices[index++].uv = glm::vec2{0.0f, 0.0f };
+    vertices[index].pos = glm::vec3{-w, h, -d }; vertices[index++].uv = glm::vec2{0.0f, uv_h };
+    vertices[index].pos = glm::vec3{w, h, -d }; vertices[index++].uv = glm::vec2{uv_w, uv_h };
+
+    vertices[index].pos = glm::vec3{w, -h, -d }; vertices[index++].uv = glm::vec2{uv_w, 0.0f };	/* right */
+    vertices[index].pos = glm::vec3{w, h, -d }; vertices[index++].uv = glm::vec2{uv_w, uv_h };
+    vertices[index].pos = glm::vec3{w, h, d }; vertices[index++].uv = glm::vec2{0.0f, uv_h };
+    vertices[index].pos = glm::vec3{w, h, d }; vertices[index++].uv = glm::vec2{0.0f, uv_h };
+    vertices[index].pos = glm::vec3{w, -h, d }; vertices[index++].uv = glm::vec2{0.0f, 0.0f };
+    vertices[index].pos = glm::vec3{w, -h, -d }; vertices[index++].uv = glm::vec2{uv_w, 0.0f };
+
+    vertices[index].pos = glm::vec3{w, h, d }; vertices[index++].uv = glm::vec2{uv_w, 0.0f };	/* top */
+    vertices[index].pos = glm::vec3{w, h, -d }; vertices[index++].uv = glm::vec2{uv_w, uv_h };
+    vertices[index].pos = glm::vec3{-w, h, -d }; vertices[index++].uv = glm::vec2{0.0f, uv_h };
+    vertices[index].pos = glm::vec3{-w, h, -d }; vertices[index++].uv = glm::vec2{0.0f, uv_h };
+    vertices[index].pos = glm::vec3{-w, h, d }; vertices[index++].uv = glm::vec2{0.0f, 0.0f };
+    vertices[index].pos = glm::vec3{w, h, d }; vertices[index++].uv = glm::vec2{uv_w, 0.0f };
+
+    vertices[index].pos = glm::vec3{-w, -h, -d }; vertices[index++].uv = glm::vec2{uv_w, 0.0f };	/* bottom */
+    vertices[index].pos = glm::vec3{w, -h, -d }; vertices[index++].uv = glm::vec2{uv_w, uv_h };
+    vertices[index].pos = glm::vec3{w, -h, d }; vertices[index++].uv = glm::vec2{0.0f, uv_h };
+    vertices[index].pos = glm::vec3{w, -h, d }; vertices[index++].uv = glm::vec2{0.0f, uv_h };
+    vertices[index].pos = glm::vec3{-w, -h, d }; vertices[index++].uv = glm::vec2{0.0f, 0.0f };
+    vertices[index].pos = glm::vec3{-w, -h, -d }; vertices[index++].uv = glm::vec2{uv_w, 0.0f };
+
+    std::vector<uint32_t> indices;
+    indices.resize(36);
+    for (size_t i = 0; i < 36; i++) {
+        indices[i] = i;
+    }
+
+    return Drawable(vertices, indices);
 }

@@ -37,11 +37,13 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, Drawable& drawable, RendererOptio
     vertexBuffer = new MoeVkArrayBuffer<Vertex>(physicalDevice, logicalDevice,
             commandPool,
             drawable.vertices,
-            MoeBufferUsage::vertexBuffer);
+            MoeBufferUsage::vertexBuffer,
+            "vertex buffer");
     indexBuffer = new MoeVkArrayBuffer<uint32_t>(physicalDevice, logicalDevice,
             commandPool,
             drawable.indices,
-            MoeBufferUsage::indexBuffer);
+            MoeBufferUsage::indexBuffer,
+            "index buffer");
 
     commandPool.createCommandBuffers(logicalDevice, framebuffer, pipeline, swapChain,
             *vertexBuffer, *indexBuffer,

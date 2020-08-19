@@ -2,6 +2,7 @@
 
 #include "MoeVkBuffer.hpp"
 #include "../MoeVertex.hpp"
+#include <spdlog/spdlog.h>
 
 namespace moe {
 
@@ -19,16 +20,20 @@ public:
     MoeVkArrayBuffer(MoeVkPhysicalDevice& physDevice, MoeVkLogicalDevice& device,
                      MoeVkCommandPool& commandPool,
                      const std::vector<T>& data,
-                     MoeBufferUsage usage
+                     MoeBufferUsage usage,
+                     const std::string& name = ""
                      )
         :   _buffer        { physDevice, device, sizeof(Vertex) * data.size(),
                              static_cast<VkBufferUsageFlags>(usage) | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-                             VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT },
+                             VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+                             name },
             _numVertices   { (uint32_t)data.size() }
     {
+        spdlog::trace("Creating MoeVkArrayBuffer " + name);
         MoeVkBuffer stagingBuffer { physDevice, device, sizeof(Vertex) * data.size(),
                                     VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-                                    VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT };
+                                    VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+                                    "staging for " + name };
 
         // fill the vertex buffer by mapping the buffer memory
         VkDeviceSize size = sizeof(T) * data.size();

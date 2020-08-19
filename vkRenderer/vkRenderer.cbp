@@ -24,8 +24,10 @@
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add option="-DSPDLOG_COMPILED_LIB"/>
 					<Add directory="/home/titus/programming/c++/vkEngine/vkRenderer/../glm"/>
 					<Add directory="/usr/include/SDL2"/>
+					<Add directory="/home/titus/programming/c++/vkEngine/external/spdlog/include"/>
 				</Compiler>
 				<MakeCommands>
 					<Build command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 vkRenderer"/>
@@ -41,8 +43,10 @@
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add option="-DSPDLOG_COMPILED_LIB"/>
 					<Add directory="/home/titus/programming/c++/vkEngine/vkRenderer/../glm"/>
 					<Add directory="/usr/include/SDL2"/>
+					<Add directory="/home/titus/programming/c++/vkEngine/external/spdlog/include"/>
 				</Compiler>
 				<MakeCommands>
 					<Build command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 vkRenderer/fast"/>
@@ -52,12 +56,6 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/Image.cpp">
-			<Option target="vkRenderer"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/Image.hpp">
-			<Option target="vkRenderer"/>
-		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeDrawable.hpp">
 			<Option target="vkRenderer"/>
 		</Unit>
@@ -113,6 +111,12 @@
 			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkFunctions.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkImage.cpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkImage.hpp">
 			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkInstance.cpp">

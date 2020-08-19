@@ -4,12 +4,18 @@
 #include "MoeVkUtils.hpp"
 #include "MoeVkCommandBuffer.hpp"
 
+#include <spdlog/spdlog.h>
+
 namespace moe {
 
 MoeVkBuffer::MoeVkBuffer(MoeVkPhysicalDevice &physDevice, MoeVkLogicalDevice &device,
                          VkDeviceSize size, VkBufferUsageFlags bufferFlags,
-                         VkMemoryPropertyFlags memoryFlags)
-        : _device{ &device } {
+                         VkMemoryPropertyFlags memoryFlags, const std::string& name)
+        :   _device{ &device },
+            _name { name } {
+
+    spdlog::trace("Creating MoeVkBuffer " + name);
+
     VkBufferCreateInfo info{};
     info.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
     info.size = size;
@@ -35,6 +41,7 @@ MoeVkBuffer::MoeVkBuffer(MoeVkPhysicalDevice &physDevice, MoeVkLogicalDevice &de
 }
 
 MoeVkBuffer::~MoeVkBuffer() {
+    spdlog::trace("Destroying MoeVkBuffer " + _name);
     vkDestroyBuffer(_device->device(), _buffer, nullptr);
     vkFreeMemory(_device->device(), _memory, nullptr);
 }
