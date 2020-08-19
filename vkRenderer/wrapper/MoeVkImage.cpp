@@ -58,7 +58,8 @@ namespace moe {
         // As for vertices, we use a staging buffer for better performance here
         MoeVkBuffer stagingBuffer(physicalDevice, device, byteSize(),
                 VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-                VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+                VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+                "image staging bugger");
         void* data;
         vkMapMemory(device.device(), stagingBuffer.memory(), 0, byteSize(), 0, &data);
         memcpy(data, _pixels.value(), byteSize());

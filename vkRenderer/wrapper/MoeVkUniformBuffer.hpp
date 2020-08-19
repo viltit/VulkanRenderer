@@ -14,18 +14,18 @@ class MoeVkUniformBuffer {
 public:
     MoeVkUniformBuffer() { }
     void createLayout(MoeVkPhysicalDevice& phyDevice, MoeVkLogicalDevice& device);
-    void createPool(MoeVkPhysicalDevice& phyDevice, MoeVkLogicalDevice& device);
+    void createPool(MoeVkPhysicalDevice& phyDevice, MoeVkLogicalDevice& device, size_t numBuffers);
     void updateSets(MoeVkPhysicalDevice& phyDevice, MoeVkLogicalDevice& device, MoeVkImage& image);
 
     void destroy(MoeVkLogicalDevice& device);
 
-    VkDeviceMemory& memory() { return _buffer->memory(); }
-    VkDescriptorSet& set() { return _set; }
+    VkDeviceMemory& memory(int i) { return _buffers[i]->memory(); }
+    VkDescriptorSet& set(int i) { return _sets[i]; }
     VkDescriptorSetLayout& layout() { return _layout; }
 private:
-    MoeVkBuffer*             _buffer;   // TODO: No pointer
+    std::vector<MoeVkBuffer*>  _buffers;   // TODO: No pointer
     VkDescriptorSetLayout   _layout;
     VkDescriptorPool        _pool;
-    VkDescriptorSet         _set;
+    std::vector<VkDescriptorSet>         _sets;
 };
 }

@@ -91,7 +91,7 @@ void MoeVkCommandPool::createCommandBuffers(MoeVkLogicalDevice &device, MoeVkFra
         // bind descriptor set
         vkCmdBindDescriptorSets(_buffer.at(i), VK_PIPELINE_BIND_POINT_GRAPHICS,
                 pipeline.layout(), 0, 1,
-                &(uniformBuffer.set()), 0, nullptr);
+                &(uniformBuffer.set(i)), 0, nullptr);
 
         // vertex count, instance count, firstVertex, firstInstance
         vkCmdDrawIndexed(_buffer.at(i), indexBuffer.numVertices(), 1, 0, 0, 0);

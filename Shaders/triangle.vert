@@ -10,11 +10,13 @@ layout(location = 1) out vec2 fragUV;
 
 // uniforms
 layout(binding = 0) uniform UBO {
-    mat4 MVP;
+    mat4 M;
+    mat4 V;
+    mat4 P;
 } ubo;
 
 void main() {
-    gl_Position = ubo.MVP * vec4(position, 1.0);
+    gl_Position = ubo.P * ubo.V * ubo.M * vec4(position, 1.0);
     fragColor = color;
     fragUV = uv;
 }

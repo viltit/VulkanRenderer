@@ -1,6 +1,7 @@
 #include "MoeVkRenderer.hpp"
 #include "../Exceptions/InitException.hpp"
 #include "VkWindow.hpp"
+#include "wrapper/MoeVkUtils.hpp"
 
 #include <iostream>
 #include <SDL_vulkan.h>
@@ -26,7 +27,7 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, Drawable& drawable, RendererOptio
     swapChain.create(physicalDevice, logicalDevice, surface, *window);
 
     uniformBuffer.createLayout(physicalDevice, logicalDevice);
-    uniformBuffer.createPool(physicalDevice, logicalDevice);
+    uniformBuffer.createPool(physicalDevice, logicalDevice, swapChain.images().size());
 
     pipeline.create(logicalDevice, swapChain, uniformBuffer);
     framebuffer.create(logicalDevice, swapChain, pipeline);
@@ -94,19 +95,6 @@ MoeVkRenderer::~MoeVkRenderer() {
 
 void MoeVkRenderer::draw() {
 
-    // TODO: This should be part of a camera class
-    glm::mat4 V = glm::lookAt(glm::vec3{ 1.f, 1.f, 1.f }, glm::vec3{ 0.f, 0.f, 0.f }, glm::vec3{ 0.f, 0.f, 1.f });
-    glm::mat4 P = glm::perspective(glm::radians(60.f), (float)swapChain.extent().width / (float)swapChain.extent().height, 0.01f, 10.f);
-
-    // glm is made for openGL, where the y-Axis goes from bottom to top
-    P[1][1] *= -1.f;
-    glm::mat4 MVP = P * V * drawable.M;
-
-    void* data;
-    vkMapMemory(logicalDevice.device(), uniformBuffer.memory(), 0, sizeof(MVP), 0, &data);
-    memcpy(data, &MVP, sizeof(MVP));
-    vkUnmapMemory(logicalDevice.device(), uniformBuffer.memory());
-
     fences[currentFrame].wait(logicalDevice, UINT64_MAX);
 
     /*  Acquire an image from the swap chain
@@ -114,11 +102,11 @@ void MoeVkRenderer::draw() {
         Return the image to the swap chain for presentation     */
     uint32_t imageIndex;
     VkResult result = vkAcquireNextImageKHR(logicalDevice.device(),
-            swapChain.swapChain(),
-            UINT64_MAX,
-            imageAvalaibleSemaphore[currentFrame].semaphore(),
-            VK_NULL_HANDLE,
-            &imageIndex);
+                                            swapChain.swapChain(),
+                                            UINT64_MAX,
+                                            imageAvalaibleSemaphore[currentFrame].semaphore(),
+                                            VK_NULL_HANDLE,
+                                            &imageIndex);
 
     // check if the swapchain is out of date
     if (result == VK_ERROR_OUT_OF_DATE_KHR) {
@@ -136,6 +124,26 @@ void MoeVkRenderer::draw() {
     }
     // mark the image as being used
     imagesInFlight[imageIndex] = fences[currentFrame];
+
+    // Update uniforms
+    // TODO: This should be part of a camera class
+    glm::mat4 V = glm::lookAt(glm::vec3{ 1.f, 1.f, 1.f }, glm::vec3{ 0.f, 0.f, 0.f }, glm::vec3{ 0.f, 0.f, 1.f });
+    glm::mat4 P = glm::perspective(glm::radians(60.f), (float)swapChain.extent().width / (float)swapChain.extent().height, 0.01f, 10.f);
+
+    // glm is made for openGL, where the y-Axis goes from bottom to top
+    P[1][1] *= -1.f;
+
+    UBO ubo { };
+    ubo.M = drawable.M;
+    ubo.V = V;
+    ubo.P = P;
+
+    void* data;
+    vkMapMemory(logicalDevice.device(), uniformBuffer.memory(imageIndex), 0, sizeof(ubo), 0, &data);
+    memcpy(data, &ubo, sizeof(ubo));
+    vkUnmapMemory(logicalDevice.device(), uniformBuffer.memory(imageIndex));
+
+
 
     VkSemaphore waitSemaphores[] = { imageAvalaibleSemaphore[currentFrame].semaphore() };
     VkSemaphore signalSemaphores[] = { renderFinishedSemaphore[currentFrame].semaphore() };
@@ -188,6 +196,7 @@ void MoeVkRenderer::recreateSwapChain() {
 }
 
 void MoeVkRenderer::cleanSwapchain() {
+    // TODO: Also destroy and recreate uniform buffer
     framebuffer.destroyBuffers(logicalDevice);
     commandPool.destroyCommandBuffers(logicalDevice);
     // pipeline.destroy(logicalDevice);

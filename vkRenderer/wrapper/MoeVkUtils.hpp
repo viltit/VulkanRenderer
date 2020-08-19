@@ -20,5 +20,11 @@ public:
         throw InitException("Failed to find suitable memory type.", __FILE__, __FUNCTION__, __LINE__);
     }
 };
-}
 
+struct UBO {
+    glm::mat4 M;
+    glm::mat4 V;
+    glm::mat4 P;
+};
+
+}
