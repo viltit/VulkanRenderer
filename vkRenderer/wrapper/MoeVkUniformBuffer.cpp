@@ -3,7 +3,7 @@
 //
 
 #include "MoeVkUniformBuffer.hpp"
-#include "MoeVkImage.hpp"
+#include "MoeTexture.hpp"
 #include "../../Exceptions/InitException.hpp"
 #include <glm/glm.hpp>
 #include <iostream>
@@ -103,7 +103,7 @@ void MoeVkUniformBuffer::createPool(moe::MoeVkPhysicalDevice &phyDevice, moe::Mo
 }
 
 void MoeVkUniformBuffer::updateSets(moe::MoeVkPhysicalDevice &phyDevice, moe::MoeVkLogicalDevice &device,
-                                    moe::MoeVkImage &image) {
+                                    moe::MoeTexture &image) {
 
     assert(_buffers.size() == _sets.size());
 

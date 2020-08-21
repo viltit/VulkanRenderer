@@ -77,6 +77,12 @@
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/stb_image.h">
 			<Option target="vkRenderer"/>
 		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeTexture.cpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeTexture.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkArrayBuffer.hpp">
 			<Option target="vkRenderer"/>
 		</Unit>

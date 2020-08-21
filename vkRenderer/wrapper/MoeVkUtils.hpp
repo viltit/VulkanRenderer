@@ -2,6 +2,10 @@
 
 #include <vulkan/vulkan.h>
 
+// TODO: Make sure we define this before GLM gets included the first time !!
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#include <glm/glm.hpp>
+
 namespace moe {
 /*
  * Helper functions needed by different other MoeVk-Classes

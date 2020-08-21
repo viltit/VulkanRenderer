@@ -13,7 +13,7 @@
 #include "wrapper/MoeVkArrayBuffer.hpp"
 #include "MoeDrawable.hpp"
 #include "wrapper/MoeVkUniformBuffer.hpp"
-#include "wrapper/MoeVkImage.hpp"
+#include "wrapper/MoeTexture.hpp"
 
 namespace moe {
 
@@ -71,7 +71,7 @@ private:
     glm::mat4                       VP;
 
     // TODO: This will be part of a "MoeTexture" class
-    MoeVkImage                           image;
+    MoeTexture                           image;
     void loadTexture(/*filename*/);
 };
 }

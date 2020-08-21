@@ -6,7 +6,7 @@
 
 namespace moe {
 
-class MoeVkImage;
+class MoeTexture;
 
 class MoeVkUniformBuffer {
 
@@ -15,7 +15,7 @@ public:
     MoeVkUniformBuffer() { }
     void createLayout(MoeVkPhysicalDevice& phyDevice, MoeVkLogicalDevice& device);
     void createPool(MoeVkPhysicalDevice& phyDevice, MoeVkLogicalDevice& device, size_t numBuffers);
-    void updateSets(MoeVkPhysicalDevice& phyDevice, MoeVkLogicalDevice& device, MoeVkImage& image);
+    void updateSets(MoeVkPhysicalDevice& phyDevice, MoeVkLogicalDevice& device, MoeTexture& image);
 
     void destroy(MoeVkLogicalDevice& device);
 
