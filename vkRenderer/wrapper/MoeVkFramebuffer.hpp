@@ -5,6 +5,7 @@
 
 #include "MoeVkSwapChain.hpp"
 #include "MoeVkPipeline.hpp"
+#include "MoeDepthTexture.hpp"
 
 namespace moe {
 
@@ -14,7 +15,8 @@ public:
     ~MoeVkFramebuffer();
 
     /// creates a Framebuffer from the SwapChain and the Rendering Pipeline
-    void create(MoeVkLogicalDevice& device, MoeVkSwapChain& swapChain, const MoeVkPipeline& pipeline);
+    void create(MoeVkLogicalDevice& device,  MoeVkPhysicalDevice& physicalDevice,
+            MoeVkSwapChain& swapChain, const MoeVkPipeline& pipeline, MoeVkCommandPool& commandPool);
     void destroy(MoeVkLogicalDevice& device);
 
     void destroyBuffers(MoeVkLogicalDevice& device);
@@ -23,5 +25,6 @@ public:
 
 private:
     std::vector<VkFramebuffer> _framebuffers;
+    MoeDepthTexture            _depthTexture;
 };
 }

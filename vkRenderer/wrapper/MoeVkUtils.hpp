@@ -23,6 +23,9 @@ public:
         }
         throw InitException("Failed to find suitable memory type.", __FILE__, __FUNCTION__, __LINE__);
     }
+    static bool isStencilFormat(VkFormat format) {
+        return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
+    }
 };
 
 struct UBO {

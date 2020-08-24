@@ -4,9 +4,7 @@
 #include "../../Exceptions/InitException.hpp"
 
 #include <map>
-#include <iostream>
-
-#define __DEBUG__
+#include <spdlog/spdlog.h>
 
 namespace moe {
 
@@ -38,12 +36,10 @@ std::vector<VkPhysicalDevice> MoeVkPhysicalDevice::fetchAll(const VkInstance& in
         throw InitException("Failed to fetch Physical Devices", __FILE__, __FUNCTION__, __LINE__);
     }
 
-#ifdef __DEBUG__
-    std::cout << "Number of gpu's detected: " << numDevices << std::endl;
+    spdlog::info("Number of gpu's detected: {0}", numDevices);
     for (size_t i = 0; i < numDevices; i++) {
         printPhysicalDeviceStats(physDevices[i]);
     }
-#endif
     return physDevices;
 }
 
@@ -140,9 +136,7 @@ MoeVkQueueFamily MoeVkPhysicalDevice::fetchQueueFamilies(VkPhysicalDevice device
     std::vector<VkQueueFamilyProperties> familyProps(numFamilies);
     vkGetPhysicalDeviceQueueFamilyProperties(device, &numFamilies, familyProps.data());
 
-#ifdef __DEBUG__
     printQueueFamilies(familyProps);
-#endif
 
     for (size_t i = 0; i < numFamilies; i++) {
         if (familyProps[i].queueCount > 0 && familyProps[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) {
@@ -192,20 +186,20 @@ void MoeVkPhysicalDevice::printPhysicalDeviceStats(VkPhysicalDevice device) {
     VkPhysicalDeviceProperties props;
     vkGetPhysicalDeviceProperties(device, &props);
 
-    std::cout << "\tName: "     << props.deviceName << std::endl;
-    std::cout << "\tAPI-Version: " << VK_VERSION_MAJOR(props.apiVersion) << "."
-              << VK_VERSION_MINOR(props.apiVersion) << "."
-              << VK_VERSION_PATCH(props.apiVersion) << std::endl;
+    spdlog::info("Name: " + std::string(props.deviceName));
+    spdlog::info("\tAPI-Version: {0}.{1}.{2}", VK_VERSION_MAJOR(props.apiVersion),
+            VK_VERSION_MINOR(props.apiVersion),
+            VK_VERSION_PATCH(props.apiVersion));
 
-    std::cout << "\tType: " << types[props.deviceType] << std::endl;
+    spdlog::info("\tType: {0}", types[props.deviceType]);
 
     VkPhysicalDeviceFeatures features;
     vkGetPhysicalDeviceFeatures(device, &features);
 
-    std::cout << "\tGeometry shader: " << (features.geometryShader ? "Yes" : "No") << std::endl;
-    std::cout << "\tTesselation shader: " << (features.tessellationShader ? "Yes" : "No") << std::endl;
+    spdlog::info("\tGeometry shader: {0}", (features.geometryShader ? "Yes" : "No"));
+    spdlog::info("\tTesselation shader: {0}", (features.tessellationShader ? "Yes" : "No"));
 
-    std::cout << "\tMax image size (with or height): " << props.limits.maxImageDimension2D << " px" << std::endl;
+    spdlog::info("\tMax image size (with or height): {0} px", props.limits.maxImageDimension2D);
 
     // VkPhysicalDeviceMemoryProperties memory;
     // vkGetPhysicalDeviceMemoryProperties(device, &memory);
@@ -213,15 +207,66 @@ void MoeVkPhysicalDevice::printPhysicalDeviceStats(VkPhysicalDevice device) {
 
 void MoeVkPhysicalDevice::printQueueFamilies(const std::vector<VkQueueFamilyProperties>& props) const {
 
-        std::cout << "\t\tSupported queues:\n";
+        spdlog::info("\tSupported queues:");
         for (size_t i = 0; i < props.size(); i++) {
-            std::cout << "\t\tQueue Family #" << i << ": ";
-            std::cout << (props[i].queueFlags & VK_QUEUE_GRAPHICS_BIT ? "Graphics | " : " 0 | ");
-            std::cout << (props[i].queueFlags & VK_QUEUE_COMPUTE_BIT ? "Compute | " : " 0 | ");
-            std::cout << (props[i].queueFlags & VK_QUEUE_TRANSFER_BIT ? "Transfer | " : " 0 | ");
-            std::cout << (props[i].queueFlags & VK_QUEUE_SPARSE_BINDING_BIT ? "Sparse Binding" : "");
-            std::cout << "\n\t\t\t" << "Queue count: " << props[i].queueCount << "\n";
+            spdlog::info("\tQueue Family #{0}: {1}{2}{3}{4}", i,
+                         (props[i].queueFlags & VK_QUEUE_GRAPHICS_BIT ? "Graphics, " : ""),
+                         (props[i].queueFlags & VK_QUEUE_COMPUTE_BIT ? "Compute, " : ""),
+                         (props[i].queueFlags & VK_QUEUE_TRANSFER_BIT ? "Transfer, " : ""),
+                         (props[i].queueFlags & VK_QUEUE_SPARSE_BINDING_BIT ? "Sparse Binding" : ""));
+
+            spdlog::info("\tQueue count: {0}", props[i].queueCount);
         }
     }
+
+bool MoeVkPhysicalDevice::isFormatSupported(VkFormat format, VkImageTiling tiling, VkFormatFeatureFlags featureFlags) {
+
+    VkFormatProperties props { };
+    vkGetPhysicalDeviceFormatProperties(_device, format, &props);
+
+    if (tiling == VK_IMAGE_TILING_LINEAR && (props.linearTilingFeatures & featureFlags) == featureFlags) {
+        return true;
+    }
+    else if (tiling == VK_IMAGE_TILING_OPTIMAL && (props.optimalTilingFeatures & featureFlags) == featureFlags) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+VkFormat MoeVkPhysicalDevice::findFirstSupportedFormat(const std::vector<VkFormat> &formats, VkImageTiling tiling,
+                                                       VkFormatFeatureFlags featureFlags) {
+    for (VkFormat format : formats) {
+        if (isFormatSupported(format, tiling, featureFlags)) {
+            return format;
+        }
+    }
+    throw InitException("Could not find any supported image format", __FILE__, __FUNCTION__, __LINE__);
+}
+
+VkFormat MoeVkPhysicalDevice::findDepthFormat() {
+    std::vector<VkFormat> possibleFormats = {
+            VK_FORMAT_D32_SFLOAT_S8_UINT, // all new grafic cards support this format
+            VK_FORMAT_D24_UNORM_S8_UINT,
+            VK_FORMAT_D32_SFLOAT    // fallback option, has no stencil
+    };
+    return findFirstSupportedFormat(possibleFormats, VK_IMAGE_TILING_OPTIMAL, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
+}
+
+VkAttachmentDescription MoeVkPhysicalDevice::getDepthAttachment() {
+    VkAttachmentDescription result { };
+    result.flags            = 0;
+    result.format           = findDepthFormat();
+    result.samples          = VK_SAMPLE_COUNT_1_BIT;  // TODO: Add multisampling ??
+    result.loadOp           = VK_ATTACHMENT_LOAD_OP_CLEAR; // clear with each frame
+    result.storeOp          = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    result.stencilLoadOp    = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    result.stencilStoreOp   = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    result.initialLayout    = VK_IMAGE_LAYOUT_UNDEFINED;
+    result.finalLayout      = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+    return result;
+}
 
 }

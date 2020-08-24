@@ -16,6 +16,13 @@ public:
     VkPhysicalDevice& device()       { return _device; }
     MoeVkQueueFamily& queueFamily()  { return _queueFamily; }
 
+    bool isFormatSupported(VkFormat format, VkImageTiling tiling, VkFormatFeatureFlags featureFlags);
+    VkFormat findFirstSupportedFormat(const std::vector<VkFormat>& formats,
+            VkImageTiling tiling, VkFormatFeatureFlags  fetureFlags);
+    VkFormat findDepthFormat();
+
+    VkAttachmentDescription getDepthAttachment();
+
 private:
 
     std::vector<VkPhysicalDevice>   fetchAll     (const VkInstance& instance);

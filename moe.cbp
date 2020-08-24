@@ -423,6 +423,12 @@
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeDrawable.hpp">
 			<Option target="vkRenderer"/>
 		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeRendererCommandBuffer.cpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeRendererCommandBuffer.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVertex.hpp">
 			<Option target="vkRenderer"/>
 		</Unit>
@@ -439,6 +445,12 @@
 			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/stb_image.h">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeDepthTexture.cpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeDepthTexture.hpp">
 			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeTexture.cpp">

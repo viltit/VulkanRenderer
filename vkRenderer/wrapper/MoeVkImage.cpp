@@ -10,6 +10,12 @@
 
 namespace moe {
 
+    MoeVkImage::MoeVkImage()
+        :   _image   { VK_NULL_HANDLE },
+            _device  { nullptr }
+
+    {}
+
     MoeVkImage::~MoeVkImage() {
         destroy();
     }
@@ -67,18 +73,19 @@ namespace moe {
 
 void MoeVkImage::destroy() {
     spdlog::trace("Destroying MoeVkImage...");
-    assert(_device != nullptr);
-    if (_view != VK_NULL_HANDLE) {
-        vkDestroyImageView(_device->device(), _view, nullptr);
-        _view = VK_NULL_HANDLE;
-    }
-    if (_image != VK_NULL_HANDLE) {
-        vkDestroyImage(_device->device(), _image, nullptr);
-        _image = VK_NULL_HANDLE;
-    }
-    if (_memory != VK_NULL_HANDLE) {
-        vkFreeMemory(_device->device(), _memory, nullptr);
-        _memory = VK_NULL_HANDLE;
+    if (_device) {
+        if (_view != VK_NULL_HANDLE) {
+            vkDestroyImageView(_device->device(), _view, nullptr);
+            _view = VK_NULL_HANDLE;
+        }
+        if (_image != VK_NULL_HANDLE) {
+            vkDestroyImage(_device->device(), _image, nullptr);
+            _image = VK_NULL_HANDLE;
+        }
+        if (_memory != VK_NULL_HANDLE) {
+            vkFreeMemory(_device->device(), _memory, nullptr);
+            _memory = VK_NULL_HANDLE;
+        }
     }
     spdlog::trace("Finished.");
 }
@@ -126,6 +133,7 @@ void MoeVkImage::changeLayout(MoeVkCommandPool &commandPool,
     VkImageMemoryBarrier barrier;
     barrier.sType           = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
     barrier.pNext           = nullptr;
+    VkImageAspectFlags aspectFlags = VK_IMAGE_ASPECT_COLOR_BIT;
     // transition from preloaded image to image an image we can copy into
     if (_layout == VK_IMAGE_LAYOUT_PREINITIALIZED && newLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL) {
         barrier.srcAccessMask = 0;
@@ -140,6 +148,17 @@ void MoeVkImage::changeLayout(MoeVkCommandPool &commandPool,
         sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
         destStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
     }
+
+    else if (_layout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL) {
+        barrier.srcAccessMask = 0;
+        barrier.dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+        sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+        destStage = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+        aspectFlags = VK_IMAGE_ASPECT_DEPTH_BIT;
+        if (MoeVkUtils::isStencilFormat(format)) {
+            aspectFlags |= VK_IMAGE_ASPECT_STENCIL_BIT;
+        }
+    }
     else {
         throw InitException("Invalid layout transition", __FILE__, __FUNCTION__, __LINE__);
     }
@@ -150,7 +169,7 @@ void MoeVkImage::changeLayout(MoeVkCommandPool &commandPool,
     barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
     barrier.image               = _image;
     // TODO: Use mipmapping
-    barrier.subresourceRange.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
+    barrier.subresourceRange.aspectMask     = aspectFlags;
     barrier.subresourceRange.baseMipLevel   = 0;
     barrier.subresourceRange.levelCount     = 1;
     barrier.subresourceRange.baseArrayLayer = 0;

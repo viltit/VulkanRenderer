@@ -12,7 +12,8 @@ MoeVkPipeline::MoeVkPipeline() { }
 
 MoeVkPipeline::~MoeVkPipeline() { }
 
-void MoeVkPipeline::create(MoeVkLogicalDevice& device, const MoeVkSwapChain& swapChain, MoeVkUniformBuffer& uniformBuffer) {
+void MoeVkPipeline::create(MoeVkLogicalDevice& device, MoeVkPhysicalDevice& physicalDevice,
+        const MoeVkSwapChain& swapChain, MoeVkUniformBuffer& uniformBuffer) {
 
     // TODO later: Do not hardcode shader path
     auto vertexCode = readShader("Shaders/triangle.vert.spv");
@@ -20,7 +21,7 @@ void MoeVkPipeline::create(MoeVkLogicalDevice& device, const MoeVkSwapChain& swa
     VkShaderModule vertexModule = createShader(device, vertexCode);
     VkShaderModule fragmentModule = createShader(device, fragmentCode);
 
-    createRenderPass(device, swapChain);
+    createRenderPass(device, physicalDevice, swapChain);
 
     VkPipelineShaderStageCreateInfo vertexCreateInfo { };
     vertexCreateInfo.sType          = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -131,6 +132,9 @@ void MoeVkPipeline::create(MoeVkLogicalDevice& device, const MoeVkSwapChain& swa
     colorBlendAttachment.alphaBlendOp           = VK_BLEND_OP_ADD;
     colorBlendAttachment.colorWriteMask         = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
 
+    // fetch create info for depth buffer:
+    VkPipelineDepthStencilStateCreateInfo dephtStencilCreateInfo = depthStencilStateCreateInfo();
+
     // color blending on a global basis, ie applied to ALL framebuffers:
     VkPipelineColorBlendStateCreateInfo blendingCreateInfo { };
     blendingCreateInfo.sType                = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
@@ -192,7 +196,7 @@ void MoeVkPipeline::create(MoeVkLogicalDevice& device, const MoeVkSwapChain& swa
     pipelineCreateInfo.pViewportState       = &viewportCreateInfo;
     pipelineCreateInfo.pRasterizationState  = &rasterizationCreateInfo;
     pipelineCreateInfo.pMultisampleState    = &multisampleCreateInfo;
-    pipelineCreateInfo.pDepthStencilState   = nullptr;
+    pipelineCreateInfo.pDepthStencilState   = &dephtStencilCreateInfo;
     pipelineCreateInfo.pColorBlendState     = &blendingCreateInfo;
     pipelineCreateInfo.pDynamicState        = &dynamicStateCreateInfo;   // allows to change viewport when recording command buffers
     pipelineCreateInfo.layout               = _layout;
@@ -269,7 +273,7 @@ VkShaderModule MoeVkPipeline::createShader(MoeVkLogicalDevice& device, const std
 }
 
 
-void MoeVkPipeline::createRenderPass(MoeVkLogicalDevice &device, const MoeVkSwapChain& swapChain) {
+void MoeVkPipeline::createRenderPass(MoeVkLogicalDevice &device, MoeVkPhysicalDevice& physicalDevice, const MoeVkSwapChain& swapChain) {
 
     // specific for rendering: add a subpass dependency for synchronization. "External" refers to the implicit
     // subpass before and after the rendering. Index 0 refers to our rendering pass, which is the only one
@@ -293,6 +297,9 @@ void MoeVkPipeline::createRenderPass(MoeVkLogicalDevice &device, const MoeVkSwap
     colorAttachment.initialLayout       = VK_IMAGE_LAYOUT_UNDEFINED;
     colorAttachment.finalLayout         = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
+    // fetch depth attachment from physical device
+    VkAttachmentDescription depthAttachment = physicalDevice.getDepthAttachment();
+
     // We could define several rendering subpasses, for example for postprocessing. For the fist triangle, however,
     // one subpass is enough
     VkAttachmentReference colorAttachmentRef { };
@@ -301,17 +308,26 @@ void MoeVkPipeline::createRenderPass(MoeVkLogicalDevice &device, const MoeVkSwap
     colorAttachmentRef.attachment       = 0;
     colorAttachmentRef.layout           = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
+    VkAttachmentReference depthAttachmentRef { };
+    depthAttachmentRef.attachment       = 1;
+    depthAttachmentRef.layout           = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
     VkSubpassDescription subpass { };
     subpass.pipelineBindPoint       = VK_PIPELINE_BIND_POINT_GRAPHICS;
     subpass.colorAttachmentCount    = 1;
     subpass.pColorAttachments       = &colorAttachmentRef;
+    subpass.pDepthStencilAttachment = &depthAttachmentRef;
 
+    VkAttachmentDescription attachmentDescriptions[] = {
+            colorAttachment,
+            depthAttachment
+    };
     VkRenderPassCreateInfo renderPassCreateInfo { };
     renderPassCreateInfo.sType                = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     renderPassCreateInfo.pNext                = nullptr;
     renderPassCreateInfo.flags                = 0;
-    renderPassCreateInfo.attachmentCount      = 1;
-    renderPassCreateInfo.pAttachments         = &colorAttachment;
+    renderPassCreateInfo.attachmentCount      = 2;
+    renderPassCreateInfo.pAttachments         = attachmentDescriptions;
     renderPassCreateInfo.subpassCount         = 1;
     renderPassCreateInfo.pSubpasses           = &subpass;
     renderPassCreateInfo.dependencyCount      = 1;
@@ -321,4 +337,23 @@ void MoeVkPipeline::createRenderPass(MoeVkLogicalDevice &device, const MoeVkSwap
         throw InitException("Failed to create Render Pass", __FILE__, __FUNCTION__, __LINE__);
     }
 }
+
+VkPipelineDepthStencilStateCreateInfo MoeVkPipeline::depthStencilStateCreateInfo(bool opaque) {
+    VkPipelineDepthStencilStateCreateInfo result { };
+    result.sType                = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+    result.pNext                = nullptr;
+    result.flags                = 0;
+    result.depthTestEnable      = VK_TRUE;
+    result.depthWriteEnable     = opaque ? VK_TRUE : VK_FALSE;
+    result.depthCompareOp       = VK_COMPARE_OP_LESS;
+    result.depthBoundsTestEnable = VK_FALSE;    // we could clip rendering into a range of the buffer
+    result.stencilTestEnable    = VK_FALSE;
+    result.front                = { };
+    result.back                 = { };
+    result.minDepthBounds = 0.0f;
+    result.maxDepthBounds = 1.f;
+
+    return result;
+}
+
 }

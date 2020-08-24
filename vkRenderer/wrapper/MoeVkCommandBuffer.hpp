@@ -24,6 +24,8 @@ public:
         return _buffers[i];
     }
 
+    size_t size() const { return _buffers.size(); }
+
 private:
     std::vector<VkCommandBuffer> _buffers;
     VkDevice _device;

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "MoeVkLogicalDevice.hpp"
-#include "MoeVkFramebuffer.hpp"
 #include "MoeVkArrayBuffer.hpp"
 #include "MoeVkCommandBuffer.hpp"
 
@@ -10,6 +9,11 @@
 
 namespace moe {
 
+class MoeVkFramebuffer;
+class MoeVkPipeline;
+class MoeVkSwapChain;
+class MoeVkUniformBuffer;
+
 class MoeVkCommandPool {
 public:
     MoeVkCommandPool() { }
@@ -17,7 +21,6 @@ public:
 
     void create(MoeVkLogicalDevice& device,
             MoeVkQueueFamily queueFamily,
-            MoeVkFramebuffer& framebuffer,
             MoeVkPipeline& pipeline,
             MoeVkSwapChain& swapChain);
     void destroy(MoeVkLogicalDevice& device);

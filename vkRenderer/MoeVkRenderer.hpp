@@ -14,6 +14,7 @@
 #include "MoeDrawable.hpp"
 #include "wrapper/MoeVkUniformBuffer.hpp"
 #include "wrapper/MoeTexture.hpp"
+#include "wrapper/MoeDepthTexture.hpp"
 
 namespace moe {
 
@@ -67,11 +68,8 @@ private:
     MoeVkArrayBuffer<uint32_t>*     indexBuffer;
     MoeVkUniformBuffer              uniformBuffer;
 
-    // TODO: This should be part of a camera class
-    glm::mat4                       VP;
-
-    // TODO: This will be part of a "MoeTexture" class
-    MoeTexture                           image;
+    MoeTexture                      image;
+    MoeDepthTexture                 depthImage;
     void loadTexture(/*filename*/);
 };
 }

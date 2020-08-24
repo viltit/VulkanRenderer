@@ -10,7 +10,7 @@
 
 using namespace moe;
 
-Drawable getCube(glm::vec3 size);
+Drawable getCube(glm::vec3 size, glm::vec3 pos);
 
 int main(int argc, char* argv[]) {
 
@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
     try {
         spdlog::info("App is starting");
 
-        Drawable drawable = getCube(glm::vec3{ 1.f, 1.f, 1.f });
+        Drawable drawable = getCube(glm::vec3{ 1.f, 1.f, 1.f }, glm::vec3{ 0, 0, 0});
 
         VkWindow window = VkWindow("Vulkan Barebones", 500, 500, ColorRGB::black());
         MoeVkRenderer vkApp = MoeVkRenderer(&window, drawable, RendererOptions::validation);
@@ -93,7 +93,7 @@ int main(int argc, char* argv[]) {
 }
 
 
-Drawable getCube(glm::vec3 size) {
+Drawable getCube(glm::vec3 size, glm::vec3 pos) {
 
     //we will need this variables at a later point:
     float w = size.x / 2.0f;
@@ -148,6 +148,10 @@ Drawable getCube(glm::vec3 size) {
     vertices[index].pos = glm::vec3{w, -h, d }; vertices[index++].uv = glm::vec2{0.0f, uv_h };
     vertices[index].pos = glm::vec3{-w, -h, d }; vertices[index++].uv = glm::vec2{0.0f, 0.0f };
     vertices[index].pos = glm::vec3{-w, -h, -d }; vertices[index++].uv = glm::vec2{uv_w, 0.0f };
+
+    for (int i = 0; i < vertices.size(); i++) {
+        vertices[i].pos += pos;
+    }
 
     std::vector<uint32_t> indices;
     indices.resize(36);

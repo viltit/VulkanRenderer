@@ -34,7 +34,9 @@ add_library(
         wrapper/MoeVkUniformBuffer.cpp
         wrapper/MoeVkCommandBuffer.cpp
         wrapper/MoeVkImage.cpp
+        wrapper/MoeDepthTexture.cpp
         MoeVertex.hpp
+        MoeRendererCommandBuffer.cpp
         wrapper/MoeVkArrayBuffer.hpp
         wrapper/MoeVkBuffer.cpp
         MoeDrawable.hpp

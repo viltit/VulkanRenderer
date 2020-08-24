@@ -1,6 +1,10 @@
 #include "MoeVkCommandPool.hpp"
 #include "../../Exceptions/InitException.hpp"
 #include "MoeVkArrayBuffer.hpp"
+#include "MoeVkFramebuffer.hpp"
+#include "MoeVkPipeline.hpp"
+#include "MoeVkSwapChain.hpp"
+#include "MoeVkUniformBuffer.hpp"
 
 #include <iostream>
 
@@ -8,7 +12,6 @@ namespace moe {
 
 void MoeVkCommandPool::create(MoeVkLogicalDevice &device,
         MoeVkQueueFamily queueFamily,
-        MoeVkFramebuffer& framebuffer,
         MoeVkPipeline& pipeline,
         MoeVkSwapChain& swapChain) {
 
@@ -46,7 +49,10 @@ void MoeVkCommandPool::createCommandBuffers(MoeVkLogicalDevice &device, MoeVkFra
         _buffer.startRecording(*this, 0, i);
 
         // TODO: Let user decide
-        VkClearValue clearColor = {0.f, 0.f, 0.f, 1.f};
+        std::vector<VkClearValue> clearColor = {
+                { 0.f, 0.f, 0.f, 1.f },   // color buffer
+                { 1.f, 0.f }             // depth buffer
+        };
 
         // once a command buffer is recorded, it can not be appended
         VkRenderPassBeginInfo renderPassInfo{};
@@ -55,8 +61,8 @@ void MoeVkCommandPool::createCommandBuffers(MoeVkLogicalDevice &device, MoeVkFra
         renderPassInfo.framebuffer = framebuffer.buffers()[i];
         renderPassInfo.renderArea.offset = {0, 0};
         renderPassInfo.renderArea.extent = swapChain.extent();
-        renderPassInfo.clearValueCount = 1;
-        renderPassInfo.pClearValues = &clearColor;
+        renderPassInfo.clearValueCount = clearColor.size();
+        renderPassInfo.pClearValues = clearColor.data();
 
         // start recording
         vkCmdBeginRenderPass(_buffer.at(i), &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);

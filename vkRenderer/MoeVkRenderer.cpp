@@ -29,10 +29,10 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, Drawable& drawable, RendererOptio
     uniformBuffer.createLayout(physicalDevice, logicalDevice);
     uniformBuffer.createPool(physicalDevice, logicalDevice, swapChain.images().size());
 
-    pipeline.create(logicalDevice, swapChain, uniformBuffer);
-    framebuffer.create(logicalDevice, swapChain, pipeline);
+    pipeline.create(logicalDevice, physicalDevice, swapChain, uniformBuffer);
+    commandPool.create(logicalDevice, physicalDevice.queueFamily(), pipeline, swapChain);
+    framebuffer.create(logicalDevice, physicalDevice, swapChain, pipeline, commandPool);
 
-    commandPool.create(logicalDevice, physicalDevice.queueFamily(), framebuffer, pipeline, swapChain);
     loadTexture();
     uniformBuffer.updateSets(physicalDevice, logicalDevice, image);
     vertexBuffer = new MoeVkArrayBuffer<Vertex>(physicalDevice, logicalDevice,
@@ -189,7 +189,7 @@ void MoeVkRenderer::recreateSwapChain() {
     cleanSwapchain();
     swapChain.create(physicalDevice, logicalDevice, surface, *window);
     // pipeline.create(logicalDevice, swapChain);
-    framebuffer.create(logicalDevice, swapChain, pipeline);
+    framebuffer.create(logicalDevice, physicalDevice, swapChain, pipeline, commandPool);
     commandPool.createCommandBuffers(logicalDevice, framebuffer, pipeline, swapChain, *vertexBuffer, *indexBuffer, uniformBuffer);
 }
 

@@ -11,12 +11,12 @@ class MoeVkPhysicalDevice;
 
 class MoeVkImage {
 public:
-    MoeVkImage() { }
+    MoeVkImage();
     ~MoeVkImage();
     void create(MoeVkLogicalDevice& device, MoeVkPhysicalDevice& physicalDevice, uint32_t w, uint32_t height,
             VkFormat format, VkImageTiling tiling,
             VkImageLayout layout,
-            VkImageUsageFlags usageFlahs, VkMemoryPropertyFlags memoryFlags);
+            VkImageUsageFlags usageFlags, VkMemoryPropertyFlags memoryFlags);
     void createView(VkFormat format, VkImageAspectFlags aspectFlags);
     void changeLayout(MoeVkCommandPool& commandPool, VkQueue queue, VkFormat format, VkImageLayout newLayout);
     void destroy();
