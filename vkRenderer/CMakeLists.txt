@@ -31,16 +31,16 @@ add_library(
         wrapper/MoeVkSemaphore.cpp
         wrapper/MoeVkFence.cpp
         wrapper/MoeVkUtils.hpp
-        wrapper/MoeVkUniformBuffer.cpp
+        wrapper/MoeVkDescriptorPool.cpp
+        wrapper/MoeVkDescriptorSet.cpp
         wrapper/MoeVkCommandBuffer.cpp
         wrapper/MoeVkImage.cpp
         wrapper/MoeDepthTexture.cpp
         MoeVertex.hpp
-        MoeRendererCommandBuffer.cpp
         wrapper/MoeVkArrayBuffer.hpp
         wrapper/MoeVkBuffer.cpp
         MoeDrawable.hpp
-        wrapper/MoeVkUniformBuffer.cpp
+        wrapper/MoeVkDescriptorPool.cpp
 )
 
 target_link_libraries(vkRenderer

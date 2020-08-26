@@ -5,7 +5,7 @@
 
 #include "MoeVkLogicalDevice.hpp"
 #include "MoeVkSwapChain.hpp"
-#include "MoeVkUniformBuffer.hpp"
+#include "MoeVkDescriptorPool.hpp"
 
 namespace moe {
 
@@ -14,7 +14,7 @@ public:
     MoeVkPipeline();
     ~MoeVkPipeline();
 
-    void create(MoeVkLogicalDevice& device, MoeVkPhysicalDevice& physicalDevice, const MoeVkSwapChain& swapChain, MoeVkUniformBuffer& uniformBuffer);
+    void create(MoeVkLogicalDevice& device, MoeVkPhysicalDevice& physicalDevice, const MoeVkSwapChain& swapChain, MoeVkDescriptorPool& uniformBuffer);
     void destroy(MoeVkLogicalDevice& device);
 
     const VkRenderPass& renderPass() const { return _renderPass; }

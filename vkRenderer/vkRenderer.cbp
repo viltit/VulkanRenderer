@@ -59,12 +59,6 @@
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeDrawable.hpp">
 			<Option target="vkRenderer"/>
 		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeRendererCommandBuffer.cpp">
-			<Option target="vkRenderer"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeRendererCommandBuffer.hpp">
-			<Option target="vkRenderer"/>
-		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVertex.hpp">
 			<Option target="vkRenderer"/>
 		</Unit>
@@ -114,6 +108,18 @@
 			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkCommandPool.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkDescriptorPool.cpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkDescriptorPool.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkDescriptorSet.cpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkDescriptorSet.hpp">
 			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkFence.cpp">
@@ -177,12 +183,6 @@
 			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkSwapChainProps.hpp">
-			<Option target="vkRenderer"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkUniformBuffer.cpp">
-			<Option target="vkRenderer"/>
-		</Unit>
-		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkUniformBuffer.hpp">
 			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkUtils.hpp">

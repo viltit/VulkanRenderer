@@ -1,10 +1,11 @@
 #include "MoeVkCommandPool.hpp"
 #include "../../Exceptions/InitException.hpp"
 #include "MoeVkArrayBuffer.hpp"
-#include "MoeVkFramebuffer.hpp"
+#include "MoeVkDescriptorSet.hpp"
 #include "MoeVkPipeline.hpp"
 #include "MoeVkSwapChain.hpp"
-#include "MoeVkUniformBuffer.hpp"
+#include "MoeVkDescriptorPool.hpp"
+#include "MoeVkFramebuffer.hpp"
 
 #include <iostream>
 
@@ -37,7 +38,7 @@ void MoeVkCommandPool::createCommandBuffers(MoeVkLogicalDevice &device, MoeVkFra
                                             MoeVkPipeline &pipeline, MoeVkSwapChain &swapChain,
                                             MoeVkArrayBuffer<moe::Vertex> &vertexBuffer,
                                             MoeVkArrayBuffer<uint32_t>& indexBuffer,
-                                            MoeVkUniformBuffer& uniformBuffer) {
+                                            MoeVkDescriptorSet& descriptorSet) {
 
     size_t numBuffers = framebuffer.buffers().size();
     _buffer.create(device, *this, numBuffers);
@@ -92,7 +93,7 @@ void MoeVkCommandPool::createCommandBuffers(MoeVkLogicalDevice &device, MoeVkFra
         // bind descriptor set
         vkCmdBindDescriptorSets(_buffer.at(i), VK_PIPELINE_BIND_POINT_GRAPHICS,
                 pipeline.layout(), 0, 1,
-                &(uniformBuffer.set(i)), 0, nullptr);
+                &(descriptorSet.set(i)), 0, nullptr);
 
         // vertex count, instance count, firstVertex, firstInstance
         vkCmdDrawIndexed(_buffer.at(i), indexBuffer.numVertices(), 1, 0, 0, 0);

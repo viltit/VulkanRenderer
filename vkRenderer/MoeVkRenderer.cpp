@@ -15,7 +15,8 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, Drawable& drawable, RendererOptio
     :   instance        { window, options },
         surface         { VK_NULL_HANDLE },
         window          { window },
-        drawable        { drawable }
+        drawable        { drawable },
+        descriptorSet   { nullptr }
 {
 
 
@@ -34,7 +35,7 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, Drawable& drawable, RendererOptio
     framebuffer.create(logicalDevice, physicalDevice, swapChain, pipeline, commandPool);
 
     loadTexture();
-    uniformBuffer.updateSets(physicalDevice, logicalDevice, image);
+    descriptorSet = new MoeVkDescriptorSet(physicalDevice, logicalDevice, image, uniformBuffer,swapChain.images().size());
     vertexBuffer = new MoeVkArrayBuffer<Vertex>(physicalDevice, logicalDevice,
             commandPool,
             drawable.vertices,
@@ -48,7 +49,7 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, Drawable& drawable, RendererOptio
 
     commandPool.createCommandBuffers(logicalDevice, framebuffer, pipeline, swapChain,
             *vertexBuffer, *indexBuffer,
-            uniformBuffer);
+            *descriptorSet);
 
     // create semaphores:
     imageAvalaibleSemaphore.resize(maxFramesInFlight);
@@ -79,6 +80,9 @@ MoeVkRenderer::~MoeVkRenderer() {
     }
     if (indexBuffer != nullptr) {
         delete indexBuffer;
+    }
+    if (descriptorSet) {
+        delete descriptorSet;
     }
 
     for (size_t i = 0; i < maxFramesInFlight; i++) {
@@ -139,9 +143,9 @@ void MoeVkRenderer::draw() {
     ubo.P = P;
 
     void* data;
-    vkMapMemory(logicalDevice.device(), uniformBuffer.memory(imageIndex), 0, sizeof(ubo), 0, &data);
+    vkMapMemory(logicalDevice.device(), descriptorSet->memory(imageIndex), 0, sizeof(ubo), 0, &data);
     memcpy(data, &ubo, sizeof(ubo));
-    vkUnmapMemory(logicalDevice.device(), uniformBuffer.memory(imageIndex));
+    vkUnmapMemory(logicalDevice.device(), descriptorSet->memory(imageIndex));
 
     VkSemaphore waitSemaphores[] = { imageAvalaibleSemaphore[currentFrame].semaphore() };
     VkSemaphore signalSemaphores[] = { renderFinishedSemaphore[currentFrame].semaphore() };
@@ -190,7 +194,7 @@ void MoeVkRenderer::recreateSwapChain() {
     swapChain.create(physicalDevice, logicalDevice, surface, *window);
     // pipeline.create(logicalDevice, swapChain);
     framebuffer.create(logicalDevice, physicalDevice, swapChain, pipeline, commandPool);
-    commandPool.createCommandBuffers(logicalDevice, framebuffer, pipeline, swapChain, *vertexBuffer, *indexBuffer, uniformBuffer);
+    commandPool.createCommandBuffers(logicalDevice, framebuffer, pipeline, swapChain, *vertexBuffer, *indexBuffer, *descriptorSet);
 }
 
 void MoeVkRenderer::cleanSwapchain() {

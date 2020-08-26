@@ -12,9 +12,10 @@
 #include "wrapper/MoeVkFence.hpp"
 #include "wrapper/MoeVkArrayBuffer.hpp"
 #include "MoeDrawable.hpp"
-#include "wrapper/MoeVkUniformBuffer.hpp"
+#include "wrapper/MoeVkDescriptorPool.hpp"
 #include "wrapper/MoeTexture.hpp"
 #include "wrapper/MoeDepthTexture.hpp"
+#include "wrapper/MoeVkDescriptorSet.hpp"
 
 namespace moe {
 
@@ -63,10 +64,11 @@ private:
 
     // TODO: This should be in an own class "scene" in the long termn
     Drawable&                       drawable;
+    MoeVkDescriptorSet*              descriptorSet;
 
     MoeVkArrayBuffer<Vertex>*       vertexBuffer;
     MoeVkArrayBuffer<uint32_t>*     indexBuffer;
-    MoeVkUniformBuffer              uniformBuffer;
+    MoeVkDescriptorPool              uniformBuffer;
 
     MoeTexture                      image;
     MoeDepthTexture                 depthImage;

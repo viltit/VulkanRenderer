@@ -13,7 +13,7 @@ MoeVkPipeline::MoeVkPipeline() { }
 MoeVkPipeline::~MoeVkPipeline() { }
 
 void MoeVkPipeline::create(MoeVkLogicalDevice& device, MoeVkPhysicalDevice& physicalDevice,
-        const MoeVkSwapChain& swapChain, MoeVkUniformBuffer& uniformBuffer) {
+                           const MoeVkSwapChain& swapChain, MoeVkDescriptorPool& uniformBuffer) {
 
     // TODO later: Do not hardcode shader path
     auto vertexCode = readShader("Shaders/triangle.vert.spv");

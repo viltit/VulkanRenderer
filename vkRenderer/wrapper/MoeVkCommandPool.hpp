@@ -12,7 +12,7 @@ namespace moe {
 class MoeVkFramebuffer;
 class MoeVkPipeline;
 class MoeVkSwapChain;
-class MoeVkUniformBuffer;
+class MoeVkDescriptorSet;
 
 class MoeVkCommandPool {
 public:
@@ -35,7 +35,7 @@ public:
                               MoeVkSwapChain& swapChain,
                               MoeVkArrayBuffer<Vertex>& vertexBuffer,
                               MoeVkArrayBuffer<uint32_t>& indexBuffer,
-                              MoeVkUniformBuffer& uniformBuffer);
+                              MoeVkDescriptorSet& descriptorSet);
 
     void destroyCommandBuffers(MoeVkLogicalDevice& device);
 
