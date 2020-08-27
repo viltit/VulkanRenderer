@@ -91,6 +91,7 @@ void MoeVkCommandPool::createCommandBuffers(MoeVkLogicalDevice &device, MoeVkFra
         vkCmdBindIndexBuffer(_buffer.at(i), indexBuffer.buffer(), 0, VK_INDEX_TYPE_UINT32);
 
         // bind descriptor set
+        assert(descriptorSet.numSets() == 3);
         vkCmdBindDescriptorSets(_buffer.at(i), VK_PIPELINE_BIND_POINT_GRAPHICS,
                 pipeline.layout(), 0, 1,
                 &(descriptorSet.set(i)), 0, nullptr);

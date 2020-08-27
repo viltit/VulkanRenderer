@@ -40,6 +40,7 @@ add_library(
         wrapper/MoeVkArrayBuffer.hpp
         wrapper/MoeVkBuffer.cpp
         MoeDrawable.hpp
+        MoeVkDrawable.cpp
         wrapper/MoeVkDescriptorPool.cpp
 )
 

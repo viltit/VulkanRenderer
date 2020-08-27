@@ -15,7 +15,7 @@
 #include "wrapper/MoeVkDescriptorPool.hpp"
 #include "wrapper/MoeTexture.hpp"
 #include "wrapper/MoeDepthTexture.hpp"
-#include "wrapper/MoeVkDescriptorSet.hpp"
+#include "MoeVkDrawable.hpp"
 
 namespace moe {
 
@@ -25,7 +25,7 @@ class VkWindow;
 class MoeVkRenderer {
 
 public:
-    MoeVkRenderer(VkWindow* window, Drawable& drawable, RendererOptions options = RendererOptions::none);
+    MoeVkRenderer(VkWindow* window, std::vector<Drawable>& drawables, RendererOptions options = RendererOptions::none);
     ~MoeVkRenderer();
 
     void draw();
@@ -63,14 +63,16 @@ private:
     size_t currentFrame = 0;
 
     // TODO: This should be in an own class "scene" in the long termn
-    Drawable&                       drawable;
-    MoeVkDescriptorSet*              descriptorSet;
+    std::vector<Drawable>&          drawables;
+    std::vector<MoeVkDrawable*>      vkDrawables;
 
+    // TODO: Should be part of vkDrawable. We also need a texture and vertex buffer cache in the long run
     MoeVkArrayBuffer<Vertex>*       vertexBuffer;
     MoeVkArrayBuffer<uint32_t>*     indexBuffer;
+    MoeTexture                      image;
+
     MoeVkDescriptorPool              uniformBuffer;
 
-    MoeTexture                      image;
     MoeDepthTexture                 depthImage;
     void loadTexture(/*filename*/);
 };

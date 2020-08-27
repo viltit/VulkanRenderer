@@ -36,8 +36,10 @@ int main(int argc, char* argv[]) {
 
         Drawable drawable = getCube(glm::vec3{ 1.f, 1.f, 1.f }, glm::vec3{ 0, 0, 0});
 
+        std::vector<Drawable> drawables = { drawable };
+
         VkWindow window = VkWindow("Vulkan Barebones", 500, 500, ColorRGB::black());
-        MoeVkRenderer vkApp = MoeVkRenderer(&window, drawable, RendererOptions::validation);
+        MoeVkRenderer vkApp = MoeVkRenderer(&window, drawables, RendererOptions::validation);
 
         Timer timer;
         timer.start();

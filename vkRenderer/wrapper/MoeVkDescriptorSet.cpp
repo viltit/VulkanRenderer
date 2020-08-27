@@ -19,6 +19,7 @@ MoeVkDescriptorSet::MoeVkDescriptorSet(
         : _device { logicalDevice } {
 
     // create buffers:
+    spdlog::trace("Creating {0} descriptor sets", numSets);
     _buffers.resize(numSets);
     _sets.resize(numSets);
     for (size_t i = 0; i < numSets; i++) {

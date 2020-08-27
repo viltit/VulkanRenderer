@@ -2,24 +2,19 @@
 #include "../Exceptions/InitException.hpp"
 #include "VkWindow.hpp"
 #include "wrapper/MoeVkUtils.hpp"
+#include "wrapper/MoeVkDescriptorSet.hpp"
 
 #include <iostream>
 #include <SDL_vulkan.h>
-#include <memory>
-
-#define __DEBUG__
 
 namespace moe {
 
-MoeVkRenderer::MoeVkRenderer(VkWindow* window, Drawable& drawable, RendererOptions options)
+MoeVkRenderer::MoeVkRenderer(VkWindow* window, std::vector<Drawable>& drawables, RendererOptions options)
     :   instance        { window, options },
         surface         { VK_NULL_HANDLE },
         window          { window },
-        drawable        { drawable },
-        descriptorSet   { nullptr }
+        drawables       { drawables }
 {
-
-
 
     const std::vector<const char*> extensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
     createSurface(window);
@@ -35,21 +30,28 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, Drawable& drawable, RendererOptio
     framebuffer.create(logicalDevice, physicalDevice, swapChain, pipeline, commandPool);
 
     loadTexture();
-    descriptorSet = new MoeVkDescriptorSet(physicalDevice, logicalDevice, image, uniformBuffer,swapChain.images().size());
+    for (auto& drawable : drawables) {
+        vkDrawables.push_back(new MoeVkDrawable(
+                physicalDevice, logicalDevice, uniformBuffer, image, &drawable, swapChain.images().size()
+                ));
+    }
+    assert(vkDrawables[0]->descriptors().numSets() == 3);  // TODO !!
+
     vertexBuffer = new MoeVkArrayBuffer<Vertex>(physicalDevice, logicalDevice,
             commandPool,
-            drawable.vertices,
+            drawables[0].vertices,      // TODO !!
             MoeBufferUsage::vertexBuffer,
             "vertex buffer");
+    assert(vkDrawables[0]->descriptors().numSets() == 3);  // TODO !!
     indexBuffer = new MoeVkArrayBuffer<uint32_t>(physicalDevice, logicalDevice,
             commandPool,
-            drawable.indices,
+            drawables[0].indices,      // TODO !!
             MoeBufferUsage::indexBuffer,
             "index buffer");
-
+    assert(vkDrawables[0]->descriptors().numSets() == 3);  // TODO !!
     commandPool.createCommandBuffers(logicalDevice, framebuffer, pipeline, swapChain,
             *vertexBuffer, *indexBuffer,
-            *descriptorSet);
+            vkDrawables[0]->descriptors());  // TODO !!
 
     // create semaphores:
     imageAvalaibleSemaphore.resize(maxFramesInFlight);
@@ -81,9 +83,10 @@ MoeVkRenderer::~MoeVkRenderer() {
     if (indexBuffer != nullptr) {
         delete indexBuffer;
     }
-    if (descriptorSet) {
-        delete descriptorSet;
+    for (size_t i = 0; i < vkDrawables.size(); i++) {
+        delete vkDrawables[i];
     }
+    vkDrawables.clear();
 
     for (size_t i = 0; i < maxFramesInFlight; i++) {
         imageAvalaibleSemaphore[i].destroy(logicalDevice);
@@ -138,14 +141,15 @@ void MoeVkRenderer::draw() {
     P[1][1] *= -1.f;
 
     UBO ubo { };
-    ubo.M = drawable.M;
+    ubo.M = drawables[0].M;   // TODO !!
     ubo.V = V;
     ubo.P = P;
 
+    // TODO !!
     void* data;
-    vkMapMemory(logicalDevice.device(), descriptorSet->memory(imageIndex), 0, sizeof(ubo), 0, &data);
+    vkMapMemory(logicalDevice.device(), vkDrawables[0]->descriptors().memory(imageIndex), 0, sizeof(ubo), 0, &data);
     memcpy(data, &ubo, sizeof(ubo));
-    vkUnmapMemory(logicalDevice.device(), descriptorSet->memory(imageIndex));
+    vkUnmapMemory(logicalDevice.device(), vkDrawables[0]->descriptors().memory(imageIndex));
 
     VkSemaphore waitSemaphores[] = { imageAvalaibleSemaphore[currentFrame].semaphore() };
     VkSemaphore signalSemaphores[] = { renderFinishedSemaphore[currentFrame].semaphore() };
@@ -194,7 +198,8 @@ void MoeVkRenderer::recreateSwapChain() {
     swapChain.create(physicalDevice, logicalDevice, surface, *window);
     // pipeline.create(logicalDevice, swapChain);
     framebuffer.create(logicalDevice, physicalDevice, swapChain, pipeline, commandPool);
-    commandPool.createCommandBuffers(logicalDevice, framebuffer, pipeline, swapChain, *vertexBuffer, *indexBuffer, *descriptorSet);
+    commandPool.createCommandBuffers(logicalDevice, framebuffer, pipeline, swapChain, *vertexBuffer,
+            *indexBuffer, vkDrawables[0]->descriptors());  // TODO !!);
 }
 
 void MoeVkRenderer::cleanSwapchain() {

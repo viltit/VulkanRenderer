@@ -24,6 +24,10 @@ public:
 
     void update(MoeTexture& texture);
 
+    size_t numSets() const {
+        return _sets.size();
+    }
+
     VkDeviceMemory& memory(int i) {
         assert(i < _buffers.size());
         return _buffers[i]->memory();
