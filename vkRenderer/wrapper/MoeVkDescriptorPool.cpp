@@ -71,7 +71,7 @@ void MoeVkDescriptorPool::createPool(moe::MoeVkPhysicalDevice &phyDevice, moe::M
     poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
     poolInfo.pNext = nullptr;
     poolInfo.flags = 0;
-    poolInfo.maxSets = 2 * numBuffers;  // TODO: Determine max sets from number of scene objects
+    poolInfo.maxSets = numBuffers;
     poolInfo.poolSizeCount = poolSizes.size();
     poolInfo.pPoolSizes = poolSizes.data();
 

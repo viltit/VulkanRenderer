@@ -1,5 +1,6 @@
 #include "VkWindow.hpp"
 #include "../Exceptions/InitException.hpp"
+#include <spdlog/spdlog.h>
 
 namespace moe {
 
@@ -9,6 +10,7 @@ VkWindow::VkWindow(const std::string& name, unsigned int width, unsigned int hei
             _w         { width },
             _h         { height }
 {
+    spdlog::trace("Creating SDL2-Window...");
     //put together the desired window style with bitwise ops
     auto windowOptions = SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE;
     if (uint(WindowOptions::borderless) & uint(options)) {
@@ -45,6 +47,7 @@ VkWindow::VkWindow(const std::string& name, unsigned int width, unsigned int hei
         std::string error { SDL_GetError() };
         throw InitException(message + error, __FILE__, __FUNCTION__, __LINE__);
     }
+    spdlog::trace("Finished.");
 }
 
 VkWindow::~VkWindow() {

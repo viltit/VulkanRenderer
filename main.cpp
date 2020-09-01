@@ -10,7 +10,7 @@
 
 using namespace moe;
 
-Drawable getCube(glm::vec3 size, glm::vec3 pos);
+Drawable getCube(glm::vec3 size, glm::vec3 pos, const std::string& name);
 
 int main(int argc, char* argv[]) {
 
@@ -34,15 +34,21 @@ int main(int argc, char* argv[]) {
     try {
         spdlog::info("App is starting");
 
-        Drawable drawable = getCube(glm::vec3{ 1.f, 1.f, 1.f }, glm::vec3{ 0, 0, 0});
+        Drawable drawable1 = getCube(glm::vec3{ 0.3f, 0.3f, 0.3f }, glm::vec3{ -0.5, 0, 0}, "Cube 1");
+        Drawable drawable2 = getCube(glm::vec3{ 0.3f, 0.3f, 0.3f }, glm::vec3{ 0.5, 0.3, 0.3 }, "Cube 2");
+        drawable1.rotationSpeed = -2.f;
 
-        std::vector<Drawable> drawables = { drawable };
+        std::vector<Drawable> drawables = { drawable2, drawable1 };
 
         VkWindow window = VkWindow("Vulkan Barebones", 500, 500, ColorRGB::black());
+
+        spdlog::info("Starting renderer...");
         MoeVkRenderer vkApp = MoeVkRenderer(&window, drawables, RendererOptions::validation);
+        spdlog::info("Finished.");
 
         Timer timer;
         timer.start();
+        auto timeNow = timer.elapsed();
 
         bool isRunning = true;
         while(isRunning) {
@@ -78,8 +84,17 @@ int main(int argc, char* argv[]) {
                         break;
                 }
             }
+
             auto time = timer.elapsed();
-            drawable.update(time);
+            while (timer.elapsed() - timeNow < 16) {
+                // wait -> TODO: Do not block whole app (ie just skip all updates and rendering)
+            }
+            timeNow = timer.elapsed();
+
+            auto delta = timer.delta();
+            for (auto& drawable : drawables) {
+                drawable.update(delta);
+            }
             vkApp.draw();
         }
         spdlog::info("Shutting down.");
@@ -95,7 +110,7 @@ int main(int argc, char* argv[]) {
 }
 
 
-Drawable getCube(glm::vec3 size, glm::vec3 pos) {
+Drawable getCube(glm::vec3 size, glm::vec3 pos, const std::string& name) {
 
     //we will need this variables at a later point:
     float w = size.x / 2.0f;
@@ -151,15 +166,11 @@ Drawable getCube(glm::vec3 size, glm::vec3 pos) {
     vertices[index].pos = glm::vec3{-w, -h, d }; vertices[index++].uv = glm::vec2{0.0f, 0.0f };
     vertices[index].pos = glm::vec3{-w, -h, -d }; vertices[index++].uv = glm::vec2{uv_w, 0.0f };
 
-    for (int i = 0; i < vertices.size(); i++) {
-        vertices[i].pos += pos;
-    }
-
     std::vector<uint32_t> indices;
     indices.resize(36);
     for (size_t i = 0; i < 36; i++) {
         indices[i] = i;
     }
 
-    return Drawable(vertices, indices);
+    return Drawable(vertices, indices, pos, name);
 }

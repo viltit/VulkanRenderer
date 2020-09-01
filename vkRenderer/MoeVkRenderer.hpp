@@ -16,6 +16,7 @@
 #include "wrapper/MoeTexture.hpp"
 #include "wrapper/MoeDepthTexture.hpp"
 #include "MoeVkDrawable.hpp"
+#include "MoeVkRendererCommandBuffer.hpp"
 
 namespace moe {
 
@@ -45,6 +46,7 @@ private:
     MoeVkPipeline               pipeline;
     MoeVkFramebuffer            framebuffer;
     MoeVkCommandPool            commandPool;
+    MoeVkRendererCommandBuffer  commandBuffer;
     VkSurfaceKHR                surface;
 
     MoeVkPhysicalDevice         physicalDevice;

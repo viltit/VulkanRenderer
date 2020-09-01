@@ -21,6 +21,10 @@ public:
             Drawable* drawable,
             uint32_t numImagesInSwapchain);
 
+    void update(MoeVkLogicalDevice& device,
+            const glm::mat4& view, const glm::mat4& perspective,
+            uint32_t imageIndex);
+
     MoeVkDescriptorSet& descriptors() { return *_descriptors; }
 
     ~MoeVkDrawable();
