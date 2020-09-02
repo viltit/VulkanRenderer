@@ -29,4 +29,14 @@ void main() {
     vec3 specular = pow(max(dot(R, V), 0), 16)  * vec3(1.f);             // TODO: 16 ...
 
     outColor = vec4(ambient + diffuse + specular, 1.f);
+
+    /*
+    To debug our normal and view vector, we can take their dot product. If view and normal are aligned, it is 1, if they are
+    perpendicular, it is 0, if they are in opposite, it is -1
+    --> we should not see any black faces. Faces that look at us directly must be white
+    */
+    // float val = dot(N, V);
+    // outColor = vec4(val, val, val, 1.f);
+
+
 }

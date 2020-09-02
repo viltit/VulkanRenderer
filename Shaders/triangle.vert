@@ -24,9 +24,9 @@ void main() {
     gl_Position = ubo.P * ubo.V * ubo.M * vec4(position, 1.0);
 
     vec4 worldPos = ubo.M * vec4(position, 1.f);
-    fragNormal = mat3(ubo.M) * normal;
+    fragNormal =  mat3(ubo.V) * mat3(ubo.M) * normal;
     fragView = vec3(ubo.V * worldPos);
-    fragLight = ubo.lightPos - vec3(worldPos);
+    fragLight = mat3(ubo.V) * (ubo.lightPos - vec3(worldPos));
 
     fragColor = color;
     fragUV = uv;
