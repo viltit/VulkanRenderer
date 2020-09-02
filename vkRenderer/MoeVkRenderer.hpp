@@ -68,14 +68,6 @@ private:
     std::vector<Drawable>&          drawables;
     std::vector<MoeVkDrawable*>      vkDrawables;
 
-    // TODO: Should be part of vkDrawable. We also need a texture and vertex buffer cache in the long run
-    MoeVkArrayBuffer<Vertex>*       vertexBuffer;
-    MoeVkArrayBuffer<uint32_t>*     indexBuffer;
-    MoeTexture                      image;
-
     MoeVkDescriptorPool              uniformBuffer;
-
-    MoeDepthTexture                 depthImage;
-    void loadTexture(/*filename*/);
 };
 }

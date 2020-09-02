@@ -30,27 +30,15 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, std::vector<Drawable>& drawables,
     commandPool.create(logicalDevice, physicalDevice.queueFamily(), pipeline, swapChain);
     framebuffer.create(logicalDevice, physicalDevice, swapChain, pipeline, commandPool);
 
-    loadTexture();
     for (auto& drawable : drawables) {
         // TODO: No new -> need copy constrcutor
         vkDrawables.push_back(new MoeVkDrawable(
-                physicalDevice, logicalDevice, uniformBuffer, image, &drawable, swapChain.images().size()
+                physicalDevice, logicalDevice, commandPool, uniformBuffer,
+                &drawable, swapChain.images().size()
                 ));
     }
 
-    // TODO: Must be part of VkDrawable
-    vertexBuffer = new MoeVkArrayBuffer<Vertex>(physicalDevice, logicalDevice,
-            commandPool,
-            drawables[0].vertices,      // TODO !!
-            MoeBufferUsage::vertexBuffer,
-            "vertex buffer");
-    indexBuffer = new MoeVkArrayBuffer<uint32_t>(physicalDevice, logicalDevice,
-            commandPool,
-            drawables[0].indices,      // TODO !!
-            MoeBufferUsage::indexBuffer,
-            "index buffer");
     commandBuffer.record(logicalDevice, framebuffer, pipeline, swapChain, commandPool,
-            *vertexBuffer, *indexBuffer,
             vkDrawables);
 
     // create semaphores:
@@ -65,24 +53,12 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, std::vector<Drawable>& drawables,
     }
 }
 
-// TODO: Remove from here
-void MoeVkRenderer::loadTexture() {
-    image.load("Textures/planks_Diffuse.png");
-    image.upload(logicalDevice, physicalDevice, commandPool, logicalDevice.graphicsQueue());
-}
-
 MoeVkRenderer::~MoeVkRenderer() {
     // because drawing command are executed asynchrounously, we need to wait until we destroy the resources:
     vkDeviceWaitIdle(logicalDevice.device());
 
     uniformBuffer.destroy(logicalDevice);
 
-    if (vertexBuffer != nullptr) {
-        delete vertexBuffer;
-    }
-    if (indexBuffer != nullptr) {
-        delete indexBuffer;
-    }
     for (size_t i = 0; i < vkDrawables.size(); i++) {
         delete vkDrawables[i];
     }
@@ -194,8 +170,7 @@ void MoeVkRenderer::recreateSwapChain() {
     swapChain.create(physicalDevice, logicalDevice, surface, *window);
     // pipeline.create(logicalDevice, swapChain);
     framebuffer.create(logicalDevice, physicalDevice, swapChain, pipeline, commandPool);
-    commandBuffer.record(logicalDevice, framebuffer, pipeline, swapChain, commandPool,
-            *vertexBuffer, *indexBuffer, vkDrawables);
+    commandBuffer.record(logicalDevice, framebuffer, pipeline, swapChain, commandPool, vkDrawables);
 }
 
 void MoeVkRenderer::cleanSwapchain() {

@@ -22,8 +22,6 @@ public:
     void record(MoeVkLogicalDevice &device, MoeVkFramebuffer &framebuffer,
             MoeVkPipeline &pipeline, MoeVkSwapChain &swapChain,
             MoeVkCommandPool& commandPool,
-            MoeVkArrayBuffer<Vertex> &vertexBuffer,
-            MoeVkArrayBuffer<uint32_t>& indexBuffer,
             std::vector<MoeVkDrawable*>& drawables);
 
     VkCommandBuffer& buffer(unsigned int index) {

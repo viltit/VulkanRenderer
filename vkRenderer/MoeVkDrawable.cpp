@@ -13,24 +13,45 @@ namespace moe {
 MoeVkDrawable::MoeVkDrawable(
         MoeVkPhysicalDevice& physicalDevice,
         MoeVkLogicalDevice& logicalDevice,
+        MoeVkCommandPool& commandPool,
         MoeVkDescriptorPool& descriptorPool,
-        MoeTexture& texture,
         Drawable* drawable,
         uint32_t numImagesInSwapchain)
-
-        :   _descriptors {  new MoeVkDescriptorSet(physicalDevice, logicalDevice,
-                texture, descriptorPool, numImagesInSwapchain) },
-            _drawable { drawable }
-
+        : _drawable { drawable }
 {
-    assert(_drawable);
-    assert(_descriptors->numSets() == 3);
+    assert(_drawable != nullptr);
+
+    _vertexBuffer = new MoeVkArrayBuffer<Vertex>(physicalDevice, logicalDevice,
+                                                 commandPool,
+                                                 drawable->vertices,
+                                                 MoeBufferUsage::vertexBuffer,
+                                                 "vertex buffer");
+    _indexBuffer = new MoeVkArrayBuffer<uint32_t>(physicalDevice, logicalDevice,
+                                                  commandPool,
+                                                  drawable->indices,
+                                                  MoeBufferUsage::indexBuffer,
+                                                  "index buffer");
+
+    image.load(drawable->texturePath);
+    image.upload(logicalDevice, physicalDevice, commandPool, logicalDevice.graphicsQueue());
+
+    _descriptors = new MoeVkDescriptorSet(physicalDevice, logicalDevice,
+                                           image, descriptorPool, numImagesInSwapchain);
 }
 
 MoeVkDrawable::~MoeVkDrawable() {
     if (_descriptors) {
         delete _descriptors;
         _descriptors = nullptr;
+    }
+
+    if (_vertexBuffer != nullptr) {
+        delete _vertexBuffer;
+        _vertexBuffer = nullptr;
+    }
+    if (_indexBuffer != nullptr) {
+        delete _indexBuffer;
+        _indexBuffer = nullptr;
     }
 }
 

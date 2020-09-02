@@ -10,7 +10,7 @@
 
 using namespace moe;
 
-Drawable getCube(glm::vec3 size, glm::vec3 pos, const std::string& name);
+Drawable getCube(glm::vec3 size, glm::vec3 pos, const std::string& texturePath, const std::string& name);
 
 int main(int argc, char* argv[]) {
 
@@ -34,8 +34,14 @@ int main(int argc, char* argv[]) {
     try {
         spdlog::info("App is starting");
 
-        Drawable drawable1 = getCube(glm::vec3{ 0.3f, 0.3f, 0.3f }, glm::vec3{ -0.5, 0, 0}, "Cube 1");
-        Drawable drawable2 = getCube(glm::vec3{ 0.3f, 0.3f, 0.3f }, glm::vec3{ 0.5, 0.3, 0.3 }, "Cube 2");
+        Drawable drawable1 = getCube(glm::vec3{ 0.3f, 0.3f, 0.3f },
+                glm::vec3{ -0.5, 0, 0},
+                "Textures/planks_Diffuse.png",
+                "Cube 1");
+        Drawable drawable2 = getCube(glm::vec3{ 0.3f, 0.3f, 0.3f },
+                glm::vec3{ 0.5, 0.3, 0.3 },
+                "Textures/StoneFloor_Diffuse.png",
+                "Cube 2");
         drawable1.rotationSpeed = -2.f;
 
         std::vector<Drawable> drawables = { drawable2, drawable1 };
@@ -110,7 +116,7 @@ int main(int argc, char* argv[]) {
 }
 
 
-Drawable getCube(glm::vec3 size, glm::vec3 pos, const std::string& name) {
+Drawable getCube(glm::vec3 size, glm::vec3 pos, const std::string& texturePath, const std::string& name) {
 
     //we will need this variables at a later point:
     float w = size.x / 2.0f;
@@ -172,5 +178,5 @@ Drawable getCube(glm::vec3 size, glm::vec3 pos, const std::string& name) {
         indices[i] = i;
     }
 
-    return Drawable(vertices, indices, pos, name);
+    return Drawable(vertices, indices, texturePath, pos, name);
 }

@@ -9,8 +9,6 @@ namespace moe {
 void MoeVkRendererCommandBuffer::record(MoeVkLogicalDevice &device, MoeVkFramebuffer &framebuffer,
             MoeVkPipeline &pipeline, MoeVkSwapChain &swapChain,
             MoeVkCommandPool& commandPool,
-            MoeVkArrayBuffer<Vertex> &vertexBuffer,
-            MoeVkArrayBuffer<uint32_t>& indexBuffer,
             std::vector<MoeVkDrawable*>& drawables) {
 
 
@@ -58,20 +56,20 @@ void MoeVkRendererCommandBuffer::record(MoeVkLogicalDevice &device, MoeVkFramebu
         scissor.extent = {swapChain.extent().width, swapChain.extent().height};
         vkCmdSetScissor(_buffer.at(i), 0, 1, &scissor);
 
-        // bind vertex buffer
-        VkBuffer vertexBuffers[] = {vertexBuffer.buffer()};
-        VkDeviceSize offsets[] = {0};
-        vkCmdBindVertexBuffers(_buffer.at(i), 0, 1, vertexBuffers, offsets);
-        vkCmdBindIndexBuffer(_buffer.at(i), indexBuffer.buffer(), 0, VK_INDEX_TYPE_UINT32);
-
         for (auto& drawable : drawables) {
             vkCmdBindDescriptorSets(_buffer.at(i), VK_PIPELINE_BIND_POINT_GRAPHICS,
                                     pipeline.layout(), 0, 1,
                                     &(drawable->descriptors().set(i)), 0, nullptr);
 
+            // bind vertex buffer
+            VkBuffer vertexBuffers[] = { drawable->vertexBuffer()->buffer()};
+            VkDeviceSize offsets[] = {0};
+            vkCmdBindVertexBuffers(_buffer.at(i), 0, 1, vertexBuffers, offsets);
+            vkCmdBindIndexBuffer(_buffer.at(i), drawable->indexBuffer()->buffer(), 0, VK_INDEX_TYPE_UINT32);
+
             // TODO: Let each drawable have another geometry
             // vertex count, instance count, firstVertex, firstInstance
-            vkCmdDrawIndexed(_buffer.at(i), indexBuffer.numVertices(), 1, 0, 0, 0);
+            vkCmdDrawIndexed(_buffer.at(i), drawable->indexBuffer()->numVertices(), 1, 0, 0, 0);
         }
         vkCmdEndRenderPass(_buffer.at(i));
 

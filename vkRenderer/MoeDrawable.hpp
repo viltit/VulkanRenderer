@@ -9,10 +9,12 @@ namespace moe {
 struct Drawable {
    // Drawable() { }
     Drawable(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices,
+            const std::string& texturePath,
             const glm::vec3& pos = glm::vec3{ },
             const std::string& name = "")
         : vertices { vertices },
           indices  { indices },
+          texturePath { texturePath },
           M        { glm::mat4 { 1.f } },
           name     { name },
           rotationSpeed { 1.f }
@@ -26,6 +28,7 @@ struct Drawable {
 
     // TODO: Add a class "Transform" that supports translating, rotating, rotateSlow, lookAt, etc.
     glm::mat4 M;
+    std::string texturePath;
     std::string name;
 
     // TODO: Just for testing
