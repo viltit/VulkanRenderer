@@ -9,6 +9,7 @@ namespace moe {
 struct Vertex {
     glm::vec3 pos;
     glm::vec3 color;
+    glm::vec3 normal;
     glm::vec2 uv;
 
     static VkVertexInputBindingDescription getBindingDescription() {
@@ -19,7 +20,7 @@ struct Vertex {
         return description;
     }
 
-    static std::array<VkVertexInputAttributeDescription, 3> getAttributeDescription() {
+    static std::array<VkVertexInputAttributeDescription, 4> getAttributeDescription() {
 
         /*
         format options:
@@ -32,19 +33,26 @@ struct Vertex {
         double: VK_FORMAT_R64_SFLOAT,
          */
 
-        std::array<VkVertexInputAttributeDescription,3> descriptions;
+        std::array<VkVertexInputAttributeDescription,4> descriptions;
         descriptions[0].binding = 0;
         descriptions[0].location = 0;   // identical with shaders "layout(location=...)"
         descriptions[0].offset = offsetof(Vertex, pos);
         descriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
+
         descriptions[1].binding = 0;
         descriptions[1].location = 1;
         descriptions[1].offset = offsetof(Vertex, color);
         descriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+
         descriptions[2].binding = 0;
         descriptions[2].location = 2;
-        descriptions[2].offset = offsetof(Vertex, uv);
-        descriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
+        descriptions[2].offset = offsetof(Vertex, normal);
+        descriptions[2].format = VK_FORMAT_R32G32B32_SFLOAT;
+
+        descriptions[3].binding = 0;
+        descriptions[3].location = 3;
+        descriptions[3].offset = offsetof(Vertex, uv);
+        descriptions[3].format = VK_FORMAT_R32G32_SFLOAT;
         return descriptions;
     }
 };

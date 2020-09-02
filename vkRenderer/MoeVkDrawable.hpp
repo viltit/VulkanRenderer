@@ -26,6 +26,7 @@ public:
 
     void update(MoeVkLogicalDevice& device,
             const glm::mat4& view, const glm::mat4& perspective,
+            const glm::vec3& lightPos,
             uint32_t imageIndex);
 
     MoeVkArrayBuffer<Vertex>*   vertexBuffer() { return  _vertexBuffer; }

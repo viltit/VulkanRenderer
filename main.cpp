@@ -130,47 +130,126 @@ Drawable getCube(glm::vec3 size, glm::vec3 pos, const std::string& texturePath, 
     vertices.resize(36);
     size_t index = 0;
 
-    vertices[index].pos = glm::vec3{-w, -h, d }; vertices[index++].uv = glm::vec2{0.0f, 0.0f };	/* front */
-    vertices[index].pos = glm::vec3{w, -h, d }; vertices[index++].uv = glm::vec2{uv_w, 0.0f };
-    vertices[index].pos = glm::vec3{w, h, d }; vertices[index++].uv = glm::vec2{uv_w, uv_h };
-    vertices[index].pos = glm::vec3{w, h, d }; vertices[index++].uv = glm::vec2{uv_w, uv_h };
-    vertices[index].pos = glm::vec3{-w, h, d }; vertices[index++].uv = glm::vec2{0.0f, uv_h };
-    vertices[index].pos = glm::vec3{-w, -h, d }; vertices[index++].uv = glm::vec2{0.0f, 0.0f };
+    /* front */
+    vertices[index].pos = glm::vec3{-w, -h, d };
+            vertices[index].normal = glm::vec3{ -0.f, 0.f, -1.f };
+            vertices[index++].uv = glm::vec2{0.0f, 0.0f };
+    vertices[index].pos = glm::vec3{w, -h, d };
+            vertices[index].normal = glm::vec3{ -0.f, 0.f, -1.f };
+            vertices[index++].uv = glm::vec2{uv_w, 0.0f };
+    vertices[index].pos = glm::vec3{w, h, d };
+            vertices[index].normal = glm::vec3{ -0.f, 0.f, -1.f };
+            vertices[index++].uv = glm::vec2{uv_w, uv_h };
+    vertices[index].pos = glm::vec3{w, h, d };
+            vertices[index].normal = glm::vec3{ -0.f, 0.f, -1.f };
+            vertices[index++].uv = glm::vec2{uv_w, uv_h };
+    vertices[index].pos = glm::vec3{-w, h, d };
+            vertices[index].normal = glm::vec3{ -0.f, 0.f, -1.f };
+            vertices[index++].uv = glm::vec2{0.0f, uv_h };
+    vertices[index].pos = glm::vec3{-w, -h, d };
+            vertices[index].normal = glm::vec3{ -0.f, 0.f, -1.f };
+            vertices[index++].uv = glm::vec2{0.0f, 0.0f };
 
-    vertices[index].pos = glm::vec3{-w, h, d }; vertices[index++].uv = glm::vec2{0.0f, uv_h };	/* left */
-    vertices[index].pos = glm::vec3{-w, h, -d }; vertices[index++].uv = glm::vec2{uv_w, uv_h };
-    vertices[index].pos = glm::vec3{-w, -h, -d }; vertices[index++].uv = glm::vec2{uv_w, 0.0f };
-    vertices[index].pos = glm::vec3{-w, -h, -d }; vertices[index++].uv = glm::vec2{uv_w, 0.0f };
-    vertices[index].pos = glm::vec3{-w, -h, d }; vertices[index++].uv = glm::vec2{0.0f, 0.0f };
-    vertices[index].pos = glm::vec3{-w, h, d }; vertices[index++].uv = glm::vec2{0.0f, uv_h };
+    vertices[index].pos = glm::vec3{-w, h, d };
+            vertices[index].normal = glm::vec3{ -1.f, 0.f, 0.f };
+            vertices[index++].uv = glm::vec2{0.0f, uv_h };	/* left */
+    vertices[index].pos = glm::vec3{-w, h, -d };
+            vertices[index].normal = glm::vec3{ -1.f, 0.f, 0.f };
+            vertices[index++].uv = glm::vec2{uv_w, uv_h };
+    vertices[index].pos = glm::vec3{-w, -h, -d };
+            vertices[index].normal = glm::vec3{ -1.f, 0.f, 0.f };
+            vertices[index++].uv = glm::vec2{uv_w, 0.0f };
+    vertices[index].pos = glm::vec3{-w, -h, -d };
+            vertices[index].normal = glm::vec3{ -1.f, 0.f, 0.f };
+            vertices[index++].uv = glm::vec2{uv_w, 0.0f };
+    vertices[index].pos = glm::vec3{-w, -h, d };
+            vertices[index].normal = glm::vec3{ -1.f, 0.f, 0.f };
+            vertices[index++].uv = glm::vec2{0.0f, 0.0f };
+    vertices[index].pos = glm::vec3{-w, h, d };
+            vertices[index].normal = glm::vec3{ -1.f, 0.f, 0.f };
+            vertices[index++].uv = glm::vec2{0.0f, uv_h };
 
-    vertices[index].pos = glm::vec3{w, h, -d }; vertices[index++].uv = glm::vec2{uv_w, uv_h };	/* back */
-    vertices[index].pos = glm::vec3{w, -h, -d }; vertices[index++].uv = glm::vec2{uv_w, 0.0f };
-    vertices[index].pos = glm::vec3{-w, -h, -d }; vertices[index++].uv = glm::vec2{0.0f, 0.0f };
-    vertices[index].pos = glm::vec3{-w, -h, -d }; vertices[index++].uv = glm::vec2{0.0f, 0.0f };
-    vertices[index].pos = glm::vec3{-w, h, -d }; vertices[index++].uv = glm::vec2{0.0f, uv_h };
-    vertices[index].pos = glm::vec3{w, h, -d }; vertices[index++].uv = glm::vec2{uv_w, uv_h };
+    /* back */
+    vertices[index].pos = glm::vec3{w, h, -d };
+            vertices[index].normal = glm::vec3{ 0.f, 0.f, 1.f };
+            vertices[index++].uv = glm::vec2{uv_w, uv_h };
+    vertices[index].pos = glm::vec3{w, -h, -d };
+            vertices[index].normal = glm::vec3{ 0.f, 0.f, 1.f };
+            vertices[index++].uv = glm::vec2{uv_w, 0.0f };
+    vertices[index].pos = glm::vec3{-w, -h, -d };
+            vertices[index].normal = glm::vec3{ 0.f, 0.f, 1.f };
+            vertices[index++].uv = glm::vec2{0.0f, 0.0f };
+    vertices[index].pos = glm::vec3{-w, -h, -d };
+            vertices[index].normal = glm::vec3{ 0.f, 0.f, 1.f };
+            vertices[index++].uv = glm::vec2{0.0f, 0.0f };
+    vertices[index].pos = glm::vec3{-w, h, -d };
+            vertices[index].normal = glm::vec3{ 0.f, 0.f, 1.f };
+            vertices[index++].uv = glm::vec2{0.0f, uv_h };
+    vertices[index].pos = glm::vec3{w, h, -d };
+            vertices[index].normal = glm::vec3{ 0.f, 0.f, 1.f };
+            vertices[index++].uv = glm::vec2{uv_w, uv_h };
 
-    vertices[index].pos = glm::vec3{w, -h, -d }; vertices[index++].uv = glm::vec2{uv_w, 0.0f };	/* right */
-    vertices[index].pos = glm::vec3{w, h, -d }; vertices[index++].uv = glm::vec2{uv_w, uv_h };
-    vertices[index].pos = glm::vec3{w, h, d }; vertices[index++].uv = glm::vec2{0.0f, uv_h };
-    vertices[index].pos = glm::vec3{w, h, d }; vertices[index++].uv = glm::vec2{0.0f, uv_h };
-    vertices[index].pos = glm::vec3{w, -h, d }; vertices[index++].uv = glm::vec2{0.0f, 0.0f };
-    vertices[index].pos = glm::vec3{w, -h, -d }; vertices[index++].uv = glm::vec2{uv_w, 0.0f };
+    /* right */
+    vertices[index].pos = glm::vec3{w, -h, -d };
+            vertices[index].normal = glm::vec3{ 1.f, 0.f, 0.f };
+            vertices[index++].uv = glm::vec2{uv_w, 0.0f };
+    vertices[index].pos = glm::vec3{w, h, -d };
+            vertices[index].normal = glm::vec3{ 1.f, 0.f, 0.f };
+            vertices[index++].uv = glm::vec2{uv_w, uv_h };
+    vertices[index].pos = glm::vec3{w, h, d };
+            vertices[index].normal = glm::vec3{ 1.f, 0.f, 0.f };
+            vertices[index++].uv = glm::vec2{0.0f, uv_h };
+    vertices[index].pos = glm::vec3{w, h, d };
+            vertices[index].normal = glm::vec3{ 1.f, 0.f, 0.f };
+            vertices[index++].uv = glm::vec2{0.0f, uv_h };
+    vertices[index].pos = glm::vec3{w, -h, d };
+            vertices[index].normal = glm::vec3{ 1.f, 0.f, 0.f };
+            vertices[index++].uv = glm::vec2{0.0f, 0.0f };
+    vertices[index].pos = glm::vec3{w, -h, -d };
+            vertices[index].normal = glm::vec3{ 1.f, 0.f, 0.f };
+            vertices[index++].uv = glm::vec2{uv_w, 0.0f };
 
-    vertices[index].pos = glm::vec3{w, h, d }; vertices[index++].uv = glm::vec2{uv_w, 0.0f };	/* top */
-    vertices[index].pos = glm::vec3{w, h, -d }; vertices[index++].uv = glm::vec2{uv_w, uv_h };
-    vertices[index].pos = glm::vec3{-w, h, -d }; vertices[index++].uv = glm::vec2{0.0f, uv_h };
-    vertices[index].pos = glm::vec3{-w, h, -d }; vertices[index++].uv = glm::vec2{0.0f, uv_h };
-    vertices[index].pos = glm::vec3{-w, h, d }; vertices[index++].uv = glm::vec2{0.0f, 0.0f };
-    vertices[index].pos = glm::vec3{w, h, d }; vertices[index++].uv = glm::vec2{uv_w, 0.0f };
+    /* top */
+    vertices[index].pos = glm::vec3{w, h, d };
+            vertices[index].normal = glm::vec3{ 0.f, -1.f, 0.f };
+            vertices[index++].uv = glm::vec2{uv_w, 0.0f };
+    vertices[index].pos = glm::vec3{w, h, -d };
+            vertices[index].normal = glm::vec3{ 0.f, -1.f, 0.f };
+            vertices[index++].uv = glm::vec2{uv_w, uv_h };
+    vertices[index].pos = glm::vec3{-w, h, -d };
+            vertices[index].normal = glm::vec3{ 0.f, -1.f, 0.f };
+            vertices[index++].uv = glm::vec2{0.0f, uv_h };
+    vertices[index].pos = glm::vec3{-w, h, -d };
+            vertices[index].normal = glm::vec3{ 0.f, -1.f, 0.f };
+            vertices[index++].uv = glm::vec2{0.0f, uv_h };
+    vertices[index].pos = glm::vec3{-w, h, d };
+            vertices[index].normal = glm::vec3{ 0.f, -1.f, 0.f };
+            vertices[index++].uv = glm::vec2{0.0f, 0.0f };
+    vertices[index].pos = glm::vec3{w, h, d };
+            vertices[index].normal = glm::vec3{ 0.f, -1.f, 0.f };
+            vertices[index++].uv = glm::vec2{uv_w, 0.0f };
 
-    vertices[index].pos = glm::vec3{-w, -h, -d }; vertices[index++].uv = glm::vec2{uv_w, 0.0f };	/* bottom */
-    vertices[index].pos = glm::vec3{w, -h, -d }; vertices[index++].uv = glm::vec2{uv_w, uv_h };
-    vertices[index].pos = glm::vec3{w, -h, d }; vertices[index++].uv = glm::vec2{0.0f, uv_h };
-    vertices[index].pos = glm::vec3{w, -h, d }; vertices[index++].uv = glm::vec2{0.0f, uv_h };
-    vertices[index].pos = glm::vec3{-w, -h, d }; vertices[index++].uv = glm::vec2{0.0f, 0.0f };
-    vertices[index].pos = glm::vec3{-w, -h, -d }; vertices[index++].uv = glm::vec2{uv_w, 0.0f };
+    /* bottom */
+    vertices[index].pos = glm::vec3{-w, -h, -d };
+            vertices[index].normal = glm::vec3{ 0.f, 1.f, 0.f };
+            vertices[index++].uv = glm::vec2{uv_w, 0.0f };
+    vertices[index].pos = glm::vec3{w, -h, -d };
+            vertices[index].normal = glm::vec3{ 0.f, 1.f, 0.f };
+            vertices[index++].uv = glm::vec2{uv_w, uv_h };
+    vertices[index].pos = glm::vec3{w, -h, d };
+            vertices[index].normal = glm::vec3{ 0.f, 1.f, 0.f };
+            vertices[index++].uv = glm::vec2{0.0f, uv_h };
+    vertices[index].pos = glm::vec3{w, -h, d };
+            vertices[index].normal = glm::vec3{ 0.f, 1.f, 0.f };
+            vertices[index++].uv = glm::vec2{0.0f, uv_h };
+    vertices[index].pos = glm::vec3{-w, -h, d };
+            vertices[index].normal = glm::vec3{ 0.f, 1.f, 0.f };
+            vertices[index++].uv = glm::vec2{0.0f, 0.0f };
+    vertices[index].pos = glm::vec3{-w, -h, -d };
+            vertices[index].normal = glm::vec3{ 0.f, 1.f, 0.f };
+            vertices[index++].uv = glm::vec2{uv_w, 0.0f };
+
+    assert(index == 36);
 
     std::vector<uint32_t> indices;
     indices.resize(36);

@@ -120,6 +120,7 @@ void MoeVkRenderer::draw() {
         drawable->update(logicalDevice,
                 V,
                 P,
+                glm::vec3{ 0.f, -3.f, 0.f },   // TODO: Not hardcode
                 imageIndex);
     }
 

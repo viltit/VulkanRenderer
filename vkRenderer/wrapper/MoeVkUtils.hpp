@@ -32,6 +32,7 @@ struct UBO {
     glm::mat4 M;
     glm::mat4 V;
     glm::mat4 P;
+    glm::vec3 lightPos;
 };
 
 }
