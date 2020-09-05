@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include <array>
+#include <vector>
 
 namespace moe {
 
@@ -20,7 +20,7 @@ struct Vertex {
         return description;
     }
 
-    static std::array<VkVertexInputAttributeDescription, 4> getAttributeDescription() {
+    static std::vector<VkVertexInputAttributeDescription> getAttributeDescription() {
 
         /*
         format options:
@@ -33,7 +33,9 @@ struct Vertex {
         double: VK_FORMAT_R64_SFLOAT,
          */
 
-        std::array<VkVertexInputAttributeDescription,4> descriptions;
+        std::vector<VkVertexInputAttributeDescription> descriptions;
+        descriptions.resize(4);
+
         descriptions[0].binding = 0;
         descriptions[0].location = 0;   // identical with shaders "layout(location=...)"
         descriptions[0].offset = offsetof(Vertex, pos);

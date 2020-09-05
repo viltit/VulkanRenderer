@@ -29,7 +29,7 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, std::vector<Drawable>& drawables,
     std::vector<MoeVkShader> shaders { 2 };
     shaders[0].create(logicalDevice, "Shaders/triangle.vert.spv", MoeVkShaderStage::vertex);
     shaders[1].create(logicalDevice, "Shaders/triangle.frag.spv", MoeVkShaderStage::fragment);
-    pipeline.prepare(shaders, 0, 0);
+    pipeline.prepare(shaders, swapChain.extent().width, swapChain.extent().height);
     pipeline.create(logicalDevice, physicalDevice, swapChain, uniformBuffer);
     commandPool.create(logicalDevice, physicalDevice.queueFamily(), pipeline, swapChain);
     framebuffer.create(logicalDevice, physicalDevice, swapChain, pipeline, commandPool);
@@ -88,7 +88,7 @@ MoeVkRenderer::~MoeVkRenderer() {
     commandPool.destroy(logicalDevice);
     framebuffer.destroy(logicalDevice);
     swapChain.destroy(logicalDevice);
-    pipeline.destroy(logicalDevice);
+    pipeline.destroy();
     vkDestroySurfaceKHR(instance.instance(), surface, nullptr);
 }
 
