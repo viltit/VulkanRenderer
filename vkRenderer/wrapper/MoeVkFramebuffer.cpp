@@ -3,7 +3,7 @@
 #include <spdlog/spdlog.h>
 
 #include "MoeVkFramebuffer.hpp"
-#include "../../Exceptions/InitException.hpp"
+#include "../../Exceptions/MoeExceptions.hpp"
 
 namespace moe {
 
@@ -36,7 +36,7 @@ void MoeVkFramebuffer::create(MoeVkLogicalDevice& device, MoeVkPhysicalDevice& p
         createInfo.layers           = 1;
 
         if (vkCreateFramebuffer(device.device(), &createInfo, nullptr, &_framebuffers[i]) != VK_SUCCESS) {
-            throw InitException("Could not initialize Framebuffer", __FILE__, __FUNCTION__, __LINE__);
+            throw MoeInitError("Could not initialize Framebuffer", __FILE__, __FUNCTION__, __LINE__);
         }
     }
 }

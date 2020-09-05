@@ -9,7 +9,8 @@ namespace moe {
 void MoeVkRendererCommandBuffer::record(MoeVkLogicalDevice &device, MoeVkFramebuffer &framebuffer,
             MoeVkPipeline &pipeline, MoeVkSwapChain &swapChain,
             MoeVkCommandPool& commandPool,
-            std::vector<MoeVkDrawable*>& drawables) {
+            std::vector<MoeVkDrawable*>& drawables,
+            VkBool32 debugNormals) {
 
 
     size_t numBuffers = framebuffer.buffers().size();
@@ -36,6 +37,12 @@ void MoeVkRendererCommandBuffer::record(MoeVkLogicalDevice &device, MoeVkFramebu
         renderPassInfo.renderArea.extent = swapChain.extent();
         renderPassInfo.clearValueCount = clearColor.size();
         renderPassInfo.pClearValues = clearColor.data();
+
+        vkCmdPushConstants(_buffer.at(i),
+                pipeline.layout(),
+                VK_SHADER_STAGE_FRAGMENT_BIT, 0,
+                sizeof(debugNormals),
+                &debugNormals);
 
         // start recording
         vkCmdBeginRenderPass(_buffer.at(i), &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
@@ -74,9 +81,12 @@ void MoeVkRendererCommandBuffer::record(MoeVkLogicalDevice &device, MoeVkFramebu
         vkCmdEndRenderPass(_buffer.at(i));
 
         if (vkEndCommandBuffer(_buffer.at(i)) != VK_SUCCESS) {
-            throw InitException("Failed to end command buffer", __FILE__, __FUNCTION__, __LINE__);
+            throw MoeInitError("Failed to end command buffer", __FILE__, __FUNCTION__, __LINE__);
         }
     }
+}
 
+void MoeVkRendererCommandBuffer::destroy() {
+    _buffer.destroy();
 }
 }

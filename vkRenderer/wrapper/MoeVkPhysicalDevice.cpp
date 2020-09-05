@@ -1,7 +1,7 @@
 
 #include "MoeVkPhysicalDevice.hpp"
 #include "MoeVkSwapChainProps.hpp"
-#include "../../Exceptions/InitException.hpp"
+#include "../../Exceptions/MoeExceptions.hpp"
 
 #include <map>
 #include <spdlog/spdlog.h>
@@ -25,15 +25,15 @@ std::vector<VkPhysicalDevice> MoeVkPhysicalDevice::fetchAll(const VkInstance& in
     uint32_t numDevices = 0;
     // fetch number of devices
     if (vkEnumeratePhysicalDevices(instance, &numDevices, nullptr) != VK_SUCCESS) {
-        throw InitException("Failed to fetch Physical Devices", __FILE__, __FUNCTION__, __LINE__);
+        throw MoeInitError("Failed to fetch Physical Devices", __FILE__, __FUNCTION__, __LINE__);
     }
     if (numDevices == 0) {
-        throw InitException("Failed to find any device with Vulkan Support.", __FILE__, __FUNCTION__, __LINE__);
+        throw MoeInitError("Failed to find any device with Vulkan Support.", __FILE__, __FUNCTION__, __LINE__);
     }
     std::vector<VkPhysicalDevice> physDevices(numDevices);
     // fetch devices:
     if (vkEnumeratePhysicalDevices(instance, &numDevices, physDevices.data()) != VK_SUCCESS) {
-        throw InitException("Failed to fetch Physical Devices", __FILE__, __FUNCTION__, __LINE__);
+        throw MoeInitError("Failed to fetch Physical Devices", __FILE__, __FUNCTION__, __LINE__);
     }
 
     spdlog::info("Number of gpu's detected: {0}", numDevices);
@@ -63,7 +63,7 @@ void MoeVkPhysicalDevice::fetchBest(
         _queueFamily = fetchQueueFamilies(_device, surface);
     }
     else {
-        throw InitException("No suitable GPU could be found.", __FILE__, __FUNCTION__, __LINE__);
+        throw MoeInitError("No suitable GPU could be found.", __FILE__, __FUNCTION__, __LINE__);
     }
 }
 /**
@@ -242,7 +242,7 @@ VkFormat MoeVkPhysicalDevice::findFirstSupportedFormat(const std::vector<VkForma
             return format;
         }
     }
-    throw InitException("Could not find any supported image format", __FILE__, __FUNCTION__, __LINE__);
+    throw MoeInitError("Could not find any supported image format", __FILE__, __FUNCTION__, __LINE__);
 }
 
 VkFormat MoeVkPhysicalDevice::findDepthFormat() {

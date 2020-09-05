@@ -32,6 +32,8 @@ public:
     void draw();
     void recreateSwapChain();
 
+    void switchDebugDrawing(bool debugMode);
+
 private:
 
     static constexpr int maxFramesInFlight = 2;

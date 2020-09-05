@@ -1,6 +1,6 @@
 
 #include "MoeVkSwapChain.hpp"
-#include "../../Exceptions/InitException.hpp"
+#include "../../Exceptions/MoeExceptions.hpp"
 
 #include <SDL2/SDL_vulkan.h>
 #include <iostream>
@@ -71,7 +71,7 @@ void MoeVkSwapChain::create(
     createInfo.oldSwapchain     = nullptr;
 
     if (vkCreateSwapchainKHR(logicalDevice.device(), &createInfo, nullptr, &_swapChain) != VK_SUCCESS) {
-        throw InitException("Failed to create Swapchain.", __FILE__, __FUNCTION__, __LINE__);
+        throw MoeInitError("Failed to create Swapchain.", __FILE__, __FUNCTION__, __LINE__);
     }
 
     // get a handle to the images in the Swapchain:
@@ -107,7 +107,7 @@ void MoeVkSwapChain::createImageViews(MoeVkLogicalDevice& device) {
         createInfo.subresourceRange.layerCount = 1;
 
         if (vkCreateImageView(device.device(), &createInfo, nullptr, &_imageViews[i]) != VK_SUCCESS) {
-            throw InitException("Failed to create an Image View.", __FILE__, __FUNCTION__, __LINE__);
+            throw MoeInitError("Failed to create an Image View.", __FILE__, __FUNCTION__, __LINE__);
         }
     }
 }

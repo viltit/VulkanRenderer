@@ -1,6 +1,6 @@
 
 #include "MoeVkImage.hpp"
-#include "../../Exceptions/InitException.hpp"
+#include "../../Exceptions/MoeExceptions.hpp"
 
 #include "MoeVkPhysicalDevice.hpp"
 #include "MoeVkLogicalDevice.hpp"
@@ -51,7 +51,7 @@ namespace moe {
         imageInfo.initialLayout     = layout;
 
         if (vkCreateImage(device.device(), &imageInfo, nullptr, &_image) != VK_SUCCESS) {
-            throw InitException("Failed to create image", __FILE__, __FUNCTION__, __LINE__);
+            throw MoeInitError("Failed to create image", __FILE__, __FUNCTION__, __LINE__);
         }
 
         VkMemoryRequirements memoryRequirements;
@@ -63,7 +63,7 @@ namespace moe {
         memoryInfo.memoryTypeIndex  = MoeVkUtils::getMemoryType(physicalDevice, memoryRequirements.memoryTypeBits,
                                                                 memoryFlags);
         if (vkAllocateMemory(device.device(), &memoryInfo, nullptr, &_memory) != VK_SUCCESS) {
-            throw InitException("Failed to allocate memory for texture", __FILE__, __FUNCTION__, __LINE__);
+            throw MoeInitError("Failed to allocate memory for texture", __FILE__, __FUNCTION__, __LINE__);
         }
 
         // bind memory to image
@@ -114,7 +114,7 @@ void MoeVkImage::createView(VkFormat format, VkImageAspectFlags aspectFlags) {
     viewCreateInfo.subresourceRange.layerCount      = 1;
 
     if (vkCreateImageView(_device->device(), &viewCreateInfo, nullptr, &_view) != VK_SUCCESS) {
-        throw InitException("Failed to create image view", __FILE__, __FUNCTION__, __LINE__);
+        throw MoeInitError("Failed to create image view", __FILE__, __FUNCTION__, __LINE__);
     }
 }
 
@@ -160,7 +160,7 @@ void MoeVkImage::changeLayout(MoeVkCommandPool &commandPool,
         }
     }
     else {
-        throw InitException("Invalid layout transition", __FILE__, __FUNCTION__, __LINE__);
+        throw MoeInitError("Invalid layout transition", __FILE__, __FUNCTION__, __LINE__);
     }
     barrier.oldLayout       = _layout;
     barrier.newLayout       = newLayout;

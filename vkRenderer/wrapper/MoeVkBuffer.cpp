@@ -23,7 +23,7 @@ MoeVkBuffer::MoeVkBuffer(MoeVkPhysicalDevice &physDevice, MoeVkLogicalDevice &de
     info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
     if (vkCreateBuffer(device.device(), &info, nullptr, &_buffer) != VK_SUCCESS) {
-        throw InitException("Failed to create vertex buffer", __FILE__, __FUNCTION__, __LINE__);
+        throw MoeInitError("Failed to create vertex buffer", __FILE__, __FUNCTION__, __LINE__);
     }
 
     VkMemoryRequirements memRequirements;
@@ -35,7 +35,7 @@ MoeVkBuffer::MoeVkBuffer(MoeVkPhysicalDevice &physDevice, MoeVkLogicalDevice &de
     allocInfo.memoryTypeIndex = MoeVkUtils::getMemoryType(physDevice, memRequirements.memoryTypeBits,
                                               memoryFlags);
     if (vkAllocateMemory(device.device(), &allocInfo, nullptr, &_memory) != VK_SUCCESS) {
-        throw InitException("Failed to allocate memory from GPU", __FILE__, __FUNCTION__, __LINE__);
+        throw MoeInitError("Failed to allocate memory from GPU", __FILE__, __FUNCTION__, __LINE__);
     }
     vkBindBufferMemory(device.device(), _buffer, _memory, 0);
 }

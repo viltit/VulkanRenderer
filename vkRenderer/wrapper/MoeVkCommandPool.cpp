@@ -1,5 +1,5 @@
 #include "MoeVkCommandPool.hpp"
-#include "../../Exceptions/InitException.hpp"
+#include "../../Exceptions/MoeExceptions.hpp"
 #include "MoeVkArrayBuffer.hpp"
 #include "MoeVkDescriptorSet.hpp"
 #include "MoeVkPipeline.hpp"
@@ -25,18 +25,13 @@ void MoeVkCommandPool::create(MoeVkLogicalDevice &device,
     createInfo.flags = 0;   // can give hints that the buffer is re-recorded regularly
 
     if (vkCreateCommandPool(device.device(), &createInfo, nullptr, &_pool) != VK_SUCCESS) {
-        throw InitException("Failed to create a command Pool.", __FILE__, __FUNCTION__, __LINE__);
+        throw MoeInitError("Failed to create a command Pool.", __FILE__, __FUNCTION__, __LINE__);
     }
 }
 
 void MoeVkCommandPool::destroy(moe::MoeVkLogicalDevice &device) {
     std::cout << "Destroying Command Pool\n";
     vkDestroyCommandPool(device.device(), _pool, nullptr);
-}
-
-
-void MoeVkCommandPool::destroyCommandBuffers(MoeVkLogicalDevice& device) {
-   // _buffer.destroy();
 }
 
 }

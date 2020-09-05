@@ -1,5 +1,5 @@
 #include "VkWindow.hpp"
-#include "../Exceptions/InitException.hpp"
+#include "../Exceptions/MoeExceptions.hpp"
 #include <spdlog/spdlog.h>
 
 namespace moe {
@@ -25,7 +25,7 @@ VkWindow::VkWindow(const std::string& name, unsigned int width, unsigned int hei
 
     // TODO: Do not initialize SDL here -> we might want to add Audio Systems too
     if (SDL_Init(SDL_INIT_VIDEO) > 1) {
-        throw InitException("Could not initialize SDL Video.", __FILE__, __FUNCTION__, __LINE__);
+        throw MoeInitError("Could not initialize SDL Video.", __FILE__, __FUNCTION__, __LINE__);
     }
 
     //if the window is fullsize, adjust width and height:
@@ -45,7 +45,7 @@ VkWindow::VkWindow(const std::string& name, unsigned int width, unsigned int hei
     if (!_window) {
         std::string message { "SDL failed to initialize a Window. Error message: "};
         std::string error { SDL_GetError() };
-        throw InitException(message + error, __FILE__, __FUNCTION__, __LINE__);
+        throw MoeInitError(message + error, __FILE__, __FUNCTION__, __LINE__);
     }
     spdlog::trace("Finished.");
 }

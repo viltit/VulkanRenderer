@@ -24,7 +24,7 @@ void MoeVkCommandBuffer::create(MoeVkLogicalDevice &device, MoeVkCommandPool& co
     allocInfo.commandBufferCount = numBuffers;
 
     if (vkAllocateCommandBuffers(device.device(), &allocInfo, _buffers.data()) != VK_SUCCESS) {
-        throw InitException("Failed to create command buffer.", __FILE__, __FUNCTION__, __LINE__);
+        throw MoeInitError("Failed to create command buffer.", __FILE__, __FUNCTION__, __LINE__);
     }
 }
 
@@ -42,14 +42,14 @@ void MoeVkCommandBuffer::startRecording(MoeVkCommandPool& commandPool, VkCommand
     commandBeginInfo.pInheritanceInfo   = nullptr;
 
     if (vkBeginCommandBuffer(_buffers.at(bufferIndex), &commandBeginInfo) != VK_SUCCESS) {
-        throw InitException("Failed to begin recording command buffer", __FILE__, __FUNCTION__, __LINE__);
+        throw MoeInitError("Failed to begin recording command buffer", __FILE__, __FUNCTION__, __LINE__);
     }
 }
 
 void MoeVkCommandBuffer::stopRecording(VkQueue& queue, MoeVkCommandPool& commandPool, int bufferIndex) {
 
     if (vkEndCommandBuffer(_buffers[bufferIndex]) != VK_SUCCESS) {
-        throw InitException("Failed to end command buffer recording", __FILE__, __FUNCTION__, __LINE__);
+        throw MoeInitError("Failed to end command buffer recording", __FILE__, __FUNCTION__, __LINE__);
     }
 
     VkSubmitInfo submitInfo { };

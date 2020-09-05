@@ -6,15 +6,20 @@
 #include "MoeVkLogicalDevice.hpp"
 #include "MoeVkSwapChain.hpp"
 #include "MoeVkDescriptorPool.hpp"
+#include "MoeVkShader.hpp"
 
 namespace moe {
 
 class MoeVkPipeline {
 public:
-    MoeVkPipeline();
-    ~MoeVkPipeline();
+    MoeVkPipeline() { }
+    ~MoeVkPipeline() { };
 
-    void create(MoeVkLogicalDevice& device, MoeVkPhysicalDevice& physicalDevice, const MoeVkSwapChain& swapChain, MoeVkDescriptorPool& uniformBuffer);
+    void prepare(std::vector<MoeVkShader>& shaders, uint32_t width, uint32_t height);
+    void create(MoeVkLogicalDevice& device,
+            MoeVkPhysicalDevice& physicalDevice,
+            const MoeVkSwapChain& swapChain,
+            MoeVkDescriptorPool& uniformBuffer);
     void destroy(MoeVkLogicalDevice& device);
 
     const VkRenderPass& renderPass() const { return _renderPass; }
@@ -22,12 +27,11 @@ public:
     const VkPipelineLayout& layout() const { return _layout; }
 
 private:
-    /// reads a compiled shader file (ie a .spv-file)
-    std::vector<char> readShader(const std::string& filename);
-    VkShaderModule createShader(MoeVkLogicalDevice& device, const std::vector<char>& bytecode);
     void createRenderPass(MoeVkLogicalDevice& device, MoeVkPhysicalDevice& physicalDevice, const MoeVkSwapChain& swapChain);
 
     VkPipelineDepthStencilStateCreateInfo depthStencilStateCreateInfo(bool opaque = true);
+
+    std::vector<VkPipelineShaderStageCreateInfo> _shaderStages;
 
     VkRenderPass        _renderPass;
     VkPipelineLayout    _layout;

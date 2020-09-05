@@ -1,7 +1,7 @@
 #include "MoeVkInstance.hpp"
 #include "../VkWindow.hpp"
 #include "MoeVkFunctions.hpp"
-#include "../../Exceptions/InitException.hpp"
+#include "../../Exceptions/MoeExceptions.hpp"
 
 #include <SDL_vulkan.h>
 #include <iostream>
@@ -65,7 +65,7 @@ MoeVkInstance::MoeVkInstance(VkWindow *window, RendererOptions options)
 
     if (vkCreateInstance(&createInfo, nullptr, &_instance) != VK_SUCCESS) {
         // TODO: Include Vulkan error code as String
-        throw InitException("Failed to create Vulkan instance", __FILE__, __FUNCTION__, __LINE__);
+        throw MoeInitError("Failed to create Vulkan instance", __FILE__, __FUNCTION__, __LINE__);
     }
 
     // create debug messenger if validation layer is active:

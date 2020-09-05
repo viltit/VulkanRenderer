@@ -1,12 +1,13 @@
 #include <iostream>
 #include "vkRenderer/MoeVkRenderer.hpp"
 #include "vkRenderer/VkWindow.hpp"
-#include "Exceptions/InitException.hpp"
+#include "Exceptions/MoeExceptions.hpp"
 #include "Timer.hpp"
 #include "vkRenderer/MoeDrawable.hpp"
 
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/basic_file_sink.h"
+
 
 using namespace moe;
 
@@ -27,6 +28,7 @@ int main(int argc, char* argv[]) {
             spdlog::set_level(spdlog::level::info);
         }
     }
+
     else {
         spdlog::set_level(spdlog::level::warn);
     }
@@ -86,6 +88,11 @@ int main(int argc, char* argv[]) {
                             case SDLK_ESCAPE:
                                 isRunning = false;
                                 break;
+                            case SDLK_F1:
+                                vkApp.switchDebugDrawing(true);
+                                break;
+                            case SDLK_F2:
+                                vkApp.switchDebugDrawing(false);
                         }
                         break;
                 }
@@ -108,7 +115,7 @@ int main(int argc, char* argv[]) {
 
 
     }
-    catch(InitException e) {
+    catch(MoeInitError e) {
         std::cout << "Unhandeld error: " << e.what() << std::endl;
         std::cout << "In File " << e.file << " on Line " << e.line << " in function " << e.func << std::endl;
     }

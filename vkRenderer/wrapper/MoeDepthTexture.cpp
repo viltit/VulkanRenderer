@@ -15,7 +15,7 @@ void MoeDepthTexture::create(MoeVkLogicalDevice &device, MoeVkPhysicalDevice &ph
                              MoeVkCommandPool &commandPool, VkQueue &queue, uint32_t w, uint32_t h) {
 
     if (_image.image() != VK_NULL_HANDLE) {
-        throw InitException("Depth Image was already created", __FILE__, __FUNCTION__, __LINE__);
+        throw MoeInitError("Depth Image was already created", __FILE__, __FUNCTION__, __LINE__);
     }
     _device = &device;
     VkFormat depthFormat = physicalDevice.findDepthFormat();

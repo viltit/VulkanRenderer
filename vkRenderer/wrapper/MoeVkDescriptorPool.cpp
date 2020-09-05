@@ -4,7 +4,7 @@
 
 #include "MoeVkDescriptorPool.hpp"
 #include "MoeTexture.hpp"
-#include "../../Exceptions/InitException.hpp"
+#include "../../Exceptions/MoeExceptions.hpp"
 #include <glm/glm.hpp>
 #include <iostream>
 #include "MoeVkUtils.hpp"
@@ -49,7 +49,7 @@ void MoeVkDescriptorPool::createLayout(MoeVkPhysicalDevice& phyDevice, MoeVkLogi
     layoutInfo.pBindings = layoutBindings.data();
 
     if (vkCreateDescriptorSetLayout(device.device(), &layoutInfo, nullptr, &_layout) != VK_SUCCESS) {
-        throw InitException("Failed to create descriptor set layout", __FILE__, __FUNCTION__, __LINE__);
+        throw MoeInitError("Failed to create descriptor set layout", __FILE__, __FUNCTION__, __LINE__);
     }
 }
 
@@ -76,7 +76,7 @@ void MoeVkDescriptorPool::createPool(moe::MoeVkPhysicalDevice &phyDevice, moe::M
     poolInfo.pPoolSizes = poolSizes.data();
 
     if (vkCreateDescriptorPool(device.device(), &poolInfo, nullptr, &_pool) != VK_SUCCESS) {
-        throw InitException("Failed to create descriptor pool.", __FILE__, __FUNCTION__, __LINE__);
+        throw MoeInitError("Failed to create descriptor pool.", __FILE__, __FUNCTION__, __LINE__);
     }
 }
 

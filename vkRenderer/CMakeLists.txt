@@ -2,6 +2,7 @@ project(vkRenderer)
 
 # Vector math header only lib, see https://glm.g-truc.net/0.9.9/index.html
 include_directories(../glm)
+include_directories(Exceptions)
 
 #Locate SDL
 find_package(SDL2 REQUIRED)
@@ -22,6 +23,7 @@ add_library(
         wrapper/MoeVkQueueFamily.hpp
         VkWindow.cpp
         wrapper/MoeVkPhysicalDevice.cpp
+        wrapper/MoeVkShader.cpp
         wrapper/MoeVkLogicalDevice.cpp
         wrapper/MoeVkSwapChain.cpp
         wrapper/MoeVkSwapChainProps.hpp
@@ -47,5 +49,6 @@ add_library(
 
 target_link_libraries(vkRenderer
         PUBLIC spdlog
+        moeExceptions
         ${SDL2_LIBRARIES}
         ${Vulkan_LIBRARIES})

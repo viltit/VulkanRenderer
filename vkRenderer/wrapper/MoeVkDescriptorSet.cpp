@@ -39,7 +39,7 @@ MoeVkDescriptorSet::MoeVkDescriptorSet(
     descriptorAllocateInfo.pSetLayouts = layouts.data();
 
     if (vkAllocateDescriptorSets(logicalDevice.device(), &descriptorAllocateInfo, _sets.data()) != VK_SUCCESS) {
-        throw InitException("Failed to allocate descriptor set.", __FILE__, __FUNCTION__, __LINE__);
+        throw MoeInitError("Failed to allocate descriptor set.", __FILE__, __FUNCTION__, __LINE__);
     }
 
     update(texture);

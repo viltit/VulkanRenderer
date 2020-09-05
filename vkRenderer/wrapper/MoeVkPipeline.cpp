@@ -2,51 +2,43 @@
 #include "MoeVkPipeline.hpp"
 #include "../MoeVertex.hpp"
 
-#include "../../Exceptions/InitException.hpp"
+#include "../../Exceptions/MoeExceptions.hpp"
 
+#include <spdlog/spdlog.h>
 #include <fstream>
+#include <spdlog/spdlog.h>
 
 namespace moe {
 
-MoeVkPipeline::MoeVkPipeline() { }
+void MoeVkPipeline::prepare(std::vector<MoeVkShader>& shaders, uint32_t width, uint32_t height) {
+    _shaderStages.resize(shaders.size());
+    // TODO: We could check if user gave two identical shader stages
+    for (size_t i = 0; i < shaders.size(); i++) {
+        _shaderStages[i] = VkPipelineShaderStageCreateInfo {
+                VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
+                nullptr,
+                0,
+                static_cast<VkShaderStageFlagBits>(shaders[i].stage()),
+                shaders[i].module(),
+                "main",
+                nullptr
+        };
+    }
 
-MoeVkPipeline::~MoeVkPipeline() { }
+    // TODO: Prepare all needed create infos here. User should be able to modify them after
+
+}
 
 void MoeVkPipeline::create(MoeVkLogicalDevice& device, MoeVkPhysicalDevice& physicalDevice,
                            const MoeVkSwapChain& swapChain, MoeVkDescriptorPool& uniformBuffer) {
 
-    // TODO later: Do not hardcode shader path
-    auto vertexCode = readShader("Shaders/triangle.vert.spv");
-    auto fragmentCode = readShader("Shaders/triangle.frag.spv");
-    VkShaderModule vertexModule = createShader(device, vertexCode);
-    VkShaderModule fragmentModule = createShader(device, fragmentCode);
+    if (_shaderStages.size() == 0) {
+        spdlog::warn("Creating pipeline with no shaders. Maybe Pipeline.create() was called before Pipeline.prepare()");
+    }
 
     createRenderPass(device, physicalDevice, swapChain);
 
-    VkPipelineShaderStageCreateInfo vertexCreateInfo { };
-    vertexCreateInfo.sType          = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-    vertexCreateInfo.pNext          = nullptr;
-    vertexCreateInfo.flags          = 0;
-    vertexCreateInfo.stage          = VK_SHADER_STAGE_VERTEX_BIT;
-    vertexCreateInfo.module         = vertexModule;
-    // This would allow for multiple shaders in one module:
-    vertexCreateInfo.pName          = "main";   // TODO: Let the calling code decide the name of the entry function
-    vertexCreateInfo.pSpecializationInfo = nullptr;
-
-    VkPipelineShaderStageCreateInfo fragmentCreateInfo { };
-    fragmentCreateInfo.sType          = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-    fragmentCreateInfo.pNext          = nullptr;
-    fragmentCreateInfo.flags          = 0;
-    fragmentCreateInfo.stage          = VK_SHADER_STAGE_FRAGMENT_BIT;
-    fragmentCreateInfo.module         = fragmentModule;
-    fragmentCreateInfo.pName          = "main";   // TODO: Let the calling code decide the name of the entry function
-    fragmentCreateInfo.pSpecializationInfo = nullptr;
-
-    VkPipelineShaderStageCreateInfo shaderStages[] = { vertexCreateInfo, fragmentCreateInfo };
-
     /* Pipeline stages ---------------------------------------------------- */
-    // TODO: How can we be more flexie in the vertex binding description, ie. drawing shapes with colors and shapes
-    // with textures at the same time
     auto bindingDesciption = Vertex::getBindingDescription();
     auto attributeDescription = Vertex::getAttributeDescription();
 
@@ -149,8 +141,6 @@ void MoeVkPipeline::create(MoeVkLogicalDevice& device, MoeVkPhysicalDevice& phys
     blendingCreateInfo.blendConstants[2]    = 0.f;
     blendingCreateInfo.blendConstants[3]    = 0.f;
 
-    // TODO later: VkDynamicState to avoid recrating the pipeline because, for example, we want a line width of 2
-
     // Define dynamic states so that we do not need to re-recreate the pipeline from scratch after a window resize
     VkDynamicState dynamicStates[] = {
             VK_DYNAMIC_STATE_VIEWPORT,
@@ -163,18 +153,26 @@ void MoeVkPipeline::create(MoeVkLogicalDevice& device, MoeVkPhysicalDevice& phys
     dynamicStateCreateInfo.dynamicStateCount = 2;
     dynamicStateCreateInfo.pDynamicStates = dynamicStates;
 
-    // TODO later: We have to define the uniforms our shader is using here
+    // Push constants are much faster than uniforms on most GPUs, but they are guaranteed to NOT be slower than uniforms
+    // However, they have a very limited memory size (guaranteed minimum: 128 Bytes)
+    // TODO: If we push more than 128 bytes, we have to check the device limits
+    VkPushConstantRange pushConstantRange { };
+    pushConstantRange.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+    pushConstantRange.offset = 0;
+    pushConstantRange.size = sizeof(VkBool32);
+
+
     VkPipelineLayoutCreateInfo layoutCreateInfo { };
     layoutCreateInfo.sType                  = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     layoutCreateInfo.pNext                  = nullptr;
     layoutCreateInfo.flags                  = 0;
     layoutCreateInfo.setLayoutCount         = 1;
     layoutCreateInfo.pSetLayouts            = &(uniformBuffer.layout());
-    layoutCreateInfo.pushConstantRangeCount = 0;
-    layoutCreateInfo.pPushConstantRanges    = nullptr;
+    layoutCreateInfo.pushConstantRangeCount = 1;
+    layoutCreateInfo.pPushConstantRanges    = &pushConstantRange;
 
     if (vkCreatePipelineLayout(device.device(), &layoutCreateInfo, nullptr, &_layout) != VK_SUCCESS) {
-        throw InitException("Failed to create pipeline layout", __FILE__, __FUNCTION__, __LINE__);
+        throw MoeInitError("Failed to create pipeline layout", __FILE__, __FUNCTION__, __LINE__);
     }
 
     /**
@@ -189,7 +187,7 @@ void MoeVkPipeline::create(MoeVkLogicalDevice& device, MoeVkPhysicalDevice& phys
     pipelineCreateInfo.pNext                = nullptr;
     pipelineCreateInfo.flags                = 0;
     pipelineCreateInfo.stageCount           = 2;    // vertex and fragment shader
-    pipelineCreateInfo.pStages              = shaderStages;
+    pipelineCreateInfo.pStages              = _shaderStages.data();
     pipelineCreateInfo.pVertexInputState    = &vertexInputCreateInfo;
     pipelineCreateInfo.pInputAssemblyState  = &inputAssemblyCreateInfo;
     pipelineCreateInfo.pTessellationState   = nullptr;
@@ -217,12 +215,8 @@ void MoeVkPipeline::create(MoeVkLogicalDevice& device, MoeVkPhysicalDevice& phys
             nullptr,
             &_pipeline) != VK_SUCCESS) {
 
-        throw InitException("Failed to create graphics pipeline", __FILE__, __FUNCTION__, __LINE__);
+        throw MoeInitError("Failed to create graphics pipeline", __FILE__, __FUNCTION__, __LINE__);
     }
-
-    // TODO: These should be destroyed even if we get an Exception above !!
-    vkDestroyShaderModule(device.device(), vertexModule, nullptr);
-    vkDestroyShaderModule(device.device(), fragmentModule, nullptr);
 }
 
 void MoeVkPipeline::destroy(MoeVkLogicalDevice& device) {
@@ -231,47 +225,6 @@ void MoeVkPipeline::destroy(MoeVkLogicalDevice& device) {
     vkDestroyRenderPass(device.device(), _renderPass, nullptr);
     vkDestroyPipeline(device.device(), _pipeline, nullptr);
 }
-
-std::vector<char> MoeVkPipeline::readShader(const std::string& filename) {
-
-    // seek to the end of file when opening and read in binary mode:
-    std::ifstream instream { filename, std::ios::ate | std::ios::binary };
-    if (!instream) {
-        throw InitException("Could not find file " + filename, __FILE__, __FUNCTION__, __LINE__);
-    }
-    if (!instream.is_open()) {
-        throw InitException("Could not open file " + filename, __FILE__, __FUNCTION__, __LINE__);
-    }
-
-    // because we opened the file at its end, we can directly get the files size:
-    size_t filesize = (size_t)instream.tellg();
-    std::vector<char> buffer(filesize);
-
-    // put the reader back at the files beginning:
-    instream.seekg(0);
-    instream.read(buffer.data(), filesize);
-    instream.close();
-
-    return buffer;
-}
-
-VkShaderModule MoeVkPipeline::createShader(MoeVkLogicalDevice& device, const std::vector<char> &bytecode) {
-
-    VkShaderModuleCreateInfo createInfo { };
-    createInfo.sType    = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-    createInfo.pNext    = nullptr;
-    createInfo.flags    = 0;
-    createInfo.codeSize = bytecode.size();
-    createInfo.pCode    = reinterpret_cast<const uint32_t*>(bytecode.data());
-
-    VkShaderModule module;
-    if (vkCreateShaderModule(device.device(), &createInfo, nullptr, &module) != VK_SUCCESS) {
-        throw InitException("Failed to create a shader module.", __FILE__, __FUNCTION__, __LINE__);
-    }
-
-    return module;
-}
-
 
 void MoeVkPipeline::createRenderPass(MoeVkLogicalDevice &device, MoeVkPhysicalDevice& physicalDevice, const MoeVkSwapChain& swapChain) {
 
@@ -334,7 +287,7 @@ void MoeVkPipeline::createRenderPass(MoeVkLogicalDevice &device, MoeVkPhysicalDe
     renderPassCreateInfo.pDependencies        = &dependency;
 
     if (vkCreateRenderPass(device.device(), &renderPassCreateInfo, nullptr, &_renderPass) != VK_SUCCESS) {
-        throw InitException("Failed to create Render Pass", __FILE__, __FUNCTION__, __LINE__);
+        throw MoeInitError("Failed to create Render Pass", __FILE__, __FUNCTION__, __LINE__);
     }
 }
 

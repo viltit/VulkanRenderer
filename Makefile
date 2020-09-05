@@ -69,8 +69,8 @@ rebuild_cache/fast: rebuild_cache
 
 # Special rule for the target edit_cache
 edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
-	/home/titus/clion-2018.3.2/bin/cmake/linux/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/home/titus/clion-2018.3.2/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -137,6 +137,19 @@ vkRenderer/fast:
 .PHONY : vkRenderer/fast
 
 #=============================================================================
+# Target rules for targets named moeExceptions
+
+# Build rule for target.
+moeExceptions: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 moeExceptions
+.PHONY : moeExceptions
+
+# fast build rule for target.
+moeExceptions/fast:
+	$(MAKE) -f Exceptions/CMakeFiles/moeExceptions.dir/build.make Exceptions/CMakeFiles/moeExceptions.dir/build
+.PHONY : moeExceptions/fast
+
+#=============================================================================
 # Target rules for targets named spdlog
 
 # Build rule for target.
@@ -186,6 +199,7 @@ help:
 	@echo "... vkEngine"
 	@echo "... edit_cache"
 	@echo "... vkRenderer"
+	@echo "... moeExceptions"
 	@echo "... spdlog"
 	@echo "... main.o"
 	@echo "... main.i"

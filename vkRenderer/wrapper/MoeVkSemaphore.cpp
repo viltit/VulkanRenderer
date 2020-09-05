@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "MoeVkSemaphore.hpp"
-#include "../../Exceptions/InitException.hpp"
+#include "../../Exceptions/MoeExceptions.hpp"
 
 namespace moe {
     void MoeVkSemaphore::create(MoeVkLogicalDevice& device) {
@@ -9,7 +9,7 @@ namespace moe {
         info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
         info.pNext = nullptr;
         if (vkCreateSemaphore(device.device(), &info, nullptr, &_semaphore) != VK_SUCCESS) {
-            throw InitException("Failed to create semaphore", __FILE__, __FUNCTION__, __LINE__);
+            throw MoeInitError("Failed to create semaphore", __FILE__, __FUNCTION__, __LINE__);
         }
     }
 

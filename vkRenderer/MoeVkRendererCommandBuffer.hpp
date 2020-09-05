@@ -22,7 +22,10 @@ public:
     void record(MoeVkLogicalDevice &device, MoeVkFramebuffer &framebuffer,
             MoeVkPipeline &pipeline, MoeVkSwapChain &swapChain,
             MoeVkCommandPool& commandPool,
-            std::vector<MoeVkDrawable*>& drawables);
+            std::vector<MoeVkDrawable*>& drawables,
+            VkBool32 debugNormals);
+
+    void destroy();
 
     VkCommandBuffer& buffer(unsigned int index) {
         return _buffer.at(index);

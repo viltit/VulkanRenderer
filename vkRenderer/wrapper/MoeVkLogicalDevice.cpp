@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "MoeVkLogicalDevice.hpp"
-#include "../../Exceptions/InitException.hpp"
+#include "../../Exceptions/MoeExceptions.hpp"
 
 namespace moe {
 
@@ -58,7 +58,7 @@ void MoeVkLogicalDevice::create(VkInstance instance, MoeVkPhysicalDevice& physDe
     createInfo.pEnabledFeatures         = &features;
 
     if (vkCreateDevice(physDevice.device(), &createInfo, nullptr, &_device) != VK_SUCCESS) {
-        throw InitException("Could not create a logical GPU.", __FILE__, __FUNCTION__, __LINE__);
+        throw MoeInitError("Could not create a logical GPU.", __FILE__, __FUNCTION__, __LINE__);
     }
 
     // get a handle to our queues:

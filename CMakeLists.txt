@@ -11,6 +11,7 @@ execute_process(
 )
 
 add_subdirectory(vkRenderer)
+add_subdirectory(Exceptions)
 
 # Staticly link spdlog, a logger library for C++
 # See https://github.com/gabime/spdlog
@@ -20,7 +21,7 @@ add_executable(vkEngine main.cpp
         Timer.hpp
         Colors/ColorRGB.hpp)
 
-
 target_link_libraries(vkEngine
         PUBLIC spdlog
-        vkRenderer)
+        vkRenderer
+        moeExceptions)

@@ -3,11 +3,9 @@
 // See https://github.com/nothings/stb
 #include "../stb_image.h"
 
-#include "../../Exceptions/InitException.hpp"
+#include "MoeExceptions.hpp"
 #include "MoeVkBuffer.hpp"
-#include "MoeVkUtils.hpp"
 
-#include <iostream>
 
 // TODO: Differentiate erros. We do not need to shut down the app when a texture could not be loaded
 
@@ -34,12 +32,12 @@ namespace moe {
 
     void MoeTexture::load(const std::string &filename) {
         if (_pixels.has_value()) {
-            throw InitException("Image was already loaded", __FILE__, __FUNCTION__, __LINE__);
+            throw MoeInitError("Image was already loaded", __FILE__, __FUNCTION__, __LINE__);
         }
         // always add an alpha channel, even if the image does not have one
         _pixels = stbi_load(filename.c_str(), &_w, &_h, &_channels, STBI_rgb_alpha);
         if (_pixels == nullptr) {
-            throw InitException("Failed to load image " + filename, __FILE__, __FUNCTION__, __LINE__);
+            throw MoeInitError("Failed to load image " + filename, __FILE__, __FUNCTION__, __LINE__);
         }
     }
 
@@ -47,10 +45,10 @@ namespace moe {
                             MoeVkCommandPool& commandPool, VkQueue& queue) {
 
         if (!_pixels.has_value()) {
-            throw InitException("Trying to upload an image that was not loaded from disk yet", __FILE__, __FUNCTION__, __LINE__);
+            throw MoeInitError("Trying to upload an image that was not loaded from disk yet", __FILE__, __FUNCTION__, __LINE__);
         }
         if (_sampler != VK_NULL_HANDLE) {
-            throw InitException("Trying to upload an image that was already uploaded before", __FILE__, __FUNCTION__, __LINE__);
+            throw MoeInitError("Trying to upload an image that was already uploaded before", __FILE__, __FUNCTION__, __LINE__);
         }
 
         _device = &device;
@@ -102,7 +100,7 @@ namespace moe {
         samplerInfo.unnormalizedCoordinates = VK_FALSE;
 
         if (vkCreateSampler(device.device(), &samplerInfo, nullptr, &_sampler) != VK_SUCCESS) {
-            throw InitException("Failed to create image sampler", __FILE__, __FUNCTION__, __LINE__);
+            throw MoeInitError("Failed to create image sampler", __FILE__, __FUNCTION__, __LINE__);
         }
 
     }

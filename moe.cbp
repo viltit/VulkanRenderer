@@ -5,7 +5,7 @@
 		<Option title="moe"/>
 		<Option makefile_is_custom="1"/>
 		<Option compiler="gcc"/>
-		<Option virtualFolders="CMake Files\;CMake Files\vkRenderer\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\..\;CMake Files\..\..\..\..\..\usr\;CMake Files\..\..\..\..\..\usr\lib\;CMake Files\..\..\..\..\..\usr\lib\x86_64-linux-gnu\;CMake Files\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\;CMake Files\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\SDL2\;CMake Files\external\;CMake Files\external\spdlog\;CMake Files\external\spdlog\cmake\;"/>
+		<Option virtualFolders="CMake Files\;CMake Files\vkRenderer\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\..\;CMake Files\..\..\..\..\..\usr\;CMake Files\..\..\..\..\..\usr\lib\;CMake Files\..\..\..\..\..\usr\lib\x86_64-linux-gnu\;CMake Files\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\;CMake Files\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\SDL2\;CMake Files\Exceptions\;CMake Files\external\;CMake Files\external\spdlog\;CMake Files\external\spdlog\cmake\;"/>
 		<Build>
 			<Target title="all">
 				<Option working_dir="/home/titus/programming/c++/vkEngine"/>
@@ -36,6 +36,7 @@
 				<Compiler>
 					<Add option="-DSPDLOG_COMPILED_LIB"/>
 					<Add directory="/home/titus/programming/c++/vkEngine/external/spdlog/include"/>
+					<Add directory="/home/titus/programming/c++/vkEngine/Exceptions/../Exceptions"/>
 				</Compiler>
 				<MakeCommands>
 					<Build command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/Makefile&quot;  VERBOSE=1 vkEngine"/>
@@ -53,6 +54,7 @@
 				<Compiler>
 					<Add option="-DSPDLOG_COMPILED_LIB"/>
 					<Add directory="/home/titus/programming/c++/vkEngine/external/spdlog/include"/>
+					<Add directory="/home/titus/programming/c++/vkEngine/Exceptions/../Exceptions"/>
 				</Compiler>
 				<MakeCommands>
 					<Build command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/Makefile&quot;  VERBOSE=1 vkEngine/fast"/>
@@ -80,8 +82,10 @@
 				<Compiler>
 					<Add option="-DSPDLOG_COMPILED_LIB"/>
 					<Add directory="/home/titus/programming/c++/vkEngine/vkRenderer/../glm"/>
+					<Add directory="/home/titus/programming/c++/vkEngine/vkRenderer/Exceptions"/>
 					<Add directory="/usr/include/SDL2"/>
 					<Add directory="/home/titus/programming/c++/vkEngine/external/spdlog/include"/>
+					<Add directory="/home/titus/programming/c++/vkEngine/Exceptions/../Exceptions"/>
 				</Compiler>
 				<MakeCommands>
 					<Build command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 vkRenderer"/>
@@ -99,14 +103,48 @@
 				<Compiler>
 					<Add option="-DSPDLOG_COMPILED_LIB"/>
 					<Add directory="/home/titus/programming/c++/vkEngine/vkRenderer/../glm"/>
+					<Add directory="/home/titus/programming/c++/vkEngine/vkRenderer/Exceptions"/>
 					<Add directory="/usr/include/SDL2"/>
 					<Add directory="/home/titus/programming/c++/vkEngine/external/spdlog/include"/>
+					<Add directory="/home/titus/programming/c++/vkEngine/Exceptions/../Exceptions"/>
 				</Compiler>
 				<MakeCommands>
 					<Build command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 vkRenderer/fast"/>
 					<CompileFile command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="moeExceptions">
+				<Option output="/home/titus/programming/c++/vkEngine/Exceptions/libmoeExceptions.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/titus/programming/c++/vkEngine/Exceptions"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/titus/programming/c++/vkEngine/Exceptions/../Exceptions"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 moeExceptions"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="moeExceptions/fast">
+				<Option output="/home/titus/programming/c++/vkEngine/Exceptions/libmoeExceptions.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/titus/programming/c++/vkEngine/Exceptions"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/titus/programming/c++/vkEngine/Exceptions/../Exceptions"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 moeExceptions/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="spdlog">
@@ -146,6 +184,9 @@
 		</Build>
 		<Unit filename="/home/titus/programming/c++/vkEngine/Colors/ColorRGB.hpp">
 			<Option target="vkEngine"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/Exceptions/MoeExceptions.hpp">
+			<Option target="moeExceptions"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/Timer.hpp">
 			<Option target="vkEngine"/>
@@ -552,6 +593,12 @@
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkSemaphore.hpp">
 			<Option target="vkRenderer"/>
 		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkShader.cpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkShader.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkSwapChain.cpp">
 			<Option target="vkRenderer"/>
 		</Unit>
@@ -572,6 +619,9 @@
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/../../../../../usr/lib/x86_64-linux-gnu/cmake/SDL2/sdl2-config.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\..\..\usr\lib\x86_64-linux-gnu\cmake\SDL2\"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/Exceptions/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\Exceptions\"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/external/spdlog/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\external\spdlog\"/>

@@ -1,6 +1,6 @@
 
 #include "MoeVkFence.hpp"
-#include "../../Exceptions/InitException.hpp"
+#include "../../Exceptions/MoeExceptions.hpp"
 
 namespace moe {
 void MoeVkFence::create(MoeVkLogicalDevice &device) {
@@ -9,7 +9,7 @@ void MoeVkFence::create(MoeVkLogicalDevice &device) {
     info.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
     info.flags = VK_FENCE_CREATE_SIGNALED_BIT;
     if (vkCreateFence(device.device(), &info, nullptr, &_fence) != VK_SUCCESS) {
-        throw InitException("Failed to create a fence", __FILE__, __FUNCTION__, __LINE__);
+        throw MoeInitError("Failed to create a fence", __FILE__, __FUNCTION__, __LINE__);
     }
 }
 

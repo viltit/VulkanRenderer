@@ -3,7 +3,7 @@
 #include "MoeVkPhysicalDevice.hpp"
 #include "MoeVkLogicalDevice.hpp"
 #include <vulkan/vulkan.h>
-#include "../../Exceptions/InitException.hpp"
+#include "../../Exceptions/MoeExceptions.hpp"
 
 namespace moe {
 

@@ -25,8 +25,6 @@ public:
             MoeVkSwapChain& swapChain);
     void destroy(MoeVkLogicalDevice& device);
 
-    void destroyCommandBuffers(MoeVkLogicalDevice& device);
-
     VkCommandPool& pool() { return _pool; }
 
 private:
