@@ -1,6 +1,6 @@
 
 #include "MoeVkSwapChain.hpp"
-#include "../../Exceptions/MoeExceptions.hpp"
+#include "MoeExceptions.hpp"
 
 #include <SDL2/SDL_vulkan.h>
 #include <iostream>

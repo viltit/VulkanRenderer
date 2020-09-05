@@ -1,6 +1,6 @@
 
 #include "MoeVkFence.hpp"
-#include "../../Exceptions/MoeExceptions.hpp"
+#include "MoeExceptions.hpp"
 
 namespace moe {
 void MoeVkFence::create(MoeVkLogicalDevice &device) {

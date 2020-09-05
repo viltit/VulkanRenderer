@@ -1,7 +1,7 @@
 #include "MoeVkInstance.hpp"
 #include "../VkWindow.hpp"
 #include "MoeVkFunctions.hpp"
-#include "../../Exceptions/MoeExceptions.hpp"
+#include "MoeExceptions.hpp"
 
 #include <SDL_vulkan.h>
 #include <iostream>

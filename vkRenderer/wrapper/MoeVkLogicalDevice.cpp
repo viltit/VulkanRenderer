@@ -1,9 +1,8 @@
 #include <assert.h>
-#include <set>
 #include <iostream>
 
 #include "MoeVkLogicalDevice.hpp"
-#include "../../Exceptions/MoeExceptions.hpp"
+#include "MoeExceptions.hpp"
 
 namespace moe {
 

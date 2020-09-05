@@ -1,5 +1,5 @@
 #include "VkWindow.hpp"
-#include "../Exceptions/MoeExceptions.hpp"
+#include "MoeExceptions.hpp"
 #include <spdlog/spdlog.h>
 
 namespace moe {

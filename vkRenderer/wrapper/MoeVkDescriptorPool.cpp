@@ -3,12 +3,6 @@
 //
 
 #include "MoeVkDescriptorPool.hpp"
-#include "MoeTexture.hpp"
-#include "../../Exceptions/MoeExceptions.hpp"
-#include <glm/glm.hpp>
-#include <iostream>
-#include "MoeVkUtils.hpp"
-#include <assert.h>
 
 namespace moe {
 void MoeVkDescriptorPool::createLayout(MoeVkPhysicalDevice& phyDevice, MoeVkLogicalDevice &device) {

@@ -3,7 +3,7 @@
 #include <spdlog/spdlog.h>
 
 #include "MoeVkFramebuffer.hpp"
-#include "../../Exceptions/MoeExceptions.hpp"
+#include "MoeExceptions.hpp"
 
 namespace moe {
 

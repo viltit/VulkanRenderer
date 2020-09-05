@@ -1,7 +1,7 @@
 
 #include "MoeVkPhysicalDevice.hpp"
 #include "MoeVkSwapChainProps.hpp"
-#include "../../Exceptions/MoeExceptions.hpp"
+#include "MoeExceptions.hpp"
 
 #include <map>
 #include <spdlog/spdlog.h>

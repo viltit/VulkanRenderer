@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "MoeVkSemaphore.hpp"
-#include "../../Exceptions/MoeExceptions.hpp"
+#include "MoeExceptions.hpp"
 
 namespace moe {
     void MoeVkSemaphore::create(MoeVkLogicalDevice& device) {

@@ -2,7 +2,7 @@
 
 #include <fstream>
 
-#include "../../Exceptions/MoeExceptions.hpp"
+#include "MoeExceptions.hpp"
 #include "MoeVkLogicalDevice.hpp"
 
 namespace moe {

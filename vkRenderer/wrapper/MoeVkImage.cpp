@@ -1,6 +1,6 @@
 
 #include "MoeVkImage.hpp"
-#include "../../Exceptions/MoeExceptions.hpp"
+#include "MoeExceptions.hpp"
 
 #include "MoeVkPhysicalDevice.hpp"
 #include "MoeVkLogicalDevice.hpp"

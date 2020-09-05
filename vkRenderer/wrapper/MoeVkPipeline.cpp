@@ -2,7 +2,7 @@
 #include "MoeVkPipeline.hpp"
 #include "../MoeVertex.hpp"
 
-#include "../../Exceptions/MoeExceptions.hpp"
+#include "MoeExceptions.hpp"
 
 #include <spdlog/spdlog.h>
 #include <fstream>
