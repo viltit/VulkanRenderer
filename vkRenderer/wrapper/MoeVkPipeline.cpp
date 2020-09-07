@@ -9,7 +9,8 @@
 
 namespace moe {
 
-void MoeVkPipeline::prepare(std::vector<MoeVkShader>& shaders, uint32_t width, uint32_t height) {
+void MoeVkPipeline::prepare(std::vector<MoeVkShader>& shaders, uint32_t width, uint32_t height,
+        uint32_t offsetX, uint32_t offsetY) {
 
     if (_isCreated) {
         spdlog::warn("Calling pipeline.prepare after is has already been created has not effect.");
@@ -50,13 +51,13 @@ void MoeVkPipeline::prepare(std::vector<MoeVkShader>& shaders, uint32_t width, u
 
     /* Pipeline stages: Viewport --------------------------------------------------------- */
     // viewport describes the region of the SwapChain Framebuffer that will be rendered on screen
-    VkViewport viewport { };
-    viewport.x = 0.f;
-    viewport.y = 0.f;
-    viewport.width = (float)width;
-    viewport.height = (float)height;
-    viewport.minDepth = 0.f;
-    viewport.maxDepth = 1.f;
+    _viewport.x = offsetX;
+    _viewport.y = offsetY;
+    _viewport.width = (float)width;
+    _viewport.height = (float)height;
+    _viewport.minDepth = 0.f;
+    _viewport.maxDepth = 1.f;
+    _renderingViewport = _viewport;
 
     // the scissor can cut parts of the SwapChain image before presenting it on screen
     VkRect2D scissor;
@@ -66,7 +67,7 @@ void MoeVkPipeline::prepare(std::vector<MoeVkShader>& shaders, uint32_t width, u
     _viewportCreateInfo.pNext        = nullptr;
     _viewportCreateInfo.flags        = 0;
     _viewportCreateInfo.viewportCount = 1;
-    _viewportCreateInfo.pViewports   = &viewport;
+    _viewportCreateInfo.pViewports   = &_viewport;
     _viewportCreateInfo.scissorCount  = 1;
     _viewportCreateInfo.pScissors    = &scissor;
 
@@ -172,7 +173,6 @@ void MoeVkPipeline::create(MoeVkLogicalDevice& device, MoeVkPhysicalDevice& phys
     }
 
     /**
-     * And FINALLY, we have all the objects that define the rendering pipeline:
      *      - Shader stages: They represent the programmable parts of the pipeline
      *      - Fixed function stages: Input assembly, rasterization etc.
      *      - Pipeline layout: Uniform and push values that can be used by the shader
@@ -213,6 +213,7 @@ void MoeVkPipeline::create(MoeVkLogicalDevice& device, MoeVkPhysicalDevice& phys
 
         throw MoeInitError("Failed to create graphics pipeline", __FILE__, __FUNCTION__, __LINE__);
     }
+
     _isCreated = true;
 }
 

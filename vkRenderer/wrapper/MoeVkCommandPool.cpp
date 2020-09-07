@@ -1,5 +1,4 @@
 #include "MoeVkCommandPool.hpp"
-#include "MoeVkPipeline.hpp"
 #include "MoeVkSwapChain.hpp"
 #include "MoeVkDescriptorPool.hpp"
 
@@ -9,7 +8,6 @@ namespace moe {
 
 void MoeVkCommandPool::create(MoeVkLogicalDevice &device,
         MoeVkQueueFamily queueFamily,
-        MoeVkPipeline& pipeline,
         MoeVkSwapChain& swapChain) {
 
     // because we only submit commands for drawing, we use the graphics queue here

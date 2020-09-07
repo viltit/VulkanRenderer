@@ -22,7 +22,8 @@ public:
 
     void record(MoeVkLogicalDevice &device, MoeVkFramebuffer &framebuffer,
             const MoeVkRenderPass& renderPass,
-            MoeVkPipeline &pipeline, MoeVkSwapChain &swapChain,
+            std::vector<MoeVkPipeline> &pipelines,
+            MoeVkSwapChain &swapChain,
             MoeVkCommandPool& commandPool,
             std::vector<MoeVkDrawable*>& drawables,
             VkBool32 debugNormals);

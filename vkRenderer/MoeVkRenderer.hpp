@@ -47,8 +47,7 @@ private:
     MoeVkInstance               instance;
     MoeVkSwapChain              swapChain;
     MoeVkRenderPass             renderPass;
-    MoeVkPipeline               pipeline;
-    MoeVkPipeline               wireframePipeline;
+    std::vector<MoeVkPipeline>  pipelines;
     MoeVkFramebuffer            framebuffer;
     MoeVkCommandPool            commandPool;
     MoeVkRendererCommandBuffer  commandBuffer;

@@ -32,13 +32,21 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, std::vector<Drawable>& drawables,
     std::vector<MoeVkShader> shaders { 2 };
     shaders[0].create(logicalDevice, "Shaders/triangle.vert.spv", MoeVkShaderStage::vertex);
     shaders[1].create(logicalDevice, "Shaders/triangle.frag.spv", MoeVkShaderStage::fragment);
-    pipeline.prepare(shaders, swapChain.extent().width / 2, swapChain.extent().height);
-    pipeline.create(logicalDevice, physicalDevice, swapChain, renderPass, uniformBuffer);
-    wireframePipeline.prepare(shaders, swapChain.extent().width / 2, swapChain.extent().height);
-    wireframePipeline.rasterizationCreateInfo().polygonMode = VK_POLYGON_MODE_LINE;
-    wireframePipeline.create(logicalDevice, physicalDevice, swapChain, renderPass, uniformBuffer);
+    pipelines.reserve(2);
+    pipelines.push_back(MoeVkPipeline());
+    pipelines[0].prepare(shaders, swapChain.extent().width, swapChain.extent().height);
+    pipelines[0].create(logicalDevice, physicalDevice, swapChain, renderPass, uniformBuffer);
+    pipelines.push_back(MoeVkPipeline());
+    pipelines[1].prepare(shaders,
+            swapChain.extent().width, swapChain.extent().height);
+    pipelines[1].rasterizationCreateInfo().polygonMode = VK_POLYGON_MODE_LINE;
+    pipelines[1].create(logicalDevice, physicalDevice, swapChain, renderPass, uniformBuffer);
 
-    commandPool.create(logicalDevice, physicalDevice.queueFamily(), pipeline, swapChain);
+    // set correct rendering viewports for the pipelines:
+    pipelines[0].setRenderingViewport(swapChain.extent().width / 2, swapChain.extent().height, 0, 0);
+    pipelines[1].setRenderingViewport(swapChain.extent().width / 2, swapChain.extent().height, swapChain.extent().width / 2, 0);
+
+    commandPool.create(logicalDevice, physicalDevice.queueFamily(), swapChain);
     framebuffer.create(logicalDevice, physicalDevice, swapChain, renderPass, commandPool);
 
     for (auto& drawable : drawables) {
@@ -49,7 +57,7 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, std::vector<Drawable>& drawables,
                 ));
     }
 
-    commandBuffer.record(logicalDevice, framebuffer, renderPass, pipeline, swapChain, commandPool,
+    commandBuffer.record(logicalDevice, framebuffer, renderPass, pipelines, swapChain, commandPool,
             vkDrawables, VK_FALSE);
 
     // create semaphores:
@@ -69,7 +77,7 @@ void MoeVkRenderer::switchDebugDrawing(bool debugMode) {
             logicalDevice,
             framebuffer,
             renderPass,
-            pipeline,
+            pipelines,
             swapChain,
             commandPool,
             vkDrawables,
@@ -96,8 +104,9 @@ MoeVkRenderer::~MoeVkRenderer() {
     commandPool.destroy(logicalDevice);
     framebuffer.destroy(logicalDevice);
     swapChain.destroy(logicalDevice);
-    pipeline.destroy();
-    wireframePipeline.destroy();
+    for (auto& pipeline : pipelines) {
+        pipeline.destroy();
+    }
     renderPass.destroy();
     vkDestroySurfaceKHR(instance.instance(), surface, nullptr);
 }
@@ -136,8 +145,9 @@ void MoeVkRenderer::draw() {
 
     // Update uniforms
     // TODO: This should be part of a camera class
+    // TODO: Automaticly adapt perspective matrix to respective rendering viewport ?
     glm::mat4 V = glm::lookAt(glm::vec3{ 1.f, 1.f, 1.f }, glm::vec3{ 0.f, 0.f, 0.f }, glm::vec3{ 0.f, 0.f, 1.f });
-    glm::mat4 P = glm::perspective(glm::radians(60.f), (float)swapChain.extent().width / (float)swapChain.extent().height, 0.01f, 10.f);
+    glm::mat4 P = glm::perspective(glm::radians(60.f), (float)swapChain.extent().width / (2.f * (float)swapChain.extent().height), 0.01f, 10.f);
 
     // glm is made for openGL, where the y-Axis goes from bottom to top
     P[1][1] *= -1.f;
@@ -196,8 +206,12 @@ void MoeVkRenderer::recreateSwapChain() {
     cleanSwapchain();
     swapChain.create(physicalDevice, logicalDevice, surface, *window);
     // pipeline.create(logicalDevice, swapChain);
+    // set correct rendering viewports for the pipelines:
+    pipelines[0].setRenderingViewport(swapChain.extent().width / 2, swapChain.extent().height, 0, 0);
+    pipelines[1].setRenderingViewport(swapChain.extent().width / 2, swapChain.extent().height, swapChain.extent().width / 2, 0);
+
     framebuffer.create(logicalDevice, physicalDevice, swapChain, renderPass, commandPool);
-    commandBuffer.record(logicalDevice, framebuffer, renderPass, pipeline, swapChain, commandPool, vkDrawables, VK_FALSE);
+    commandBuffer.record(logicalDevice, framebuffer, renderPass, pipelines, swapChain, commandPool, vkDrawables, VK_FALSE);
 }
 
 void MoeVkRenderer::cleanSwapchain() {

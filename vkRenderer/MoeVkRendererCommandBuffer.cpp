@@ -10,7 +10,8 @@ namespace moe {
 
 void MoeVkRendererCommandBuffer::record(MoeVkLogicalDevice &device, MoeVkFramebuffer &framebuffer,
             const MoeVkRenderPass& renderPass,
-            MoeVkPipeline &pipeline, MoeVkSwapChain &swapChain,
+            std::vector<MoeVkPipeline> &pipelines,
+            MoeVkSwapChain &swapChain,
             MoeVkCommandPool& commandPool,
             std::vector<MoeVkDrawable*>& drawables,
             VkBool32 debugNormals) {
@@ -40,46 +41,44 @@ void MoeVkRendererCommandBuffer::record(MoeVkLogicalDevice &device, MoeVkFramebu
         renderPassInfo.renderArea.extent = swapChain.extent();
         renderPassInfo.clearValueCount = clearColor.size();
         renderPassInfo.pClearValues = clearColor.data();
-
-        vkCmdPushConstants(_buffer.at(i),
-                pipeline.layout(),
-                VK_SHADER_STAGE_FRAGMENT_BIT, 0,
-                sizeof(debugNormals),
-                &debugNormals);
+        vkCmdBeginRenderPass(_buffer.at(i), &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
         // start recording
-        vkCmdBeginRenderPass(_buffer.at(i), &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
-        vkCmdBindPipeline(_buffer.at(i), VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.pipeline());
+        // TODO: In the long term, different pipelines may draw different objects (ie colored object versus textured)
+        for (auto& pipeline : pipelines) {
 
-        // When setting viewport as dynamic state in the pipeline creation, we MUST set it here
-        VkViewport viewport;
-        viewport.x = 0.f;
-        viewport.y = 0.f;
-        viewport.width = swapChain.extent().width;
-        viewport.height = swapChain.extent().height;
-        viewport.minDepth = 0.f;
-        viewport.maxDepth = 1.f;
-        vkCmdSetViewport(_buffer.at(i), 0, 1, &viewport);
+            vkCmdBindPipeline(_buffer.at(i), VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.pipeline());
 
-        VkRect2D scissor;
-        scissor.offset = {0, 0};
-        scissor.extent = {swapChain.extent().width, swapChain.extent().height};
-        vkCmdSetScissor(_buffer.at(i), 0, 1, &scissor);
+            vkCmdPushConstants(_buffer.at(i),
+                               pipeline.layout(),
+                               VK_SHADER_STAGE_FRAGMENT_BIT, 0,
+                               sizeof(debugNormals),
+                               &debugNormals);
 
-        for (auto& drawable : drawables) {
-            vkCmdBindDescriptorSets(_buffer.at(i), VK_PIPELINE_BIND_POINT_GRAPHICS,
-                                    pipeline.layout(), 0, 1,
-                                    &(drawable->descriptors().set(i)), 0, nullptr);
+            // When setting viewport as dynamic state in the pipeline creation, we MUST set it here
+            VkViewport viewport = pipeline.viewport();
+            vkCmdSetViewport(_buffer.at(i), 0, 1, &viewport);
 
-            // bind vertex buffer
-            VkBuffer vertexBuffers[] = { drawable->vertexBuffer()->buffer()};
-            VkDeviceSize offsets[] = {0};
-            vkCmdBindVertexBuffers(_buffer.at(i), 0, 1, vertexBuffers, offsets);
-            vkCmdBindIndexBuffer(_buffer.at(i), drawable->indexBuffer()->buffer(), 0, VK_INDEX_TYPE_UINT32);
+            VkRect2D scissor;
+            scissor.offset = {0, 0};
+            scissor.extent = {swapChain.extent().width, swapChain.extent().height};
+            vkCmdSetScissor(_buffer.at(i), 0, 1, &scissor);
 
-            // TODO: Let each drawable have another geometry
-            // vertex count, instance count, firstVertex, firstInstance
-            vkCmdDrawIndexed(_buffer.at(i), drawable->indexBuffer()->numVertices(), 1, 0, 0, 0);
+            for (auto &drawable : drawables) {
+                vkCmdBindDescriptorSets(_buffer.at(i), VK_PIPELINE_BIND_POINT_GRAPHICS,
+                                        pipeline.layout(), 0, 1,
+                                        &(drawable->descriptors().set(i)), 0, nullptr);
+
+                // bind vertex buffer
+                VkBuffer vertexBuffers[] = {drawable->vertexBuffer()->buffer()};
+                VkDeviceSize offsets[] = {0};
+                vkCmdBindVertexBuffers(_buffer.at(i), 0, 1, vertexBuffers, offsets);
+                vkCmdBindIndexBuffer(_buffer.at(i), drawable->indexBuffer()->buffer(), 0, VK_INDEX_TYPE_UINT32);
+
+                // TODO: Let each drawable have another geometry
+                // vertex count, instance count, firstVertex, firstInstance
+                vkCmdDrawIndexed(_buffer.at(i), drawable->indexBuffer()->numVertices(), 1, 0, 0, 0);
+            }
         }
         vkCmdEndRenderPass(_buffer.at(i));
 

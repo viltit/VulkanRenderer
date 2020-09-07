@@ -10,7 +10,6 @@
 namespace moe {
 
 class MoeVkFramebuffer;
-class MoeVkPipeline;
 class MoeVkSwapChain;
 class MoeVkDescriptorSet;
 
@@ -21,7 +20,6 @@ public:
 
     void create(MoeVkLogicalDevice& device,
             MoeVkQueueFamily queueFamily,
-            MoeVkPipeline& pipeline,
             MoeVkSwapChain& swapChain);
     void destroy(MoeVkLogicalDevice& device);
 
