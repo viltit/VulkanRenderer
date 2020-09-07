@@ -4,7 +4,7 @@
 #include <vulkan/vulkan.h>
 
 #include "MoeVkSwapChain.hpp"
-#include "MoeVkPipeline.hpp"
+#include "MoeVkRenderPass.hpp"
 #include "MoeDepthTexture.hpp"
 
 namespace moe {
@@ -16,7 +16,7 @@ public:
 
     /// creates a Framebuffer from the SwapChain and the Rendering Pipeline
     void create(MoeVkLogicalDevice& device,  MoeVkPhysicalDevice& physicalDevice,
-            MoeVkSwapChain& swapChain, const MoeVkPipeline& pipeline, MoeVkCommandPool& commandPool);
+            MoeVkSwapChain& swapChain, const MoeVkRenderPass& renderPass, MoeVkCommandPool& commandPool);
     void destroy(MoeVkLogicalDevice& device);
 
     void destroyBuffers(MoeVkLogicalDevice& device);

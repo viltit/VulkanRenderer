@@ -3,14 +3,17 @@
 #include "../MoeVertex.hpp"
 
 #include "MoeExceptions.hpp"
+#include "MoeVkRenderPass.hpp"
 
-#include <spdlog/spdlog.h>
-#include <fstream>
 #include <spdlog/spdlog.h>
 
 namespace moe {
 
 void MoeVkPipeline::prepare(std::vector<MoeVkShader>& shaders, uint32_t width, uint32_t height) {
+
+    if (_isCreated) {
+        spdlog::warn("Calling pipeline.prepare after is has already been created has not effect.");
+    }
 
     _shaderStages.resize(shaders.size());
     // TODO: We could check if user gave two identical shader stages
@@ -25,7 +28,6 @@ void MoeVkPipeline::prepare(std::vector<MoeVkShader>& shaders, uint32_t width, u
                 nullptr
         };
     }
-
 
     /* Pipeline stages: Vertex input ---------------------------------------------------- */
     _bindingDesciption = Vertex::getBindingDescription();
@@ -141,18 +143,20 @@ void MoeVkPipeline::prepare(std::vector<MoeVkShader>& shaders, uint32_t width, u
     _pushConstantRange.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
     _pushConstantRange.offset = 0;
     _pushConstantRange.size = sizeof(VkBool32);
+
+    _isPrepared = true;
 }
 
 void MoeVkPipeline::create(MoeVkLogicalDevice& device, MoeVkPhysicalDevice& physicalDevice,
-                           const MoeVkSwapChain& swapChain, MoeVkDescriptorPool& uniformBuffer) {
+                           const MoeVkSwapChain& swapChain,
+                           const MoeVkRenderPass& renderPass,
+                           MoeVkDescriptorPool& uniformBuffer) {
 
     _device = &device;
 
-    if (_shaderStages.size() == 0) {
-        spdlog::warn("Creating pipeline with no shaders. Maybe Pipeline.create() was called before Pipeline.prepare()");
+    if (!_isPrepared) {
+        throw MoeInitError("Pipeline must be prepared before it can be created.", __FILE__, __FUNCTION__, __LINE__);
     }
-
-    createRenderPass(device, physicalDevice, swapChain);
 
     VkPipelineLayoutCreateInfo layoutCreateInfo { };
     layoutCreateInfo.sType                  = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -190,7 +194,7 @@ void MoeVkPipeline::create(MoeVkLogicalDevice& device, MoeVkPhysicalDevice& phys
     pipelineCreateInfo.pColorBlendState     = &_blendingCreateInfo;
     pipelineCreateInfo.pDynamicState        = &_dynamicStateCreateInfo;   // allows to change viewport when recording command buffers
     pipelineCreateInfo.layout               = _layout;
-    pipelineCreateInfo.renderPass           = _renderPass;
+    pipelineCreateInfo.renderPass           = renderPass.renderPass();
     pipelineCreateInfo.subpass              = 0;
     // When using multiple pipelines, we could define a basePipeline with common features
     // This is better for performance than using multiple completly different pipelines !!
@@ -209,80 +213,16 @@ void MoeVkPipeline::create(MoeVkLogicalDevice& device, MoeVkPhysicalDevice& phys
 
         throw MoeInitError("Failed to create graphics pipeline", __FILE__, __FUNCTION__, __LINE__);
     }
+    _isCreated = true;
 }
 
 void MoeVkPipeline::destroy() {
-    if (_device) {
+    if (_isCreated && _device != nullptr) {
         vkDestroyPipelineLayout(_device->device(), _layout, nullptr);
-        vkDestroyRenderPass(_device->device(), _renderPass, nullptr);
         vkDestroyPipeline(_device->device(), _pipeline, nullptr);
     }
     _device = nullptr;
-}
-
-void MoeVkPipeline::createRenderPass(MoeVkLogicalDevice &device, MoeVkPhysicalDevice& physicalDevice, const MoeVkSwapChain& swapChain) {
-
-    // specific for rendering: add a subpass dependency for synchronization. "External" refers to the implicit
-    // subpass before and after the rendering. Index 0 refers to our rendering pass, which is the only one
-    VkSubpassDependency dependency { };
-    dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
-    dependency.dstSubpass = 0;
-    // the operations to wait on:
-    dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    dependency.srcAccessMask = 0;
-    // the operations that should wait:
-    dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-
-    VkAttachmentDescription colorAttachment { };
-    colorAttachment.format              = swapChain.format().format;
-    colorAttachment.samples             = VK_SAMPLE_COUNT_1_BIT;    // TODO later: no multisampling yet -> stick to 1 sample
-    colorAttachment.loadOp              = VK_ATTACHMENT_LOAD_OP_CLEAR;
-    colorAttachment.storeOp             = VK_ATTACHMENT_STORE_OP_STORE;
-    colorAttachment.stencilLoadOp       = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-    colorAttachment.stencilStoreOp      = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-    colorAttachment.initialLayout       = VK_IMAGE_LAYOUT_UNDEFINED;
-    colorAttachment.finalLayout         = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-
-    // fetch depth attachment from physical device
-    VkAttachmentDescription depthAttachment = physicalDevice.getDepthAttachment();
-
-    // We could define several rendering subpasses, for example for postprocessing. For the fist triangle, however,
-    // one subpass is enough
-    VkAttachmentReference colorAttachmentRef { };
-    // because we only have one colorAttachment, its index will be 0.
-    // Important: The index directly references the fragments shader layout(location=0) out vec4 color index !!
-    colorAttachmentRef.attachment       = 0;
-    colorAttachmentRef.layout           = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
-    VkAttachmentReference depthAttachmentRef { };
-    depthAttachmentRef.attachment       = 1;
-    depthAttachmentRef.layout           = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-
-    VkSubpassDescription subpass { };
-    subpass.pipelineBindPoint       = VK_PIPELINE_BIND_POINT_GRAPHICS;
-    subpass.colorAttachmentCount    = 1;
-    subpass.pColorAttachments       = &colorAttachmentRef;
-    subpass.pDepthStencilAttachment = &depthAttachmentRef;
-
-    VkAttachmentDescription attachmentDescriptions[] = {
-            colorAttachment,
-            depthAttachment
-    };
-    VkRenderPassCreateInfo renderPassCreateInfo { };
-    renderPassCreateInfo.sType                = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-    renderPassCreateInfo.pNext                = nullptr;
-    renderPassCreateInfo.flags                = 0;
-    renderPassCreateInfo.attachmentCount      = 2;
-    renderPassCreateInfo.pAttachments         = attachmentDescriptions;
-    renderPassCreateInfo.subpassCount         = 1;
-    renderPassCreateInfo.pSubpasses           = &subpass;
-    renderPassCreateInfo.dependencyCount      = 1;
-    renderPassCreateInfo.pDependencies        = &dependency;
-
-    if (vkCreateRenderPass(device.device(), &renderPassCreateInfo, nullptr, &_renderPass) != VK_SUCCESS) {
-        throw MoeInitError("Failed to create Render Pass", __FILE__, __FUNCTION__, __LINE__);
-    }
+    _isCreated = false;
 }
 
 VkPipelineDepthStencilStateCreateInfo MoeVkPipeline::depthStencilStateCreateInfo(bool opaque) {

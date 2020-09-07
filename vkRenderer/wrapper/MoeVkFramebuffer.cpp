@@ -12,7 +12,7 @@ MoeVkFramebuffer::MoeVkFramebuffer() { }
 MoeVkFramebuffer::~MoeVkFramebuffer() { }
 
 void MoeVkFramebuffer::create(MoeVkLogicalDevice& device, MoeVkPhysicalDevice& physicalDevice,
-        MoeVkSwapChain &swapChain, const MoeVkPipeline &pipeline, MoeVkCommandPool& commandPool) {
+        MoeVkSwapChain &swapChain, const MoeVkRenderPass &renderPass, MoeVkCommandPool& commandPool) {
 
     spdlog::trace("Creating MoeVkFramebuffer");
 
@@ -28,7 +28,7 @@ void MoeVkFramebuffer::create(MoeVkLogicalDevice& device, MoeVkPhysicalDevice& p
         createInfo.sType            = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
         createInfo.pNext            = nullptr;
         createInfo.flags            = 0;
-        createInfo.renderPass       = pipeline.renderPass();
+        createInfo.renderPass       = renderPass.renderPass();
         createInfo.attachmentCount  = 2;
         createInfo.pAttachments     = attachment;
         createInfo.width            = swapChain.extent().width;

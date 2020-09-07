@@ -3,10 +3,13 @@
 
 #include "wrapper/MoeVkFramebuffer.hpp"
 #include "wrapper/MoeVkDescriptorSet.hpp"
+#include "wrapper/MoeVkRenderPass.hpp"
+#include "wrapper/MoeVkPipeline.hpp"
 
 namespace moe {
 
 void MoeVkRendererCommandBuffer::record(MoeVkLogicalDevice &device, MoeVkFramebuffer &framebuffer,
+            const MoeVkRenderPass& renderPass,
             MoeVkPipeline &pipeline, MoeVkSwapChain &swapChain,
             MoeVkCommandPool& commandPool,
             std::vector<MoeVkDrawable*>& drawables,
@@ -31,7 +34,7 @@ void MoeVkRendererCommandBuffer::record(MoeVkLogicalDevice &device, MoeVkFramebu
         // once a command buffer is recorded, it can not be appended
         VkRenderPassBeginInfo renderPassInfo{};
         renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-        renderPassInfo.renderPass = pipeline.renderPass();
+        renderPassInfo.renderPass = renderPass.renderPass();
         renderPassInfo.framebuffer = framebuffer.buffers()[i];
         renderPassInfo.renderArea.offset = {0, 0};
         renderPassInfo.renderArea.extent = swapChain.extent();

@@ -10,13 +10,21 @@
 
 namespace moe {
 
+// TODO: Do we want to expose Vulkan here or wrap everything around our own enums ?
+/* enum class MoeVkPolygonMode {
+
+}; */
+
+class MoeVkRenderPass;
+
 class MoeVkPipeline {
 public:
     MoeVkPipeline()
         :   _device     { nullptr },
             _pipeline   { VK_NULL_HANDLE },
             _layout     { VK_NULL_HANDLE },
-            _renderPass { VK_NULL_HANDLE }
+            _isCreated  { false },
+            _isPrepared { false }
     { }
     ~MoeVkPipeline() { };
 
@@ -24,15 +32,23 @@ public:
     void create(MoeVkLogicalDevice& device,
             MoeVkPhysicalDevice& physicalDevice,
             const MoeVkSwapChain& swapChain,
+            const MoeVkRenderPass& renderPass,
             MoeVkDescriptorPool& uniformBuffer);
     void destroy();
 
-    const VkRenderPass& renderPass() const { return _renderPass; }
     const VkPipeline& pipeline() const  { return _pipeline; }
     const VkPipelineLayout& layout() const { return _layout; }
 
+    // for now, we allow direct access to the most important create infos so the user can modify them before calling
+    // "create"
+    VkPipelineRasterizationStateCreateInfo& rasterizationCreateInfo() {
+        return _rasterizationCreateInfo;
+    }
+
 private:
-    void createRenderPass(MoeVkLogicalDevice& device, MoeVkPhysicalDevice& physicalDevice, const MoeVkSwapChain& swapChain);
+
+    bool _isPrepared;
+    bool _isCreated;
 
     VkPipelineDepthStencilStateCreateInfo depthStencilStateCreateInfo(bool opaque = true);
 
@@ -55,7 +71,6 @@ private:
     VkPipelineDepthStencilStateCreateInfo   _dephtStencilCreateInfo;
 
     MoeVkLogicalDevice* _device;
-    VkRenderPass        _renderPass;
     VkPipelineLayout    _layout;
     VkPipeline          _pipeline;
 };

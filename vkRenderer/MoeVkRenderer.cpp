@@ -1,5 +1,5 @@
 #include "MoeVkRenderer.hpp"
-#include "../Exceptions/MoeExceptions.hpp"
+#include "MoeExceptions.hpp"
 #include "VkWindow.hpp"
 #include "wrapper/MoeVkUtils.hpp"
 #include "wrapper/MoeVkDescriptorSet.hpp"
@@ -26,13 +26,20 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, std::vector<Drawable>& drawables,
     // TODO: numBuffers may change while the app is rendering -> do we need to reset the buffer ?
     uniformBuffer.createPool(physicalDevice, logicalDevice, swapChain.images().size() * drawables.size());
 
+
+    // prepare and create pipeline
+    renderPass.create(logicalDevice, physicalDevice, swapChain);
     std::vector<MoeVkShader> shaders { 2 };
     shaders[0].create(logicalDevice, "Shaders/triangle.vert.spv", MoeVkShaderStage::vertex);
     shaders[1].create(logicalDevice, "Shaders/triangle.frag.spv", MoeVkShaderStage::fragment);
-    pipeline.prepare(shaders, swapChain.extent().width, swapChain.extent().height);
-    pipeline.create(logicalDevice, physicalDevice, swapChain, uniformBuffer);
+    pipeline.prepare(shaders, swapChain.extent().width / 2, swapChain.extent().height);
+    pipeline.create(logicalDevice, physicalDevice, swapChain, renderPass, uniformBuffer);
+    wireframePipeline.prepare(shaders, swapChain.extent().width / 2, swapChain.extent().height);
+    wireframePipeline.rasterizationCreateInfo().polygonMode = VK_POLYGON_MODE_LINE;
+    wireframePipeline.create(logicalDevice, physicalDevice, swapChain, renderPass, uniformBuffer);
+
     commandPool.create(logicalDevice, physicalDevice.queueFamily(), pipeline, swapChain);
-    framebuffer.create(logicalDevice, physicalDevice, swapChain, pipeline, commandPool);
+    framebuffer.create(logicalDevice, physicalDevice, swapChain, renderPass, commandPool);
 
     for (auto& drawable : drawables) {
         // TODO: No new -> need copy constrcutor
@@ -42,7 +49,7 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, std::vector<Drawable>& drawables,
                 ));
     }
 
-    commandBuffer.record(logicalDevice, framebuffer, pipeline, swapChain, commandPool,
+    commandBuffer.record(logicalDevice, framebuffer, renderPass, pipeline, swapChain, commandPool,
             vkDrawables, VK_FALSE);
 
     // create semaphores:
@@ -61,6 +68,7 @@ void MoeVkRenderer::switchDebugDrawing(bool debugMode) {
     commandBuffer.record(
             logicalDevice,
             framebuffer,
+            renderPass,
             pipeline,
             swapChain,
             commandPool,
@@ -89,6 +97,8 @@ MoeVkRenderer::~MoeVkRenderer() {
     framebuffer.destroy(logicalDevice);
     swapChain.destroy(logicalDevice);
     pipeline.destroy();
+    wireframePipeline.destroy();
+    renderPass.destroy();
     vkDestroySurfaceKHR(instance.instance(), surface, nullptr);
 }
 
@@ -186,8 +196,8 @@ void MoeVkRenderer::recreateSwapChain() {
     cleanSwapchain();
     swapChain.create(physicalDevice, logicalDevice, surface, *window);
     // pipeline.create(logicalDevice, swapChain);
-    framebuffer.create(logicalDevice, physicalDevice, swapChain, pipeline, commandPool);
-    commandBuffer.record(logicalDevice, framebuffer, pipeline, swapChain, commandPool, vkDrawables, VK_FALSE);
+    framebuffer.create(logicalDevice, physicalDevice, swapChain, renderPass, commandPool);
+    commandBuffer.record(logicalDevice, framebuffer, renderPass, pipeline, swapChain, commandPool, vkDrawables, VK_FALSE);
 }
 
 void MoeVkRenderer::cleanSwapchain() {

@@ -13,6 +13,7 @@ class MoeVkLogicalDevice;
 class MoeVkFramebuffer;
 class MoeVkPipeline;
 class MoeVkSwapChain;
+class MoeVkRenderPass;
 class Vertex;
 
 class MoeVkRendererCommandBuffer {
@@ -20,6 +21,7 @@ public:
     MoeVkRendererCommandBuffer() { }
 
     void record(MoeVkLogicalDevice &device, MoeVkFramebuffer &framebuffer,
+            const MoeVkRenderPass& renderPass,
             MoeVkPipeline &pipeline, MoeVkSwapChain &swapChain,
             MoeVkCommandPool& commandPool,
             std::vector<MoeVkDrawable*>& drawables,

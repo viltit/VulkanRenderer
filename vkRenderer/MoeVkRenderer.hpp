@@ -15,6 +15,7 @@
 #include "wrapper/MoeVkDescriptorPool.hpp"
 #include "wrapper/MoeTexture.hpp"
 #include "wrapper/MoeDepthTexture.hpp"
+#include "wrapper/MoeVkRenderPass.hpp"
 #include "MoeVkDrawable.hpp"
 #include "MoeVkRendererCommandBuffer.hpp"
 
@@ -45,7 +46,9 @@ private:
 
     MoeVkInstance               instance;
     MoeVkSwapChain              swapChain;
+    MoeVkRenderPass             renderPass;
     MoeVkPipeline               pipeline;
+    MoeVkPipeline               wireframePipeline;
     MoeVkFramebuffer            framebuffer;
     MoeVkCommandPool            commandPool;
     MoeVkRendererCommandBuffer  commandBuffer;
