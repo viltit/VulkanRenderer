@@ -9,23 +9,23 @@
 
 namespace moe {
 
+// TODO Remove - maybe make part of RenderOptions
+const std::vector<const char*> extensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
+
 MoeVkRenderer::MoeVkRenderer(VkWindow* window, std::vector<Drawable>& drawables, RendererOptions options)
     :   instance        { window, options },
-        surface         { VK_NULL_HANDLE },
         window          { window },
-        drawables       { drawables }
+        surface         { instance, *window },
+        drawables       { drawables },
+        physicalDevice  { instance.instance(), surface.surface(), extensions },
+        logicalDevice   { instance.instance(), physicalDevice, extensions }
 {
 
-    const std::vector<const char*> extensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
-    createSurface(window);
-    physicalDevice.create(instance.instance(), surface, extensions);
-    logicalDevice.create(instance.instance(), physicalDevice, extensions);
-    swapChain.create(physicalDevice, logicalDevice, surface, *window);
+    swapChain.create(physicalDevice, logicalDevice, surface.surface(), *window);
 
     uniformBuffer.createLayout(physicalDevice, logicalDevice);
     // TODO: numBuffers may change while the app is rendering -> do we need to reset the buffer ?
     uniformBuffer.createPool(physicalDevice, logicalDevice, swapChain.images().size() * drawables.size());
-
 
     // prepare and create pipeline
     renderPass.create(logicalDevice, physicalDevice, swapChain);
@@ -36,8 +36,11 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, std::vector<Drawable>& drawables,
     pipelines.push_back(MoeVkPipeline());
     pipelines[0].prepare(shaders, swapChain.extent().width, swapChain.extent().height);
     pipelines[0].create(logicalDevice, physicalDevice, swapChain, renderPass, uniformBuffer);
+    std::vector<MoeVkShader> wireframeShaders { 2 };
+    wireframeShaders[0].create(logicalDevice, "Shaders/simple.vert.spv", MoeVkShaderStage::vertex);
+    wireframeShaders[1].create(logicalDevice, "Shaders/simple.frag.spv", MoeVkShaderStage::fragment);
     pipelines.push_back(MoeVkPipeline());
-    pipelines[1].prepare(shaders,
+    pipelines[1].prepare(wireframeShaders,
             swapChain.extent().width, swapChain.extent().height);
     pipelines[1].rasterizationCreateInfo().polygonMode = VK_POLYGON_MODE_LINE;
     pipelines[1].create(logicalDevice, physicalDevice, swapChain, renderPass, uniformBuffer);
@@ -45,6 +48,7 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, std::vector<Drawable>& drawables,
     // set correct rendering viewports for the pipelines:
     pipelines[0].setRenderingViewport(swapChain.extent().width / 2, swapChain.extent().height, 0, 0);
     pipelines[1].setRenderingViewport(swapChain.extent().width / 2, swapChain.extent().height, swapChain.extent().width / 2, 0);
+
 
     commandPool.create(logicalDevice, physicalDevice.queueFamily(), swapChain);
     framebuffer.create(logicalDevice, physicalDevice, swapChain, renderPass, commandPool);
@@ -108,7 +112,6 @@ MoeVkRenderer::~MoeVkRenderer() {
         pipeline.destroy();
     }
     renderPass.destroy();
-    vkDestroySurfaceKHR(instance.instance(), surface, nullptr);
 }
 
 void MoeVkRenderer::draw() {
@@ -204,7 +207,7 @@ void MoeVkRenderer::draw() {
 void MoeVkRenderer::recreateSwapChain() {
     vkDeviceWaitIdle(logicalDevice.device());
     cleanSwapchain();
-    swapChain.create(physicalDevice, logicalDevice, surface, *window);
+    swapChain.create(physicalDevice, logicalDevice, surface.surface(), *window);
     // pipeline.create(logicalDevice, swapChain);
     // set correct rendering viewports for the pipelines:
     pipelines[0].setRenderingViewport(swapChain.extent().width / 2, swapChain.extent().height, 0, 0);
@@ -222,26 +225,4 @@ void MoeVkRenderer::cleanSwapchain() {
 
     swapChain.destroy(logicalDevice);
 }
-
-void MoeVkRenderer::createSurface(moe::VkWindow *window) {
-    if (!window) {
-        return;
-    }
-
-#ifndef NDEBUG
-    std::cout << "<VulkanHandler> Creating surface ...";
-#endif
-
-    if (!SDL_Vulkan_CreateSurface(window->sdlWindow(), instance.instance(), &surface)) {
-        // TODO: Error handling
-        std::cout << "Could not create a vulkan surface for the window." << std::endl;
-        std::cout << SDL_GetError() << std::endl;
-    }
-
-#ifndef NDEBUG
-    std::cout << "\t\tfinsihed\n";
-#endif
-}
-
-
 }

@@ -11,10 +11,10 @@
 				<Option working_dir="/home/titus/programming/c++/vkEngine/Exceptions"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="moeExceptions">
@@ -25,12 +25,19 @@
 				<Option compiler="gcc"/>
 				<Compiler>
 					<Add directory="/home/titus/programming/c++/vkEngine/Exceptions/../Exceptions"/>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 moeExceptions"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 moeExceptions"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="moeExceptions/fast">
@@ -41,12 +48,19 @@
 				<Option compiler="gcc"/>
 				<Compiler>
 					<Add directory="/home/titus/programming/c++/vkEngine/Exceptions/../Exceptions"/>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 moeExceptions/fast"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 moeExceptions/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/home/titus/programming/c++/vkEngine/Exceptions/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>

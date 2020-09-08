@@ -31,6 +31,7 @@ add_library(
         wrapper/MoeVkFramebuffer.cpp
         wrapper/MoeVkCommandPool.cpp
         wrapper/MoeVkRenderPass.cpp
+        wrapper/MoeVkSurfaceSDL2.cpp
         wrapper/MoeVkSemaphore.cpp
         wrapper/MoeVkFence.cpp
         wrapper/MoeVkUtils.hpp

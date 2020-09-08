@@ -11,10 +11,10 @@
 				<Option working_dir="/home/titus/programming/c++/vkEngine/vkRenderer"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="vkRenderer">
@@ -30,12 +30,19 @@
 					<Add directory="/usr/include/SDL2"/>
 					<Add directory="/home/titus/programming/c++/vkEngine/external/spdlog/include"/>
 					<Add directory="/home/titus/programming/c++/vkEngine/Exceptions/../Exceptions"/>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 vkRenderer"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 vkRenderer"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="vkRenderer/fast">
@@ -51,12 +58,19 @@
 					<Add directory="/usr/include/SDL2"/>
 					<Add directory="/home/titus/programming/c++/vkEngine/external/spdlog/include"/>
 					<Add directory="/home/titus/programming/c++/vkEngine/Exceptions/../Exceptions"/>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 vkRenderer/fast"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 vkRenderer/fast"/>
+					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j12 -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j12 -f &quot;/home/titus/programming/c++/vkEngine/vkRenderer/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
@@ -202,6 +216,12 @@
 			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkShader.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkSurfaceSDL2.cpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkSurfaceSDL2.hpp">
 			<Option target="vkRenderer"/>
 		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/wrapper/MoeVkSwapChain.cpp">

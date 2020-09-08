@@ -3,7 +3,38 @@
 #include <glm/glm.hpp>
 #include <vector>
 
+#include <concepts>
 namespace moe {
+
+struct SimpleVertex {
+    glm::vec3 pos;
+    glm::vec2 uv;
+
+    static VkVertexInputBindingDescription getBindingDescription() {
+        VkVertexInputBindingDescription description { };
+        description.binding = 0;
+        description.stride = sizeof(SimpleVertex);
+        description.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;    // vertex or instance for instanced rendering
+        return description;
+    }
+
+    static std::vector<VkVertexInputAttributeDescription> getAttributeDescription() {
+
+        std::vector<VkVertexInputAttributeDescription> descriptions;
+        descriptions.resize(2);
+
+        descriptions[0].binding = 0;
+        descriptions[0].location = 0;   // identical with shaders "layout(location=...)"
+        descriptions[0].offset = offsetof(SimpleVertex, pos);
+        descriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
+
+        descriptions[3].binding = 0;
+        descriptions[3].location = 3;
+        descriptions[3].offset = offsetof(SimpleVertex, uv);
+        descriptions[3].format = VK_FORMAT_R32G32_SFLOAT;
+        return descriptions;
+    }
+};
 
 // TODO long term: allow either colored OR textured vertices
 struct Vertex {

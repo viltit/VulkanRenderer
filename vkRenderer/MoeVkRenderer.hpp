@@ -18,6 +18,7 @@
 #include "wrapper/MoeVkRenderPass.hpp"
 #include "MoeVkDrawable.hpp"
 #include "MoeVkRendererCommandBuffer.hpp"
+#include "wrapper/MoeVkSurfaceSDL2.hpp"
 
 namespace moe {
 
@@ -36,10 +37,8 @@ public:
     void switchDebugDrawing(bool debugMode);
 
 private:
-
     static constexpr int maxFramesInFlight = 2;
 
-    void createSurface(VkWindow* window);
     void cleanSwapchain();
 
     VkWindow*                   window;
@@ -51,7 +50,7 @@ private:
     MoeVkFramebuffer            framebuffer;
     MoeVkCommandPool            commandPool;
     MoeVkRendererCommandBuffer  commandBuffer;
-    VkSurfaceKHR                surface;
+    MoeVkSurfaceSDL2            surface;
 
     MoeVkPhysicalDevice         physicalDevice;
     MoeVkLogicalDevice          logicalDevice;

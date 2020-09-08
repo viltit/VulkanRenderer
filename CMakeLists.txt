@@ -1,13 +1,14 @@
 cmake_minimum_required(VERSION 3.10)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
 
 project(moe)
 
-# compile shaders - DOES NOT WORK
+# Compile the shaders
 execute_process(
-        COMMAND cd Shaders/ && bash compile.sh
+        COMMAND bash compile.sh
 )
 
 add_subdirectory(vkRenderer)

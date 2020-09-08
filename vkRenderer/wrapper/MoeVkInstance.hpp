@@ -17,7 +17,7 @@ public:
     MoeVkInstance(VkWindow* window, RendererOptions options);
     ~MoeVkInstance();
 
-    VkInstance instance()   { return _instance; }
+    VkInstance& instance()   { return _instance; }
 
 private:
     void createDebugMessenger();

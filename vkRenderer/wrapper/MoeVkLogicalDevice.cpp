@@ -6,18 +6,10 @@
 
 namespace moe {
 
-MoeVkLogicalDevice::MoeVkLogicalDevice() {
-    std::cout << "Creating logical device\n";
-}
+MoeVkLogicalDevice::MoeVkLogicalDevice(VkInstance instance, MoeVkPhysicalDevice& physDevice,
+                                       const std::vector<const char*>& extensions,
+                                       unsigned int desiredQueueCount) {
 
-MoeVkLogicalDevice::~MoeVkLogicalDevice() {
-    std::cout << "Destroying logical device\n";
-    vkDestroyDevice(_device, nullptr);
-}
-
-void MoeVkLogicalDevice::create(VkInstance instance, MoeVkPhysicalDevice& physDevice,
-        const std::vector<const char*>& extensions,
-        unsigned int desiredQueueCount) {
 
     assert(physDevice.queueFamily().graphics.size() > 0);
     assert(physDevice.queueFamily().presentation.size() > 0);
@@ -41,7 +33,9 @@ void MoeVkLogicalDevice::create(VkInstance instance, MoeVkPhysicalDevice& physDe
     // TODO - add specific features we need from the gpu -> only add features we really use !
     VkPhysicalDeviceFeatures features = { };
     features.geometryShader = true;
+    // TODO: Check if GPU allows this features
     features.samplerAnisotropy = true;  // TODO: Optional
+    features.fillModeNonSolid = true;
 
     VkDeviceCreateInfo createInfo { };
     createInfo.sType                    = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -63,5 +57,11 @@ void MoeVkLogicalDevice::create(VkInstance instance, MoeVkPhysicalDevice& physDe
     // get a handle to our queues:
     vkGetDeviceQueue(_device, queues.front(), 0, &_graphicsQueue);
     vkGetDeviceQueue(_device, queues.back(), 0, &_presentationQueue);
+    std::cout << "Creating logical device\n";
+}
+
+MoeVkLogicalDevice::~MoeVkLogicalDevice() {
+    std::cout << "Destroying logical device\n";
+    vkDestroyDevice(_device, nullptr);
 }
 }

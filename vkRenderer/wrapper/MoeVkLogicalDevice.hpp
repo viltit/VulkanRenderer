@@ -12,7 +12,9 @@ namespace moe {
  */
 class MoeVkLogicalDevice {
 public:
-    MoeVkLogicalDevice();
+    MoeVkLogicalDevice(VkInstance instance, MoeVkPhysicalDevice& device,
+                       const std::vector<const char*>& extensions,
+                       unsigned int desiredQueueCount = 4);
     ~MoeVkLogicalDevice();
 
     // weird thing may happen on a shallow copy (like trying to allocate stuff from a VK_NULL_HANDLE)
@@ -21,11 +23,6 @@ public:
     MoeVkLogicalDevice(MoeVkLogicalDevice&& other) = delete;
     MoeVkLogicalDevice& operator=(const MoeVkLogicalDevice& other) = delete;
     MoeVkLogicalDevice& operator=(MoeVkLogicalDevice&& other) = delete;
-
-
-    void create(VkInstance instance, MoeVkPhysicalDevice& device,
-            const std::vector<const char*>& extensions,
-            unsigned int desiredQueueCount = 4);
 
     VkDevice& device() { return _device; }
     VkQueue& graphicsQueue() { return _graphicsQueue; }

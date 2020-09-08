@@ -8,10 +8,10 @@
 namespace moe {
 class MoeVkPhysicalDevice {
 public:
-    MoeVkPhysicalDevice();
+    MoeVkPhysicalDevice(const VkInstance& instance,
+            const VkSurfaceKHR& surface,
+            const std::vector<const char*> desiredExtensions);
     ~MoeVkPhysicalDevice();
-
-    void create(const VkInstance& instance, const VkSurfaceKHR& surface, const std::vector<const char*> desiredExtensions);
 
     VkPhysicalDevice& device()       { return _device; }
     MoeVkQueueFamily& queueFamily()  { return _queueFamily; }

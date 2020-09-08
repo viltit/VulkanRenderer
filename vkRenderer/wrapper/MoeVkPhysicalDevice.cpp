@@ -8,18 +8,15 @@
 
 namespace moe {
 
-MoeVkPhysicalDevice::MoeVkPhysicalDevice() { }
-
-MoeVkPhysicalDevice::~MoeVkPhysicalDevice() { }
-
-void MoeVkPhysicalDevice::create(
-        const VkInstance &instance,
-        const VkSurfaceKHR &surface,
-        const std::vector<const char*> desiredExtensions) {
+MoeVkPhysicalDevice::MoeVkPhysicalDevice(const VkInstance& instance,
+                                         const VkSurfaceKHR& surface,
+                                         const std::vector<const char*> desiredExtensions) {
 
     auto devices = fetchAll(instance);
     fetchBest(devices, desiredExtensions, surface);
 }
+
+MoeVkPhysicalDevice::~MoeVkPhysicalDevice() { }
 
 std::vector<VkPhysicalDevice> MoeVkPhysicalDevice::fetchAll(const VkInstance& instance) {
     uint32_t numDevices = 0;
