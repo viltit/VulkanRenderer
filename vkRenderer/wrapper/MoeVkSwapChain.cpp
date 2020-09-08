@@ -3,74 +3,64 @@
 #include "MoeExceptions.hpp"
 
 #include <SDL2/SDL_vulkan.h>
-#include <iostream>
+#include <spdlog/spdlog.h>
 
 namespace moe {
 
-MoeVkSwapChain::MoeVkSwapChain()
-{ }
+MoeVkSwapChain::MoeVkSwapChain(MoeVkPhysicalDevice& physicalDevice,
+                               MoeVkLogicalDevice& logicalDevice,
+                               const VkSurfaceKHR& surface,
+                               const VkWindow& window)
+    : _device{ logicalDevice }
+{
 
-MoeVkSwapChain::~MoeVkSwapChain() { }
-
-void MoeVkSwapChain::destroy(MoeVkLogicalDevice &device) {
-    for (size_t i = 0; i < _imageViews.size(); i++) {
-        vkDestroyImageView(device.device(), _imageViews[i], nullptr);
-    }
-    vkDestroySwapchainKHR(device.device(), _swapChain, nullptr);
-}
-
-void MoeVkSwapChain::create(
-        MoeVkPhysicalDevice& device,
-        MoeVkLogicalDevice& logicalDevice,
-        const VkSurfaceKHR &surface,
-        const moe::VkWindow &window) {
-
-    _properties = SwapChainProps( device.device(), surface );
-    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device.device(), surface, &_capabilities);
+    _properties = SwapChainProps(physicalDevice.device(), surface );
+    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice.device(), surface, &_capabilities);
     _format = fetchBestFormat();
     _presentMode = fetchBestPresentMode();
     _extent = fetchBestExtent(window);
+
+    spdlog::debug("Swap chain is setting surface extent to {0} / {1}", _extent.width, _extent.height);
 
     uint numImages = _capabilities.minImageCount + 1;
     if (_capabilities.maxImageCount > 0 && numImages > _capabilities.maxImageCount) {
         numImages = _capabilities.maxImageCount;
     }
 
-    VkSwapchainCreateInfoKHR createInfo { };
-    createInfo.sType                = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-    createInfo.pNext                = nullptr;
-    createInfo.flags                = 0;
-    createInfo.surface              = surface;
-    createInfo.minImageCount        = numImages;
-    createInfo.imageFormat          = _format.format;
-    createInfo.imageColorSpace      = _format.colorSpace;
-    createInfo.imageExtent          = _extent;
-    createInfo.imageArrayLayers     = 1;    // 1 for most apps, exept maybe a stereoscopic app
-    createInfo.imageUsage           = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;  // draw direcly to the screen -> no postporocessing for now
+    _createInfo.sType                = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+    _createInfo.pNext                = nullptr;
+    _createInfo.flags                = 0;
+    _createInfo.surface              = surface;
+    _createInfo.minImageCount        = numImages;
+    _createInfo.imageFormat          = _format.format;
+    _createInfo.imageColorSpace      = _format.colorSpace;
+    _createInfo.imageExtent          = _extent;
+    _createInfo.imageArrayLayers     = 1;    // 1 for most apps, exept maybe a stereoscopic app
+    _createInfo.imageUsage           = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;  // draw direcly to the screen -> no postporocessing for now
 
     // If we have two separate queues for graphics and presentation, the swap chain needs to share images between them:
-    uint queueIndices[] = { device.queueFamily().selectedGraphicsIndex, device.queueFamily().selectedPresentationIndex };
+    uint queueIndices[] = {physicalDevice.queueFamily().selectedGraphicsIndex, physicalDevice.queueFamily().selectedPresentationIndex };
     if (queueIndices[0] != queueIndices[1]) {
         // ownership of swap chain images is shared
         /* TODO: For performance, an exlusive mode is better -> this would need to explicitly handle swap chain ownership
             in subsequent code */
-        createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
-        createInfo.queueFamilyIndexCount = 2;
-        createInfo.pQueueFamilyIndices = queueIndices;
+        _createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
+        _createInfo.queueFamilyIndexCount = 2;
+        _createInfo.pQueueFamilyIndices = queueIndices;
     }
     else {
-        createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
-        createInfo.queueFamilyIndexCount = 0;
-        createInfo.pQueueFamilyIndices = nullptr;
+        _createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+        _createInfo.queueFamilyIndexCount = 0;
+        _createInfo.pQueueFamilyIndices = nullptr;
     }
 
-    createInfo.preTransform     = _capabilities.currentTransform;       // we do NOT want any transformations of images in the swap chain
-    createInfo.compositeAlpha   = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;  // no transparency to other windows
-    createInfo.presentMode      = _presentMode;
-    createInfo.clipped          = VK_TRUE;  // we are not interested in clipped pixel, for example behind another window
-    createInfo.oldSwapchain     = nullptr;
+    _createInfo.preTransform     = _capabilities.currentTransform;       // we do NOT want any transformations of images in the swap chain
+    _createInfo.compositeAlpha   = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;  // no transparency to other windows
+    _createInfo.presentMode      = _presentMode;
+    _createInfo.clipped          = VK_TRUE;  // we are not interested in clipped pixel, for example behind another window
+    _createInfo.oldSwapchain     = nullptr;
 
-    if (vkCreateSwapchainKHR(logicalDevice.device(), &createInfo, nullptr, &_swapChain) != VK_SUCCESS) {
+    if (vkCreateSwapchainKHR(logicalDevice.device(), &_createInfo, nullptr, &_swapChain) != VK_SUCCESS) {
         throw MoeInitError("Failed to create Swapchain.", __FILE__, __FUNCTION__, __LINE__);
     }
 
@@ -81,6 +71,39 @@ void MoeVkSwapChain::create(
 
     // create a view into these images:
     createImageViews(logicalDevice);
+}
+
+void MoeVkSwapChain::recreate(MoeVkPhysicalDevice& physicalDevice, const VkWindow &window, const VkSurfaceKHR& surface) {
+    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice.device(), surface, &_capabilities);
+    _extent = fetchBestExtent(window);
+    spdlog::debug("Swap chain is setting surface extent to {0} / {1}", _extent.width, _extent.height);
+    _createInfo.imageExtent = _extent;
+    _createInfo.surface = surface;
+    uint numImages = _createInfo.minImageCount;
+
+    for (size_t i = 0; i < _imageViews.size(); i++) {
+        vkDestroyImageView(_device.device(), _imageViews[i], nullptr);
+    }
+    vkDestroySwapchainKHR(_device.device(), _swapChain, nullptr);
+
+    if (vkCreateSwapchainKHR(_device.device(), &_createInfo, nullptr, &_swapChain) != VK_SUCCESS) {
+        throw MoeInitError("Failed to create Swapchain.", __FILE__, __FUNCTION__, __LINE__);
+    }
+
+    // get a handle to the images in the Swapchain:
+    vkGetSwapchainImagesKHR(_device.device(), _swapChain, &numImages, nullptr);
+    _images.resize(numImages);
+    vkGetSwapchainImagesKHR(_device.device(), _swapChain, &numImages, _images.data());
+    // create a view into these images:
+    createImageViews(_device);
+
+}
+
+MoeVkSwapChain::~MoeVkSwapChain() {
+    for (size_t i = 0; i < _imageViews.size(); i++) {
+        vkDestroyImageView(_device.device(), _imageViews[i], nullptr);
+    }
+    vkDestroySwapchainKHR(_device.device(), _swapChain, nullptr);
 }
 
 void MoeVkSwapChain::createImageViews(MoeVkLogicalDevice& device) {
@@ -154,7 +177,6 @@ VkPresentModeKHR MoeVkSwapChain::fetchBestPresentMode() const {
 VkExtent2D MoeVkSwapChain::fetchBestExtent(const VkWindow& window) {
     // the window system already set the value to its size:
     if (_capabilities.currentExtent.width != UINT32_MAX) {
-        std::cout << "Setting surface extent to " << _capabilities.currentExtent.width << " / " << _capabilities.currentExtent.height << std::endl;
         return _capabilities.currentExtent;
     }
     // we need to get the size ourselfes:
@@ -165,8 +187,6 @@ VkExtent2D MoeVkSwapChain::fetchBestExtent(const VkWindow& window) {
 
     result.width = std::max(_capabilities.minImageExtent.width, std::min(_capabilities.maxImageExtent.width, result.width));
     result.height = std::max(_capabilities.minImageExtent.height, std::min(_capabilities.maxImageExtent.height, result.height));
-
-    std::cout << "Setting surface extent to " << result.width << " / " << result.height << std::endl;
 
     return result;
 }

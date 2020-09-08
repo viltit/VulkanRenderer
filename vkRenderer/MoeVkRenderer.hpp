@@ -44,16 +44,16 @@ private:
     VkWindow*                   window;
 
     MoeVkInstance               instance;
+    MoeVkSurfaceSDL2            surface;
+    MoeVkPhysicalDevice         physicalDevice;
+    MoeVkLogicalDevice          logicalDevice;
     MoeVkSwapChain              swapChain;
     MoeVkRenderPass             renderPass;
     std::vector<MoeVkPipeline>  pipelines;
     MoeVkFramebuffer            framebuffer;
     MoeVkCommandPool            commandPool;
     MoeVkRendererCommandBuffer  commandBuffer;
-    MoeVkSurfaceSDL2            surface;
 
-    MoeVkPhysicalDevice         physicalDevice;
-    MoeVkLogicalDevice          logicalDevice;
 
     // we need several semaphores to lock swapchain images separatedly and therefore allow "frames in flight"
     std::vector<MoeVkSemaphore>   imageAvalaibleSemaphore;

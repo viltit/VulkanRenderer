@@ -2,6 +2,7 @@
 
 #include <vulkan/vulkan.h>
 #include <vector>
+#include <utility>
 
 namespace moe {
 
@@ -16,6 +17,14 @@ class MoeVkInstance {
 public:
     MoeVkInstance(VkWindow* window, RendererOptions options);
     ~MoeVkInstance();
+
+    MoeVkInstance(const MoeVkInstance&)                 = delete;
+    MoeVkInstance(MoeVkInstance&& other)
+        :   _instance { std::exchange(other._instance, nullptr )},
+            debugMessenger { std::exchange(other.debugMessenger, nullptr) }
+    { }
+    MoeVkInstance& operator = (const MoeVkInstance&)    = delete;
+    MoeVkInstance& operator = (MoeVkInstance&&)         = delete;
 
     VkInstance& instance()   { return _instance; }
 

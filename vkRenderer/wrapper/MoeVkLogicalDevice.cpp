@@ -1,5 +1,4 @@
 #include <assert.h>
-#include <iostream>
 
 #include "MoeVkLogicalDevice.hpp"
 #include "MoeExceptions.hpp"
@@ -57,11 +56,9 @@ MoeVkLogicalDevice::MoeVkLogicalDevice(VkInstance instance, MoeVkPhysicalDevice&
     // get a handle to our queues:
     vkGetDeviceQueue(_device, queues.front(), 0, &_graphicsQueue);
     vkGetDeviceQueue(_device, queues.back(), 0, &_presentationQueue);
-    std::cout << "Creating logical device\n";
 }
 
 MoeVkLogicalDevice::~MoeVkLogicalDevice() {
-    std::cout << "Destroying logical device\n";
     vkDestroyDevice(_device, nullptr);
 }
 }

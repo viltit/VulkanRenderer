@@ -12,15 +12,13 @@ namespace moe {
 
 class MoeVkSwapChain {
 public:
-    MoeVkSwapChain();
+    MoeVkSwapChain(MoeVkPhysicalDevice& physicalDevice,
+                   MoeVkLogicalDevice& logicalDevice,
+                   const VkSurfaceKHR& surface,
+                   const VkWindow& window);
     ~MoeVkSwapChain();
 
-    void create(MoeVkPhysicalDevice& device,
-                MoeVkLogicalDevice& logicalDevice,
-                const VkSurfaceKHR& surface,
-                const VkWindow& window);
-
-    void destroy(MoeVkLogicalDevice& device);
+    void recreate(MoeVkPhysicalDevice& physicalDevice, const VkWindow& window, const VkSurfaceKHR& surface);
 
     VkSwapchainKHR&             swapChain()     { return _swapChain; }
     VkExtent2D                  extent() const { return _extent; }
@@ -34,6 +32,7 @@ private:
     VkExtent2D          fetchBestExtent(const VkWindow& window);
     void                createImageViews(MoeVkLogicalDevice& device);
 
+    MoeVkLogicalDevice&         _device;
     VkSwapchainKHR              _swapChain;
     SwapChainProps              _properties;
     VkSurfaceCapabilitiesKHR    _capabilities;
@@ -42,6 +41,9 @@ private:
     VkExtent2D                  _extent;
     std::vector<VkImage>        _images;
     std::vector<VkImageView >   _imageViews;
+
+    // we also store the create info struct for a faster swapchain recreation on window-resize
+    VkSwapchainCreateInfoKHR    _createInfo;
 
 };
 }

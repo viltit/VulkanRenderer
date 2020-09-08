@@ -13,16 +13,14 @@ namespace moe {
 const std::vector<const char*> extensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 
 MoeVkRenderer::MoeVkRenderer(VkWindow* window, std::vector<Drawable>& drawables, RendererOptions options)
-    :   instance        { window, options },
-        window          { window },
+    :   window          { window },
+        instance        { window, options },
         surface         { instance, *window },
         drawables       { drawables },
         physicalDevice  { instance.instance(), surface.surface(), extensions },
-        logicalDevice   { instance.instance(), physicalDevice, extensions }
+        logicalDevice   { instance.instance(), physicalDevice, extensions },
+        swapChain       { physicalDevice, logicalDevice, surface.surface(), *window }
 {
-
-    swapChain.create(physicalDevice, logicalDevice, surface.surface(), *window);
-
     uniformBuffer.createLayout(physicalDevice, logicalDevice);
     // TODO: numBuffers may change while the app is rendering -> do we need to reset the buffer ?
     uniformBuffer.createPool(physicalDevice, logicalDevice, swapChain.images().size() * drawables.size());
@@ -107,7 +105,6 @@ MoeVkRenderer::~MoeVkRenderer() {
     }
     commandPool.destroy(logicalDevice);
     framebuffer.destroy(logicalDevice);
-    swapChain.destroy(logicalDevice);
     for (auto& pipeline : pipelines) {
         pipeline.destroy();
     }
@@ -205,9 +202,10 @@ void MoeVkRenderer::draw() {
 }
 
 void MoeVkRenderer::recreateSwapChain() {
+    // TODO: Make sure we do this right (ie, no memory leak and not unnecessary performance loss by re-building too much
     vkDeviceWaitIdle(logicalDevice.device());
     cleanSwapchain();
-    swapChain.create(physicalDevice, logicalDevice, surface.surface(), *window);
+    swapChain.recreate(physicalDevice, *window, surface.surface());
     // pipeline.create(logicalDevice, swapChain);
     // set correct rendering viewports for the pipelines:
     pipelines[0].setRenderingViewport(swapChain.extent().width / 2, swapChain.extent().height, 0, 0);
@@ -218,11 +216,9 @@ void MoeVkRenderer::recreateSwapChain() {
 }
 
 void MoeVkRenderer::cleanSwapchain() {
-    // TODO: Also destroy and recreate uniform buffer
+    // TODO: Also destroy and recreate uniform buffer ?
     framebuffer.destroyBuffers(logicalDevice);
     // pipeline.destroy(logicalDevice);
     // TODO: Command buffers ?
-
-    swapChain.destroy(logicalDevice);
 }
 }

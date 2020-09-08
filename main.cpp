@@ -69,16 +69,14 @@ int main(int argc, char* argv[]) {
                         break;
                     case SDL_WINDOWEVENT:
                         if (e.window.event == SDL_WINDOWEVENT_RESIZED) {
-                            std::cout << "Window resize\n";
-                            std::cout << e.window.data1 << " / " << e.window.data2 << std::endl;
+                            spdlog::debug("SDL detected window resize to {0} / {1}", e.window.data1, e.window.data2);
                             // TODO: Calling resize leads to unexpected window height growth -> it seems unnecessary??
-                            // window.resize(e.window.data1, e.window.data2);
-                            // vulkan->resize();
+                            // window.resize(e.window.data1, e.window.data2);;
                             // TODO: Some drivers may not set VK_ERROR_OUT_OF_DATE_KHR when the window resized -> explicitly tell the renderer
                         }
                         else if (e.window.event == SDL_WINDOWEVENT_MINIMIZED) {
                             // skip drawing
-                            std::cout << "Window minimized\n";
+                            spdlog::debug("Window minimized");
                             continue;
                         }
                         // TODO: Window hidden?
@@ -116,8 +114,8 @@ int main(int argc, char* argv[]) {
 
     }
     catch(MoeInitError e) {
-        std::cout << "Unhandeld error: " << e.what() << std::endl;
-        std::cout << "In File " << e.file << " on Line " << e.line << " in function " << e.func << std::endl;
+        spdlog::error("Unhandeld error. Message: {0}", e.what());
+        spdlog::error("In file {0} on line {1} in function {2}", e.file, e.line, e.func);
     }
     return 0;
 }

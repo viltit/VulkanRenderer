@@ -4,7 +4,7 @@
 #include "MoeExceptions.hpp"
 
 #include <SDL_vulkan.h>
-#include <iostream>
+#include <spdlog/spdlog.h>
 
 namespace moe {
 MoeVkInstance::MoeVkInstance(VkWindow *window, RendererOptions options)
@@ -17,13 +17,11 @@ MoeVkInstance::MoeVkInstance(VkWindow *window, RendererOptions options)
     uint numExtensions{ 0 };
     std::vector<const char*> extensions;
     if (!SDL_Vulkan_GetInstanceExtensions(window->sdlWindow(), &numExtensions, nullptr)) {
-        // TODO: Proper error handling
-        std::cout << "SDL failed to get Vulkan extensions" << std::endl;
+        throw MoeInitError("SDL failed to enumerate needed Vulkan extensions", __FILE__, __FUNCTION__, __LINE__);
     }
     extensions.resize(numExtensions);
     if (!SDL_Vulkan_GetInstanceExtensions(window->sdlWindow(), &numExtensions, extensions.data())) {
-        // TODO: Proper error handling
-        std::cout << "SDL failed to get Vulkan extensions" << std::endl;
+        throw MoeInitError("SDL failed to deliver its Vulkan Extension names", __FILE__, __FUNCTION__, __LINE__);
     }
 
     // Check if validation should be active
@@ -34,15 +32,28 @@ MoeVkInstance::MoeVkInstance(VkWindow *window, RendererOptions options)
         extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
         validationLayers.push_back("VK_LAYER_LUNARG_standard_validation");
         if (!hasLayerSupport(validationLayers)) {
-            // TODO: Error handling
-            std::cout << "Failed to get support for Validation Layers!\n";
+            // TODO: Just disable this layer and issue a warning
+            spdlog::error("Failed to get support for Validation Layers!\n");
         }
     }
 
     if (!hasExtensions(extensions)) {
         // TODO: Error handling
-        std::cout << "SDL needs extensions not supported by Vulkan." << std::endl;
+        spdlog::error("SDL needs extensions not supported by Vulkan.");
     }
+
+    if (validationLayers.size() > 0) {
+        spdlog::info("Activated Vulkan Layers:");
+        for (const auto& layer : validationLayers) {
+            spdlog::info("\t" + std::string(layer));
+        }
+    }
+    if (extensions.size() > 0) {
+        for (const auto& extension : extensions) {
+            spdlog::info("\t" + std::string(extension));
+        }
+    }
+
 
     VkApplicationInfo appInfo { };
     appInfo.sType                   = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -74,7 +85,7 @@ MoeVkInstance::MoeVkInstance(VkWindow *window, RendererOptions options)
     }
 }
 
-MoeVkInstance::~MoeVkInstance() {
+MoeVkInstance::~MoeVkInstance(){
     if (debugMessenger) {
         destroyDebugUtilsMessengerEXT(_instance, debugMessenger, nullptr);
     }
@@ -99,7 +110,7 @@ void MoeVkInstance::createDebugMessenger() {
     createInfo.pUserData = nullptr;
 
     if (createDebugUtilsMessengerEXT(_instance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS) {
-        std::cout << "failed.\n";
+        spdlog::error("Failed to create a Vulkan Debug messenger.");
         return;
     }
 }

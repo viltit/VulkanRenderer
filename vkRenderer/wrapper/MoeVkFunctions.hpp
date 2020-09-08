@@ -16,13 +16,13 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
 
     switch (severity) {
         case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
-            spdlog::warn("<Vulkan> Validation layer message: " + std::string(pData->pMessage));
+            spdlog::warn("Vulkan Validation layer message: " + std::string(pData->pMessage));
             break;
         case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
-            spdlog::error("<Vulkan> Validation layer message: " + std::string(pData->pMessage));
+            spdlog::error("Vulkan Validation layer message: " + std::string(pData->pMessage));
             break;
         default:
-            spdlog::info("<Vulkan> Validation layer message: " + std::string(pData->pMessage));
+            spdlog::info("Vulkan Validation layer message: " + std::string(pData->pMessage));
 
     }
     return VK_FALSE;
