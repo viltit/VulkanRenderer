@@ -19,21 +19,18 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, std::vector<Drawable>& drawables,
         drawables       { drawables },
         physicalDevice  { instance.instance(), surface.surface(), extensions },
         logicalDevice   { instance.instance(), physicalDevice, extensions },
-        swapChain       { physicalDevice, logicalDevice, surface.surface(), *window }
+        swapChain       { physicalDevice, logicalDevice, surface.surface(), *window },
+        descriptorPool  { physicalDevice, logicalDevice, swapChain.images().size() * drawables.size() },
+        renderPass      { logicalDevice, physicalDevice, swapChain }
 {
-    uniformBuffer.createLayout(physicalDevice, logicalDevice);
-    // TODO: numBuffers may change while the app is rendering -> do we need to reset the buffer ?
-    uniformBuffer.createPool(physicalDevice, logicalDevice, swapChain.images().size() * drawables.size());
 
-    // prepare and create pipeline
-    renderPass.create(logicalDevice, physicalDevice, swapChain);
     std::vector<MoeVkShader> shaders { 2 };
     shaders[0].create(logicalDevice, "Shaders/triangle.vert.spv", MoeVkShaderStage::vertex);
     shaders[1].create(logicalDevice, "Shaders/triangle.frag.spv", MoeVkShaderStage::fragment);
     pipelines.reserve(2);
     pipelines.push_back(MoeVkPipeline());
     pipelines[0].prepare(shaders, swapChain.extent().width, swapChain.extent().height);
-    pipelines[0].create(logicalDevice, physicalDevice, swapChain, renderPass, uniformBuffer);
+    pipelines[0].create(logicalDevice, physicalDevice, swapChain, renderPass, descriptorPool);
     std::vector<MoeVkShader> wireframeShaders { 2 };
     wireframeShaders[0].create(logicalDevice, "Shaders/simple.vert.spv", MoeVkShaderStage::vertex);
     wireframeShaders[1].create(logicalDevice, "Shaders/simple.frag.spv", MoeVkShaderStage::fragment);
@@ -41,7 +38,7 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, std::vector<Drawable>& drawables,
     pipelines[1].prepare(wireframeShaders,
             swapChain.extent().width, swapChain.extent().height);
     pipelines[1].rasterizationCreateInfo().polygonMode = VK_POLYGON_MODE_LINE;
-    pipelines[1].create(logicalDevice, physicalDevice, swapChain, renderPass, uniformBuffer);
+    pipelines[1].create(logicalDevice, physicalDevice, swapChain, renderPass, descriptorPool);
 
     // set correct rendering viewports for the pipelines:
     pipelines[0].setRenderingViewport(swapChain.extent().width / 2, swapChain.extent().height, 0, 0);
@@ -54,7 +51,7 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, std::vector<Drawable>& drawables,
     for (auto& drawable : drawables) {
         // TODO: No new -> need copy constrcutor
         vkDrawables.push_back(new MoeVkDrawable(
-                physicalDevice, logicalDevice, commandPool, uniformBuffer,
+                physicalDevice, logicalDevice, commandPool, descriptorPool,
                 &drawable, swapChain.images().size()
                 ));
     }
@@ -91,8 +88,6 @@ MoeVkRenderer::~MoeVkRenderer() {
     // because drawing command are executed asynchrounously, we need to wait until we destroy the resources:
     vkDeviceWaitIdle(logicalDevice.device());
 
-    uniformBuffer.destroy(logicalDevice);
-
     for (size_t i = 0; i < vkDrawables.size(); i++) {
         delete vkDrawables[i];
     }
@@ -108,7 +103,6 @@ MoeVkRenderer::~MoeVkRenderer() {
     for (auto& pipeline : pipelines) {
         pipeline.destroy();
     }
-    renderPass.destroy();
 }
 
 void MoeVkRenderer::draw() {

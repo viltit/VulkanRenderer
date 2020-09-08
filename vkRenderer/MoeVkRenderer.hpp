@@ -48,6 +48,7 @@ private:
     MoeVkPhysicalDevice         physicalDevice;
     MoeVkLogicalDevice          logicalDevice;
     MoeVkSwapChain              swapChain;
+    MoeVkDescriptorPool         descriptorPool;
     MoeVkRenderPass             renderPass;
     std::vector<MoeVkPipeline>  pipelines;
     MoeVkFramebuffer            framebuffer;
@@ -70,7 +71,5 @@ private:
     // TODO: This should be in an own class "scene" in the long termn
     std::vector<Drawable>&          drawables;
     std::vector<MoeVkDrawable*>      vkDrawables;
-
-    MoeVkDescriptorPool              uniformBuffer;
 };
 }

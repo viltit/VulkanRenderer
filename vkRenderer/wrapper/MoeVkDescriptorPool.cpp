@@ -5,7 +5,22 @@
 #include "MoeVkDescriptorPool.hpp"
 
 namespace moe {
-void MoeVkDescriptorPool::createLayout(MoeVkPhysicalDevice& phyDevice, MoeVkLogicalDevice &device) {
+
+MoeVkDescriptorPool::MoeVkDescriptorPool(MoeVkPhysicalDevice& phyDevice,
+        const MoeVkLogicalDevice& device,
+        size_t numBuffers)
+        : _device { device }
+{
+    createLayout(phyDevice, device);
+    createPool(phyDevice, device, numBuffers);
+}
+
+MoeVkDescriptorPool::~MoeVkDescriptorPool() {
+    vkDestroyDescriptorSetLayout(_device.device(), _layout, nullptr);
+    vkDestroyDescriptorPool(_device.device(), _pool, nullptr);
+}
+
+void MoeVkDescriptorPool::createLayout(MoeVkPhysicalDevice& phyDevice, const MoeVkLogicalDevice &device) {
 
     /**
      * A descriptor layout describes the details about the binding. This information is needed during pipeline
@@ -47,7 +62,7 @@ void MoeVkDescriptorPool::createLayout(MoeVkPhysicalDevice& phyDevice, MoeVkLogi
     }
 }
 
-void MoeVkDescriptorPool::createPool(moe::MoeVkPhysicalDevice &phyDevice, moe::MoeVkLogicalDevice &device, size_t numBuffers) {
+void MoeVkDescriptorPool::createPool(moe::MoeVkPhysicalDevice &phyDevice, const MoeVkLogicalDevice &device, size_t numBuffers) {
 
     // TODO: Automate from layoutBindings
     std::vector<VkDescriptorPoolSize> poolSizes{
@@ -72,11 +87,5 @@ void MoeVkDescriptorPool::createPool(moe::MoeVkPhysicalDevice &phyDevice, moe::M
     if (vkCreateDescriptorPool(device.device(), &poolInfo, nullptr, &_pool) != VK_SUCCESS) {
         throw MoeInitError("Failed to create descriptor pool.", __FILE__, __FUNCTION__, __LINE__);
     }
-}
-
-
-void MoeVkDescriptorPool::destroy(MoeVkLogicalDevice &device) {
-    vkDestroyDescriptorSetLayout(device.device(), _layout, nullptr);
-    vkDestroyDescriptorPool(device.device(), _pool, nullptr);
 }
 }

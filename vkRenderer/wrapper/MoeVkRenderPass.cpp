@@ -9,9 +9,11 @@
 
 namespace moe {
 
-void MoeVkRenderPass::create(MoeVkLogicalDevice &device, MoeVkPhysicalDevice& physicalDevice, const MoeVkSwapChain& swapChain) {
-
-    _device = &device;
+MoeVkRenderPass::MoeVkRenderPass(const MoeVkLogicalDevice &device,
+                                         const MoeVkPhysicalDevice& physicalDevice,
+                                         const MoeVkSwapChain& swapChain)
+    : _device { device }
+{
 
     // specific for rendering: add a subpass dependency for synchronization. "External" refers to the implicit
     // subpass before and after the rendering. Index 0 refers to our rendering pass, which is the only one
@@ -76,11 +78,7 @@ void MoeVkRenderPass::create(MoeVkLogicalDevice &device, MoeVkPhysicalDevice& ph
     }
 }
 
-void MoeVkRenderPass::destroy() {
-    if (_device) {
-        vkDestroyRenderPass(_device->device(), _renderPass, nullptr);
-        _device = nullptr;
-    }
+MoeVkRenderPass::~MoeVkRenderPass() {
+    vkDestroyRenderPass(_device.device(), _renderPass, nullptr);
 }
-
 }

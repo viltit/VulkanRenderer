@@ -24,7 +24,7 @@ public:
     MoeVkLogicalDevice& operator=(const MoeVkLogicalDevice& other) = delete;
     MoeVkLogicalDevice& operator=(MoeVkLogicalDevice&& other) = delete;
 
-    VkDevice& device() { return _device; }
+    const VkDevice& device() const { return _device; }
     VkQueue& graphicsQueue() { return _graphicsQueue; }
     VkQueue& presentationQueue() { return _presentationQueue; }
 

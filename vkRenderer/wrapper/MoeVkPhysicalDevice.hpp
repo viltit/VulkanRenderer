@@ -13,15 +13,16 @@ public:
             const std::vector<const char*> desiredExtensions);
     ~MoeVkPhysicalDevice();
 
-    VkPhysicalDevice& device()       { return _device; }
+    const VkPhysicalDevice& device() const { return _device; }
     MoeVkQueueFamily& queueFamily()  { return _queueFamily; }
 
-    bool isFormatSupported(VkFormat format, VkImageTiling tiling, VkFormatFeatureFlags featureFlags);
-    VkFormat findFirstSupportedFormat(const std::vector<VkFormat>& formats,
-            VkImageTiling tiling, VkFormatFeatureFlags  fetureFlags);
-    VkFormat findDepthFormat();
+    bool isFormatSupported(VkFormat format, VkImageTiling tiling, VkFormatFeatureFlags featureFlags) const;
 
-    VkAttachmentDescription getDepthAttachment();
+    VkFormat findFirstSupportedFormat(const std::vector<VkFormat>& formats,
+            VkImageTiling tiling, VkFormatFeatureFlags  fetureFlags) const;
+
+    VkFormat findDepthFormat() const;
+    VkAttachmentDescription getDepthAttachment() const;
 
 private:
 

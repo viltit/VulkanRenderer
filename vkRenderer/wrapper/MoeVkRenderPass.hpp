@@ -10,22 +10,21 @@ class MoeVkSwapChain;
 
 class MoeVkRenderPass {
 public:
-    MoeVkRenderPass()
-        : _device { nullptr },
-          _renderPass { VK_NULL_HANDLE }
-    { }
+    MoeVkRenderPass(const MoeVkLogicalDevice &device,
+            const MoeVkPhysicalDevice& physicalDevice,
+            const MoeVkSwapChain& swapChain);
+
+    ~MoeVkRenderPass();
 
     MoeVkRenderPass(const MoeVkRenderPass&) = delete;
     MoeVkRenderPass& operator = (const MoeVkRenderPass&) = delete;
 
-    void create(MoeVkLogicalDevice &device, MoeVkPhysicalDevice& physicalDevice, const MoeVkSwapChain& swapChain);
-    void destroy();
 
     const VkRenderPass& renderPass() const { return _renderPass; }
 
 private:
-    MoeVkLogicalDevice*     _device;
-    VkRenderPass            _renderPass;
+    const MoeVkLogicalDevice&     _device;
+    VkRenderPass                  _renderPass;
 
 };
 }

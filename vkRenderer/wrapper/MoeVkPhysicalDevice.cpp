@@ -216,7 +216,8 @@ void MoeVkPhysicalDevice::printQueueFamilies(const std::vector<VkQueueFamilyProp
         }
     }
 
-bool MoeVkPhysicalDevice::isFormatSupported(VkFormat format, VkImageTiling tiling, VkFormatFeatureFlags featureFlags) {
+bool MoeVkPhysicalDevice::isFormatSupported(VkFormat format,
+        VkImageTiling tiling, VkFormatFeatureFlags featureFlags) const {
 
     VkFormatProperties props { };
     vkGetPhysicalDeviceFormatProperties(_device, format, &props);
@@ -233,7 +234,7 @@ bool MoeVkPhysicalDevice::isFormatSupported(VkFormat format, VkImageTiling tilin
 }
 
 VkFormat MoeVkPhysicalDevice::findFirstSupportedFormat(const std::vector<VkFormat> &formats, VkImageTiling tiling,
-                                                       VkFormatFeatureFlags featureFlags) {
+                                                       VkFormatFeatureFlags featureFlags) const {
     for (VkFormat format : formats) {
         if (isFormatSupported(format, tiling, featureFlags)) {
             return format;
@@ -242,7 +243,7 @@ VkFormat MoeVkPhysicalDevice::findFirstSupportedFormat(const std::vector<VkForma
     throw MoeInitError("Could not find any supported image format", __FILE__, __FUNCTION__, __LINE__);
 }
 
-VkFormat MoeVkPhysicalDevice::findDepthFormat() {
+VkFormat MoeVkPhysicalDevice::findDepthFormat() const {
     std::vector<VkFormat> possibleFormats = {
             VK_FORMAT_D32_SFLOAT_S8_UINT, // all new grafic cards support this format
             VK_FORMAT_D24_UNORM_S8_UINT,
@@ -251,7 +252,7 @@ VkFormat MoeVkPhysicalDevice::findDepthFormat() {
     return findFirstSupportedFormat(possibleFormats, VK_IMAGE_TILING_OPTIMAL, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
 }
 
-VkAttachmentDescription MoeVkPhysicalDevice::getDepthAttachment() {
+VkAttachmentDescription MoeVkPhysicalDevice::getDepthAttachment() const {
     VkAttachmentDescription result { };
     result.flags            = 0;
     result.format           = findDepthFormat();
