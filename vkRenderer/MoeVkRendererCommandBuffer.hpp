@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "MoeVkDrawable.hpp"
+#include "MoeVkTexturedDrawable.hpp"
 #include "MoeVertex.hpp"
 #include "wrapper/MoeVkArrayBuffer.hpp"
 #include "wrapper/MoeVkCommandBuffer.hpp"
@@ -25,7 +25,7 @@ public:
             std::vector<MoeVkPipeline> &pipelines,
             MoeVkSwapChain &swapChain,
             MoeVkCommandPool& commandPool,
-            std::vector<MoeVkDrawable*>& drawables,
+            std::vector<MoeVkTexturedDrawable*>& drawables,
             VkBool32 debugNormals);
 
     void destroy();

@@ -1,3 +1,6 @@
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD 17)
+
 project(vkRenderer)
 
 # Vector math header only lib, see https://glm.g-truc.net/0.9.9/index.html
@@ -44,7 +47,8 @@ add_library(
         wrapper/MoeVkArrayBuffer.hpp
         wrapper/MoeVkBuffer.cpp
         MoeDrawable.hpp
-        MoeVkDrawable.cpp
+        MoeVkTexturedDrawable.cpp
+        MoeDrawableGroup.cpp
         MoeVkRendererCommandBuffer.cpp
         wrapper/MoeVkDescriptorPool.cpp
 )

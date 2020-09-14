@@ -3,8 +3,8 @@
 #include <glm/glm.hpp>
 #include <vector>
 
-#include <concepts>
 namespace moe {
+
 
 struct SimpleVertex {
     glm::vec3 pos;

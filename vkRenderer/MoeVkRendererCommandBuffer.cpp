@@ -13,7 +13,7 @@ void MoeVkRendererCommandBuffer::record(MoeVkLogicalDevice &device, MoeVkFramebu
             std::vector<MoeVkPipeline> &pipelines,
             MoeVkSwapChain &swapChain,
             MoeVkCommandPool& commandPool,
-            std::vector<MoeVkDrawable*>& drawables,
+            std::vector<MoeVkTexturedDrawable*>& drawables,
             VkBool32 debugNormals) {
 
 

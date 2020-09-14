@@ -16,7 +16,7 @@
 #include "wrapper/MoeTexture.hpp"
 #include "wrapper/MoeDepthTexture.hpp"
 #include "wrapper/MoeVkRenderPass.hpp"
-#include "MoeVkDrawable.hpp"
+#include "MoeVkTexturedDrawable.hpp"
 #include "MoeVkRendererCommandBuffer.hpp"
 #include "wrapper/MoeVkSurfaceSDL2.hpp"
 
@@ -70,6 +70,6 @@ private:
 
     // TODO: This should be in an own class "scene" in the long termn
     std::vector<Drawable>&          drawables;
-    std::vector<MoeVkDrawable*>      vkDrawables;
+    std::vector<MoeVkTexturedDrawable*>      vkDrawables;
 };
 }

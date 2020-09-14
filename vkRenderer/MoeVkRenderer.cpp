@@ -50,7 +50,7 @@ MoeVkRenderer::MoeVkRenderer(VkWindow* window, std::vector<Drawable>& drawables,
 
     for (auto& drawable : drawables) {
         // TODO: No new -> need copy constrcutor
-        vkDrawables.push_back(new MoeVkDrawable(
+        vkDrawables.push_back(new MoeVkTexturedDrawable(
                 physicalDevice, logicalDevice, commandPool, descriptorPool,
                 &drawable, swapChain.images().size()
                 ));

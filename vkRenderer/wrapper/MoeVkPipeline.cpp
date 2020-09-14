@@ -31,6 +31,7 @@ void MoeVkPipeline::prepare(std::vector<MoeVkShader>& shaders, uint32_t width, u
     }
 
     /* Pipeline stages: Vertex input ---------------------------------------------------- */
+    // TODO: Do not hardcode vertex struct
     _bindingDesciption = Vertex::getBindingDescription();
     _attributeDescription = Vertex::getAttributeDescription();
     _vertexInputCreateInfo.sType         = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;

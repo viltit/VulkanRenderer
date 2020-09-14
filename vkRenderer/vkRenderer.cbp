@@ -77,6 +77,12 @@
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeDrawable.hpp">
 			<Option target="vkRenderer"/>
 		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeDrawableGroup.cpp">
+			<Option target="vkRenderer"/>
+		</Unit>
+		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeDrawableGroup.hpp">
+			<Option target="vkRenderer"/>
+		</Unit>
 		<Unit filename="/home/titus/programming/c++/vkEngine/vkRenderer/MoeVertex.hpp">
 			<Option target="vkRenderer"/>
 		</Unit>
