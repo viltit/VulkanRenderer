@@ -30,7 +30,7 @@ MoeVkInstance::MoeVkInstance(VkWindow *window, RendererOptions options)
     std::vector<const char*> validationLayers;
     if (uint(options) & uint(RendererOptions::validation)) {
         extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
-        validationLayers.push_back("VK_LAYER_LUNARG_standard_validation");
+        validationLayers.push_back("VK_LAYER_KHRONOS_validation");
         if (!hasLayerSupport(validationLayers)) {
             // TODO: Just disable this layer and issue a warning
             spdlog::error("Failed to get support for Validation Layers!\n");
@@ -151,7 +151,10 @@ bool MoeVkInstance::hasLayerSupport(const std::vector<const char*>& layers) cons
                 break;
             }
         }
-        if (!result) return false;
+        if (!result){
+            spdlog::warn("Failed to get support for layer {0}",  desLayer);
+            return false;
+        }
     }
     return true;
 }
